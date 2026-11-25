@@ -1,0 +1,30 @@
+# Virtual environments
+.venv/
+.venv_build/
+venv/
+env/
+
+# Build & release artifacts (published via GitHub Releases instead of Git history)
+build/
+dist/
+dist_latest/
+release/
+
+# Local debug outputs, screenshots & logs
+debug_out/
+screen shot/
+*.log
+
+# Personal runtime settings & downloaded OCR models
+data/user_settings.json
+data/ocr_models/
+
+# Python / IDE / OS cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

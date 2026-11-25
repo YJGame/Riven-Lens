@@ -1,0 +1,18 @@
+# Warframe Simplified Chinese Riven Overlay Dependencies
+# Python 3.10+
+
+# Screen capture & image processing
+mss>=9.0.1
+numpy>=1.24.0
+opencv-python>=4.8.0
+Pillow>=10.0.0
+
+# Local OCR (CPU ONNX Runtime, lightweight & fast for Simplified Chinese)
+rapidocr-onnxruntime>=1.3.24
+
+# Frameless transparent overlay UI
+PyQt6>=6.6.0
+
+# Global hotkeys (pynput requires no admin privileges in many cases; keyboard as optional alternative)
+pynput>=1.7.7
+keyboard>=0.13.5

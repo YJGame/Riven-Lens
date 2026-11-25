@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Riven Lens
+Name[zh_CN]=裂罅透镜
+Comment=Warframe Riven Mod OCR & Void Relic Pricer Overlay (Wayland & X11)
+Comment[zh_CN]=《星际战甲》紫卡 OCR 评级与开核桃比价悬浮窗
+Exec=riven-lens --overlay
+Icon=riven-lens
+Terminal=false
+Categories=Game;Utility;
+StartupWMClass=riven-lens

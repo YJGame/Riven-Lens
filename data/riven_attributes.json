@@ -1,0 +1,924 @@
+{
+  "schema_version": 2,
+  "updated_at": 1795514303,
+  "updated_at_iso": "2026-11-24T09:58:23Z",
+  "sources": [
+    "https://api.warframe.market/v2/riven/attributes",
+    "Warframe Official Riven Math (Rank 8 = 9x base)"
+  ],
+  "attribute_count": 50,
+  "combo_multipliers": {
+    "2+0-": {
+      "positive": 0.99,
+      "negative": 0.0
+    },
+    "2+1-": {
+      "positive": 1.2375,
+      "negative": -0.495
+    },
+    "3+0-": {
+      "positive": 0.75,
+      "negative": 0.0
+    },
+    "3+1-": {
+      "positive": 0.9375,
+      "negative": -0.75
+    }
+  },
+  "attributes": {
+    "punch_through": {
+      "slug": "punch_through",
+      "zh_name": "穿透",
+      "wfm_zh_name": "穿透",
+      "en_name": "Punch Through",
+      "unit": null,
+      "exclusive_to": [
+        "archgun",
+        "kitgun",
+        "pistol",
+        "rifle",
+        "shotgun"
+      ],
+      "positive_only": true,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 2.7,
+        "shotgun": 2.7,
+        "pistol": 2.7,
+        "archgun": 2.7
+      }
+    },
+    "slash_damage": {
+      "slug": "slash_damage",
+      "zh_name": "切割伤害",
+      "wfm_zh_name": "切割伤害",
+      "en_name": "Slash",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 120.0,
+        "shotgun": 120.0,
+        "pistol": 120.0,
+        "melee": 119.7,
+        "archgun": 90.0
+      }
+    },
+    "impact_damage": {
+      "slug": "impact_damage",
+      "zh_name": "冲击伤害",
+      "wfm_zh_name": "冲击伤害",
+      "en_name": "Impact",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 120.0,
+        "shotgun": 120.0,
+        "pistol": 120.0,
+        "melee": 119.7,
+        "archgun": 90.0
+      }
+    },
+    "toxin_damage": {
+      "slug": "toxin_damage",
+      "zh_name": "毒素伤害",
+      "wfm_zh_name": "毒素伤害",
+      "en_name": "Toxin",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": true,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "melee": 90.0,
+        "archgun": 119.7
+      }
+    },
+    "status_duration": {
+      "slug": "status_duration",
+      "zh_name": "触发时间",
+      "wfm_zh_name": "触发时间",
+      "en_name": "Status Duration",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 99.99,
+        "shotgun": 99.99,
+        "pistol": 99.99,
+        "melee": 99.99,
+        "archgun": 99.99
+      }
+    },
+    "ammo_maximum": {
+      "slug": "ammo_maximum",
+      "zh_name": "弹药最大值",
+      "wfm_zh_name": "弹药最大值",
+      "en_name": "Ammo Maximum",
+      "unit": "percent",
+      "exclusive_to": [
+        "archgun",
+        "kitgun",
+        "pistol",
+        "rifle",
+        "shotgun"
+      ],
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 49.95,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "archgun": 99.9
+      }
+    },
+    "recoil": {
+      "slug": "recoil",
+      "zh_name": "武器后坐力",
+      "wfm_zh_name": "武器后坐力",
+      "en_name": "Weapon Recoil",
+      "unit": "percent",
+      "exclusive_to": [
+        "archgun",
+        "kitgun",
+        "pistol",
+        "rifle",
+        "shotgun"
+      ],
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "archgun": 90.0
+      }
+    },
+    "zoom": {
+      "slug": "zoom",
+      "zh_name": "变焦",
+      "wfm_zh_name": "变焦",
+      "en_name": "Zoom",
+      "unit": "percent",
+      "exclusive_to": [
+        "archgun",
+        "kitgun",
+        "pistol",
+        "rifle",
+        "shotgun"
+      ],
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 60.0,
+        "shotgun": 42.0,
+        "pistol": 80.1,
+        "archgun": 60.0
+      }
+    },
+    "channeling_damage": {
+      "slug": "channeling_damage",
+      "zh_name": "初始连击",
+      "wfm_zh_name": "初始连击",
+      "en_name": "Initial Combo",
+      "unit": null,
+      "exclusive_to": [
+        "melee",
+        "zaw"
+      ],
+      "positive_only": true,
+      "negative_only": false,
+      "base_values": {
+        "melee": 24.48
+      }
+    },
+    "channeling_efficiency": {
+      "slug": "channeling_efficiency",
+      "zh_name": "重击效率",
+      "wfm_zh_name": "重击效率",
+      "en_name": "Heavy Attack Efficiency",
+      "unit": "percent",
+      "exclusive_to": [
+        "melee",
+        "zaw"
+      ],
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "melee": 73.44
+      }
+    },
+    "critical_chance": {
+      "slug": "critical_chance",
+      "zh_name": "暴击几率",
+      "wfm_zh_name": "暴击率",
+      "en_name": "Critical Chance",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 150.0,
+        "shotgun": 90.0,
+        "pistol": 150.0,
+        "melee": 180.0,
+        "archgun": 99.9
+      }
+    },
+    "critical_damage": {
+      "slug": "critical_damage",
+      "zh_name": "暴击伤害",
+      "wfm_zh_name": "暴击伤害",
+      "en_name": "Critical Damage",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 120.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "melee": 90.0,
+        "archgun": 80.1
+      }
+    },
+    "base_damage_/_melee_damage": {
+      "slug": "base_damage_/_melee_damage",
+      "zh_name": "伤害",
+      "wfm_zh_name": "伤害",
+      "en_name": "Damage",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 165.0,
+        "shotgun": 164.7,
+        "pistol": 219.6,
+        "melee": 164.7,
+        "archgun": 99.9
+      }
+    },
+    "heat_damage": {
+      "slug": "heat_damage",
+      "zh_name": "火焰伤害",
+      "wfm_zh_name": "火焰伤害",
+      "en_name": "Heat",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": true,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "melee": 90.0,
+        "archgun": 119.7
+      }
+    },
+    "multishot": {
+      "slug": "multishot",
+      "zh_name": "多重射击",
+      "wfm_zh_name": "多重射击",
+      "en_name": "Multishot",
+      "unit": "percent",
+      "exclusive_to": [
+        "archgun",
+        "kitgun",
+        "pistol",
+        "rifle",
+        "shotgun"
+      ],
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 119.7,
+        "pistol": 119.7,
+        "archgun": 60.3
+      }
+    },
+    "reload_speed": {
+      "slug": "reload_speed",
+      "zh_name": "装填速度",
+      "wfm_zh_name": "装填速度",
+      "en_name": "Reload Speed",
+      "unit": "percent",
+      "exclusive_to": [
+        "archgun",
+        "kitgun",
+        "pistol",
+        "rifle",
+        "shotgun"
+      ],
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 50.0,
+        "shotgun": 50.0,
+        "pistol": 50.0,
+        "archgun": 99.9
+      }
+    },
+    "range": {
+      "slug": "range",
+      "zh_name": "攻击范围",
+      "wfm_zh_name": "攻击范围",
+      "en_name": "Range",
+      "unit": null,
+      "exclusive_to": [
+        "melee",
+        "zaw"
+      ],
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "melee": 1.94
+      }
+    },
+    "damage_vs_corpus": {
+      "slug": "damage_vs_corpus",
+      "zh_name": "对 Corpus 伤害",
+      "wfm_zh_name": "对 Corpus 的伤害",
+      "en_name": "Damage to Corpus",
+      "unit": "multiply",
+      "exclusive_to": null,
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 45.0,
+        "shotgun": 45.0,
+        "pistol": 45.0,
+        "melee": 45.0,
+        "archgun": 45.0
+      }
+    },
+    "damage_vs_grineer": {
+      "slug": "damage_vs_grineer",
+      "zh_name": "对 Grineer 伤害",
+      "wfm_zh_name": "对 Grineer 的伤害",
+      "en_name": "Damage to Grineer",
+      "unit": "multiply",
+      "exclusive_to": null,
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 45.0,
+        "shotgun": 45.0,
+        "pistol": 45.0,
+        "melee": 45.0,
+        "archgun": 45.0
+      }
+    },
+    "puncture_damage": {
+      "slug": "puncture_damage",
+      "zh_name": "穿刺伤害",
+      "wfm_zh_name": "穿刺伤害",
+      "en_name": "Puncture",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 120.0,
+        "shotgun": 120.0,
+        "pistol": 120.0,
+        "melee": 119.7,
+        "archgun": 90.0
+      }
+    },
+    "damage_vs_infested": {
+      "slug": "damage_vs_infested",
+      "zh_name": "对 Infested 伤害",
+      "wfm_zh_name": "对 Infested 的伤害",
+      "en_name": "Damage to Infested",
+      "unit": "multiply",
+      "exclusive_to": null,
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 45.0,
+        "shotgun": 45.0,
+        "pistol": 45.0,
+        "melee": 45.0,
+        "archgun": 45.0
+      }
+    },
+    "electric_damage": {
+      "slug": "electric_damage",
+      "zh_name": "电击伤害",
+      "wfm_zh_name": "电击伤害",
+      "en_name": "Electricity",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": true,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "melee": 90.0,
+        "archgun": 119.7
+      }
+    },
+    "finisher_damage": {
+      "slug": "finisher_damage",
+      "zh_name": "处决伤害",
+      "wfm_zh_name": "处决伤害",
+      "en_name": "Finisher Damage",
+      "unit": "percent",
+      "exclusive_to": [
+        "melee",
+        "zaw"
+      ],
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "melee": 119.7
+      }
+    },
+    "fire_rate_/_attack_speed": {
+      "slug": "fire_rate_/_attack_speed",
+      "zh_name": "射速/攻击速度",
+      "wfm_zh_name": "射速/攻击速度",
+      "en_name": "Fire Rate / Attack Speed",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 60.03,
+        "shotgun": 90.0,
+        "pistol": 74.7,
+        "melee": 54.9,
+        "archgun": 60.03
+      }
+    },
+    "projectile_speed": {
+      "slug": "projectile_speed",
+      "zh_name": "投射物速度",
+      "wfm_zh_name": "投射物速度",
+      "en_name": "Projectile Speed",
+      "unit": "percent",
+      "exclusive_to": [
+        "kitgun",
+        "pistol",
+        "rifle",
+        "shotgun"
+      ],
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0
+      }
+    },
+    "magazine_capacity": {
+      "slug": "magazine_capacity",
+      "zh_name": "弹匣容量",
+      "wfm_zh_name": "弹匣容量",
+      "en_name": "Magazine Capacity",
+      "unit": "percent",
+      "exclusive_to": [
+        "archgun",
+        "kitgun",
+        "pistol",
+        "rifle",
+        "shotgun"
+      ],
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 50.0,
+        "shotgun": 50.0,
+        "pistol": 50.0,
+        "archgun": 60.3
+      }
+    },
+    "status_chance": {
+      "slug": "status_chance",
+      "zh_name": "触发几率",
+      "wfm_zh_name": "触发几率",
+      "en_name": "Status Chance",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "melee": 90.0,
+        "archgun": 60.3
+      }
+    },
+    "cold_damage": {
+      "slug": "cold_damage",
+      "zh_name": "冰冻伤害",
+      "wfm_zh_name": "冰冻伤害",
+      "en_name": "Cold",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": true,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "melee": 90.0,
+        "archgun": 119.7
+      }
+    },
+    "combo_duration": {
+      "slug": "combo_duration",
+      "zh_name": "连击持续时间",
+      "wfm_zh_name": "连击持续时间",
+      "en_name": "Combo Duration",
+      "unit": "seconds",
+      "exclusive_to": [
+        "melee",
+        "zaw"
+      ],
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "melee": 8.1
+      }
+    },
+    "critical_chance_on_slide_attack": {
+      "slug": "critical_chance_on_slide_attack",
+      "zh_name": "滑行攻击暴击几率",
+      "wfm_zh_name": "滑行攻击暴击几率",
+      "en_name": "Critical Chance for Slide Attack",
+      "unit": "percent",
+      "exclusive_to": [
+        "melee",
+        "zaw"
+      ],
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "melee": 120.0
+      }
+    },
+    "chance_to_gain_extra_combo_count": {
+      "slug": "chance_to_gain_extra_combo_count",
+      "zh_name": "额外连击几率",
+      "wfm_zh_name": "额外连击数几率",
+      "en_name": "Additional Combo Count Chance",
+      "unit": "percent",
+      "exclusive_to": [
+        "melee",
+        "zaw"
+      ],
+      "positive_only": true,
+      "negative_only": false,
+      "base_values": {
+        "melee": 58.77
+      }
+    },
+    "chance_to_gain_combo_count": {
+      "slug": "chance_to_gain_combo_count",
+      "zh_name": "额外连击几率",
+      "wfm_zh_name": "的几率来获得连击数",
+      "en_name": "Chance to Gain Combo Count",
+      "unit": "percent",
+      "exclusive_to": [
+        "melee",
+        "zaw"
+      ],
+      "positive_only": false,
+      "negative_only": true,
+      "base_values": {
+        "melee": 58.77
+      }
+    },
+    "ammo_efficiency": {
+      "slug": "ammo_efficiency",
+      "zh_name": "弹药效率",
+      "wfm_zh_name": "弹药效率",
+      "en_name": "Ammo Efficiency",
+      "unit": "percent",
+      "exclusive_to": [
+        "archgun",
+        "kitgun",
+        "pistol",
+        "rifle",
+        "shotgun"
+      ],
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 45.0,
+        "shotgun": 45.0,
+        "pistol": 45.0,
+        "archgun": 45.0
+      }
+    },
+    "blast": {
+      "slug": "blast",
+      "zh_name": "爆炸伤害",
+      "wfm_zh_name": "爆炸伤害",
+      "en_name": "Blast",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": true,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "melee": 90.0,
+        "archgun": 90.0
+      }
+    },
+    "corrosive": {
+      "slug": "corrosive",
+      "zh_name": "腐蚀伤害",
+      "wfm_zh_name": "腐蚀伤害",
+      "en_name": "Corrosive",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": true,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "melee": 90.0,
+        "archgun": 90.0
+      }
+    },
+    "damage_to_orokin": {
+      "slug": "damage_to_orokin",
+      "zh_name": "对奥罗金伤害",
+      "wfm_zh_name": "对奥罗金的伤害",
+      "en_name": "Damage to Orokin",
+      "unit": "multiply",
+      "exclusive_to": null,
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 45.0,
+        "shotgun": 45.0,
+        "pistol": 45.0,
+        "melee": 45.0,
+        "archgun": 45.0
+      }
+    },
+    "damage_to_scaldra": {
+      "slug": "damage_to_scaldra",
+      "zh_name": "对炽蛇军伤害",
+      "wfm_zh_name": "对炽蛇军的伤害",
+      "en_name": "Damage to Scaldra",
+      "unit": "multiply",
+      "exclusive_to": null,
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 45.0,
+        "shotgun": 45.0,
+        "pistol": 45.0,
+        "melee": 45.0,
+        "archgun": 45.0
+      }
+    },
+    "damage_to_techrot": {
+      "slug": "damage_to_techrot",
+      "zh_name": "对科腐者伤害",
+      "wfm_zh_name": "对科腐者的伤害",
+      "en_name": "Damage to Techrot",
+      "unit": "multiply",
+      "exclusive_to": null,
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 45.0,
+        "shotgun": 45.0,
+        "pistol": 45.0,
+        "melee": 45.0,
+        "archgun": 45.0
+      }
+    },
+    "gas": {
+      "slug": "gas",
+      "zh_name": "毒气伤害",
+      "wfm_zh_name": "毒气伤害",
+      "en_name": "Gas",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": true,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "melee": 90.0,
+        "archgun": 90.0
+      }
+    },
+    "heavy_attack_wind_up_speed": {
+      "slug": "heavy_attack_wind_up_speed",
+      "zh_name": "重击准备速度",
+      "wfm_zh_name": "重击准备速度",
+      "en_name": "Heavy Attack Wind Up Speed",
+      "unit": "percent",
+      "exclusive_to": [
+        "melee",
+        "zaw"
+      ],
+      "positive_only": true,
+      "negative_only": false,
+      "base_values": {
+        "melee": 119.7
+      }
+    },
+    "magazine_reloaded_s_when_holstered": {
+      "slug": "magazine_reloaded_s_when_holstered",
+      "zh_name": "收起武器时弹匣每秒自动装填",
+      "wfm_zh_name": "收起武器时弹匣每秒自动装填",
+      "en_name": "Magazine Reloaded/s when Holstered",
+      "unit": "percent",
+      "exclusive_to": [
+        "kitgun",
+        "pistol",
+        "rifle",
+        "shotgun"
+      ],
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0
+      }
+    },
+    "magnetic": {
+      "slug": "magnetic",
+      "zh_name": "磁力伤害",
+      "wfm_zh_name": "磁力伤害",
+      "en_name": "Magnetic",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": true,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "melee": 90.0,
+        "archgun": 90.0
+      }
+    },
+    "melee_damage_on_heavy_attack": {
+      "slug": "melee_damage_on_heavy_attack",
+      "zh_name": "在重击时的近战伤害",
+      "wfm_zh_name": "在重击时的近战伤害",
+      "en_name": "Melee Damage on Heavy Attack",
+      "unit": "percent",
+      "exclusive_to": [
+        "melee",
+        "zaw"
+      ],
+      "positive_only": true,
+      "negative_only": false,
+      "base_values": {
+        "melee": 119.7
+      }
+    },
+    "parry_angle": {
+      "slug": "parry_angle",
+      "zh_name": "招架角度",
+      "wfm_zh_name": "招架角度",
+      "en_name": "Parry Angle",
+      "unit": null,
+      "exclusive_to": [
+        "melee",
+        "zaw"
+      ],
+      "positive_only": true,
+      "negative_only": false,
+      "base_values": {
+        "melee": 81.0
+      }
+    },
+    "radiation": {
+      "slug": "radiation",
+      "zh_name": "辐射伤害",
+      "wfm_zh_name": "辐射伤害",
+      "en_name": "Radiation",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": true,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "melee": 90.0,
+        "archgun": 90.0
+      }
+    },
+    "slam_attack_damage": {
+      "slug": "slam_attack_damage",
+      "zh_name": "震地攻击伤害",
+      "wfm_zh_name": "震地攻击伤害",
+      "en_name": "Slam Attack Damage",
+      "unit": "percent",
+      "exclusive_to": [
+        "melee",
+        "zaw"
+      ],
+      "positive_only": true,
+      "negative_only": false,
+      "base_values": {
+        "melee": 119.7
+      }
+    },
+    "status_damage": {
+      "slug": "status_damage",
+      "zh_name": "异常状态伤害",
+      "wfm_zh_name": "异常状态伤害",
+      "en_name": "Status Damage",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "melee": 90.0,
+        "archgun": 90.0
+      }
+    },
+    "viral": {
+      "slug": "viral",
+      "zh_name": "病毒伤害",
+      "wfm_zh_name": "病毒伤害",
+      "en_name": "Viral",
+      "unit": "percent",
+      "exclusive_to": null,
+      "positive_only": true,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "melee": 90.0,
+        "archgun": 90.0
+      }
+    },
+    "weak_point_critical_chance": {
+      "slug": "weak_point_critical_chance",
+      "zh_name": "弱点暴击几率",
+      "wfm_zh_name": "弱点暴击几率",
+      "en_name": "Weak Point Critical Chance",
+      "unit": "percent",
+      "exclusive_to": [
+        "archgun",
+        "kitgun",
+        "pistol",
+        "rifle",
+        "shotgun"
+      ],
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 247.5,
+        "shotgun": 247.5,
+        "pistol": 247.5,
+        "archgun": 247.5
+      }
+    },
+    "weak_point_damage": {
+      "slug": "weak_point_damage",
+      "zh_name": "弱点伤害",
+      "wfm_zh_name": "弱点伤害",
+      "en_name": "Weak Point Damage",
+      "unit": "percent",
+      "exclusive_to": [
+        "archgun",
+        "kitgun",
+        "pistol",
+        "rifle",
+        "shotgun"
+      ],
+      "positive_only": false,
+      "negative_only": false,
+      "base_values": {
+        "rifle": 225.0,
+        "shotgun": 225.0,
+        "pistol": 225.0,
+        "archgun": 225.0
+      }
+    }
+  }
+}

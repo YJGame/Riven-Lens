@@ -1,0 +1,600 @@
+{
+  "_comment": "Warframe Simplified Chinese weapon database (weapon_class & Riven Disposition). Users can freely edit or append weapons here as DE adjusts dispositions.",
+  "ocr_aliases": {
+    "冰松": "冰凇",
+    "赤毒布拉玛": "赤毒·布拉玛",
+    "赤毒沙皇": "赤毒·沙皇",
+    "赤毒努寇微波枪": "赤毒·努寇微波枪",
+    "赤毒海克": "赤毒·海克",
+    "信条漫射者": "信条·漫射者",
+    "信条弧电离子枪": "信条·弧电离子枪",
+    "信条德特昂": "信条·德特昂",
+    "信条冰凇": "信条·冰凇",
+    "托理德": "托里德",
+    "伯斯顿": "伯斯顿",
+    "瘟疫克里帕丝": "瘟疫 克里帕丝",
+    "瘟疫奇沃": "瘟疫 奇沃"
+  },
+  "weapons": {
+    "瘟疫 克里帕丝": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "瘟疫 奇沃": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "德塔特": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "巴拉": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "多克拉姆": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "塞普梵": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "拉比威": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "克鲁什": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "迈宛": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "西弗": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "哈尔武": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "赤毒·布拉玛": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "布拉玛": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "冰凇": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "冰凇 Prime": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "信条·冰凇": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "托里德": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "伯斯顿": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "伯斯顿 Prime": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "拉特昂": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "拉特昂 Prime": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "布莱顿": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "布莱顿 Prime": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "米特尔": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "波尔托骨刺": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "波尔托骨刺 Prime": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "月神": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "月神 Prime": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "绝路": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "绝路 Prime": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "兰卡": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "守望者": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "守望者 Prime": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "赤毒·沙皇": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "赤毒·食人女魔": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "赤毒·征服榴炮": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "赤毒·查库尔": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "赤毒·重力枪": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "赤毒·邪眼": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "赤毒·雌鹿": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "信条·使节": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "信条·通量步枪": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "信条·四重奏": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "信条·铁晶磁轨炮": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "信条·漫射者": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "伊格尼斯": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "伊格尼斯 亡魂": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "安培克斯": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "雷霆": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "雷霆 Prime": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "迅发电浆炮": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "迅发电浆炮 Prime": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "重装巨炮": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "重装巨炮 Prime": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "凤梨": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "菲拉克斯": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "芬莫": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "帕里斯": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "帕里斯 Prime": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "恐惧": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "娜塔": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "长弓": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "西诺斯": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "西诺斯 Prime": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "异融西诺斯": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "赤毒·布拉马": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "楞次弓": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "棱晶 楞次弓": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "葛拉卡达": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "棱晶 葛拉卡达": {
+      "class": "rifle",
+      "disposition": 1.2
+    },
+    "提佩多": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "猛虎": {
+      "class": "shotgun",
+      "disposition": 1.2
+    },
+    "猛虎 Prime": {
+      "class": "shotgun",
+      "disposition": 1.2
+    },
+    "塞多": {
+      "class": "shotgun",
+      "disposition": 1.2
+    },
+    "布波尼科": {
+      "class": "shotgun",
+      "disposition": 1.2
+    },
+    "斐拉克": {
+      "class": "shotgun",
+      "disposition": 1.2
+    },
+    "斯特朗": {
+      "class": "shotgun",
+      "disposition": 1.2
+    },
+    "斯特朗 Prime": {
+      "class": "shotgun",
+      "disposition": 1.2
+    },
+    "野猪": {
+      "class": "shotgun",
+      "disposition": 1.2
+    },
+    "野猪 Prime": {
+      "class": "shotgun",
+      "disposition": 1.2
+    },
+    "弧电离子枪": {
+      "class": "shotgun",
+      "disposition": 1.2
+    },
+    "信条·弧电离子枪": {
+      "class": "shotgun",
+      "disposition": 1.2
+    },
+    "海克": {
+      "class": "shotgun",
+      "disposition": 1.2
+    },
+    "赤毒·海克": {
+      "class": "shotgun",
+      "disposition": 1.2
+    },
+    "赤毒·寇恩热能枪": {
+      "class": "shotgun",
+      "disposition": 1.2
+    },
+    "幻离子": {
+      "class": "shotgun",
+      "disposition": 1.2
+    },
+    "幻离子 Prime": {
+      "class": "shotgun",
+      "disposition": 1.2
+    },
+    "科林斯": {
+      "class": "shotgun",
+      "disposition": 1.2
+    },
+    "科林斯 Prime": {
+      "class": "shotgun",
+      "disposition": 1.2
+    },
+    "重击巨锤": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "赤毒·努寇微波枪": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "信条·循环离子枪": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "信条·德特昂": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "墓指": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "捕月": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "孢射": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "响胆": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "双子毒牙": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "双子毒牙 Prime": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "雷克斯": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "雷克斯 Prime": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "盗贼": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "盗贼 Prime": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "盗贼双枪": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "拉托": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "拉托 破坏者": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "墓碑": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "莱顿": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "核桃": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "原子矿融炮": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "奥克绪俄斯": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "毒囊双枪": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "狂怒": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "丧钟": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "丧钟 Prime": {
+      "class": "pistol",
+      "disposition": 1.2
+    },
+    "战刃": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "战刃 Prime": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "驱魔之刃": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "赤毒·希尔德": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "侍刃": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "侍刃 Prime": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "龙之侍刃": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "皇家拐刃": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "皇家拐刃 Prime": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "格拉姆": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "格拉姆 Prime": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "病变": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "关刀": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "关刀 Prime": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "欧特鲁斯": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "欧特鲁斯 Prime": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "憎恨": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "收割者 Prime": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "陶瓷匕首": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "魔导": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "双持灵液": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "灵枢": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "信条·莉维娅": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "鼠尾草": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "鼠尾草 Prime": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "黑鸦": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "黑鸦 Prime": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "奥卡": {
+      "class": "melee",
+      "disposition": 1.2
+    },
+    "赤毒·阿扬加": {
+      "class": "archgun",
+      "disposition": 1.2
+    },
+    "陵墓": {
+      "class": "archgun",
+      "disposition": 1.2
+    }
+  }
+}

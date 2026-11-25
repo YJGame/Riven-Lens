@@ -1,0 +1,378 @@
+{
+  "schema_version": 1,
+  "description": "本地优先加载的补充紫卡/新版本融合词条映射表（程序更新官方数据库时不会覆盖此文件，启动与重载时自动与主库合并）",
+  "global_disposition_scale": 1.2,
+  "default_hybrid_scale_factor": 0.6,
+  "hybrid_connectors": [
+    "与",
+    "和",
+    "及",
+    "并且",
+    "并",
+    "且",
+    "/",
+    "|",
+    "&",
+    "and",
+    "with"
+  ],
+  "custom_stats": {
+    "病毒伤害": {
+      "stat_key": "viral",
+      "en_name": "Viral",
+      "aliases": ["病毒伤害", "病毒", "viral", "viral damage", "viraldamage"],
+      "is_percent": true,
+      "positive_only": true,
+      "wm_slug": "viral",
+      "score_weight": 1.2,
+      "direction_tier": "high",
+      "synergy_tag": "直出病毒",
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "melee": 90.0,
+        "archgun": 90.0
+      }
+    },
+    "腐蚀伤害": {
+      "stat_key": "corrosive",
+      "en_name": "Corrosive",
+      "aliases": ["腐蚀伤害", "腐蚀", "corrosive", "corrosive damage", "corrosivedamage"],
+      "is_percent": true,
+      "positive_only": true,
+      "wm_slug": "corrosive",
+      "score_weight": 1.18,
+      "direction_tier": "high",
+      "synergy_tag": "直出腐蚀",
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "melee": 90.0,
+        "archgun": 90.0
+      }
+    },
+    "辐射伤害": {
+      "stat_key": "radiation",
+      "en_name": "Radiation",
+      "aliases": ["辐射伤害", "辐射", "radiation", "radiation damage", "radiationdamage"],
+      "is_percent": true,
+      "positive_only": true,
+      "wm_slug": "radiation",
+      "score_weight": 1.08,
+      "direction_tier": "high",
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "melee": 90.0,
+        "archgun": 90.0
+      }
+    },
+    "磁力伤害": {
+      "stat_key": "magnetic",
+      "en_name": "Magnetic",
+      "aliases": ["磁力伤害", "磁力", "magnetic", "magnetic damage", "magneticdamage"],
+      "is_percent": true,
+      "positive_only": true,
+      "wm_slug": "magnetic",
+      "score_weight": 1.1,
+      "direction_tier": "high",
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "melee": 90.0,
+        "archgun": 90.0
+      }
+    },
+    "毒气伤害": {
+      "stat_key": "gas",
+      "en_name": "Gas",
+      "aliases": ["毒气伤害", "毒气", "gas", "gas damage", "gasdamage"],
+      "is_percent": true,
+      "positive_only": true,
+      "wm_slug": "gas",
+      "score_weight": 1.08,
+      "direction_tier": "medium",
+      "synergy_tag": "直出毒气",
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "melee": 90.0,
+        "archgun": 90.0
+      }
+    },
+    "爆炸伤害": {
+      "stat_key": "blast",
+      "en_name": "Blast",
+      "aliases": ["爆炸伤害", "爆炸", "blast", "blast damage", "blastdamage"],
+      "is_percent": true,
+      "positive_only": true,
+      "wm_slug": "blast",
+      "score_weight": 1.12,
+      "direction_tier": "high",
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0,
+        "melee": 90.0,
+        "archgun": 90.0
+      }
+    },
+    "弱点伤害": {
+      "stat_key": "weak_point_damage",
+      "en_name": "Weak Point Damage",
+      "aliases": [
+        "弱点伤害",
+        "弱点增伤",
+        "弱点倍率",
+        "爆头伤害",
+        "weakpointdamage",
+        "weak point damage",
+        "headshotdamage",
+        "headshot damage"
+      ],
+      "is_percent": true,
+      "wm_slug": "weak_point_damage",
+      "score_weight": 1.15,
+      "direction_tier": "high",
+      "synergy_tag": "弱点增伤",
+      "base_values": {
+        "rifle": 225.0,
+        "shotgun": 225.0,
+        "pistol": 225.0,
+        "archgun": 225.0
+      }
+    },
+    "弱点暴击几率": {
+      "stat_key": "weak_point_critical_chance",
+      "en_name": "Weak Point Critical Chance",
+      "aliases": [
+        "弱点暴击几率",
+        "弱点暴击率",
+        "爆头暴击几率",
+        "weakpointcriticalchance",
+        "weak point critical chance",
+        "weakpointcritchance"
+      ],
+      "is_percent": true,
+      "wm_slug": "weak_point_critical_chance",
+      "score_weight": 1.15,
+      "direction_tier": "high",
+      "synergy_tag": "弱点增伤",
+      "base_values": {
+        "rifle": 247.5,
+        "shotgun": 247.5,
+        "pistol": 247.5,
+        "archgun": 247.5
+      }
+    },
+    "弹药效率": {
+      "stat_key": "ammo_efficiency",
+      "en_name": "Ammo Efficiency",
+      "aliases": ["弹药效率", "ammoefficiency", "ammo efficiency"],
+      "is_percent": true,
+      "wm_slug": "ammo_efficiency",
+      "score_weight": 1.05,
+      "direction_tier": "medium",
+      "base_values": {
+        "rifle": 45.0,
+        "shotgun": 45.0,
+        "pistol": 45.0,
+        "archgun": 45.0
+      }
+    },
+    "收起武器时弹匣每秒自动装填": {
+      "stat_key": "magazine_reloaded_s_when_holstered",
+      "en_name": "Reload Holstered",
+      "aliases": ["收起武器时弹匣每秒自动装填", "收起自动装填", "magazinereloaded/swhenholstered"],
+      "is_percent": true,
+      "wm_slug": "magazine_reloaded_s_when_holstered",
+      "score_weight": 1.0,
+      "direction_tier": "medium",
+      "base_values": {
+        "rifle": 90.0,
+        "shotgun": 90.0,
+        "pistol": 90.0
+      }
+    },
+    "爆头暴击伤害": {
+      "stat_key": "weak_point_critical_damage",
+      "en_name": "Weak Point Critical Damage",
+      "aliases": [
+        "爆头暴击伤害",
+        "弱点暴击伤害",
+        "弱点暴伤",
+        "weakpointcriticaldamage",
+        "weak point critical damage",
+        "headshotcriticaldamage"
+      ],
+      "is_percent": true,
+      "wm_slug": null,
+      "score_weight": 1.2,
+      "direction_tier": "high",
+      "synergy_tag": "弱点增伤",
+      "base_values": {}
+    },
+    "超宏防护伤害": {
+      "stat_key": "overguard_damage",
+      "en_name": "Overguard Damage",
+      "aliases": [
+        "超宏防护伤害",
+        "对超宏防护伤害",
+        "对超宏防护的伤害",
+        "超宏增伤",
+        "overguarddamage",
+        "damage to overguard",
+        "damage vs overguard"
+      ],
+      "is_percent": true,
+      "wm_slug": null,
+      "score_weight": 1.05,
+      "direction_tier": "medium",
+      "base_values": {}
+    },
+    "融合增幅": {
+      "stat_key": "fusion_amplification",
+      "en_name": "Fusion Amplification",
+      "aliases": [
+        "融合增幅",
+        "融合威力",
+        "融合倍率",
+        "融合伤害",
+        "fusionamplification",
+        "fusion amplification",
+        "hybridamplification"
+      ],
+      "is_percent": true,
+      "wm_slug": null,
+      "score_weight": 1.15,
+      "direction_tier": "high",
+      "base_values": {}
+    },
+    "异常触发倍率": {
+      "stat_key": "status_multiplier",
+      "en_name": "Status Multiplier",
+      "aliases": [
+        "异常触发倍率",
+        "状态倍率",
+        "异常倍率",
+        "statusmultiplier",
+        "status multiplier"
+      ],
+      "is_percent": true,
+      "wm_slug": null,
+      "score_weight": 1.1,
+      "direction_tier": "high",
+      "base_values": {}
+    },
+    "近战重击范围": {
+      "stat_key": "heavy_attack_range",
+      "en_name": "Heavy Attack Range",
+      "aliases": [
+        "近战重击范围",
+        "重击范围",
+        "heavyattackrange",
+        "heavy attack range"
+      ],
+      "is_percent": false,
+      "wm_slug": null,
+      "score_weight": 1.0,
+      "direction_tier": "medium",
+      "base_values": {}
+    }
+  },
+  "hybrid_pairs": {
+    "暴击几率+暴击伤害": {
+      "display_zh": "融合双暴",
+      "display_en": "Hybrid Crit",
+      "scale_factor": 0.6,
+      "score_weight": 1.25,
+      "synergy_bonus": 14.0,
+      "tag": "融合双暴"
+    },
+    "伤害+多重射击": {
+      "display_zh": "融合基伤多重",
+      "display_en": "Hybrid DMG+MS",
+      "scale_factor": 0.6,
+      "score_weight": 1.2,
+      "synergy_bonus": 12.0,
+      "tag": "融合基伤多重"
+    },
+    "暴击几率+多重射击": {
+      "display_zh": "融合暴击多重",
+      "display_en": "Hybrid CC+MS",
+      "scale_factor": 0.6,
+      "score_weight": 1.2,
+      "synergy_bonus": 12.0,
+      "tag": "融合词条"
+    },
+    "暴击伤害+多重射击": {
+      "display_zh": "融合暴伤多重",
+      "display_en": "Hybrid CD+MS",
+      "scale_factor": 0.6,
+      "score_weight": 1.22,
+      "synergy_bonus": 12.0,
+      "tag": "融合词条"
+    },
+    "伤害+暴击几率": {
+      "display_zh": "融合基伤暴击",
+      "display_en": "Hybrid DMG+CC",
+      "scale_factor": 0.6,
+      "score_weight": 1.15,
+      "synergy_bonus": 10.0,
+      "tag": "融合词条"
+    },
+    "伤害+暴击伤害": {
+      "display_zh": "融合基伤暴伤",
+      "display_en": "Hybrid DMG+CD",
+      "scale_factor": 0.6,
+      "score_weight": 1.15,
+      "synergy_bonus": 10.0,
+      "tag": "融合词条"
+    },
+    "攻击速度+攻击范围": {
+      "display_zh": "融合攻速范围",
+      "display_en": "Hybrid AS+Range",
+      "scale_factor": 0.6,
+      "score_weight": 1.15,
+      "synergy_bonus": 10.0,
+      "tag": "融合词条"
+    },
+    "初始连击+暴击伤害": {
+      "display_zh": "融合重击暴伤",
+      "display_en": "Hybrid IC+CD",
+      "scale_factor": 0.6,
+      "score_weight": 1.2,
+      "synergy_bonus": 12.0,
+      "tag": "融合词条"
+    },
+    "触发几率+异常状态伤害": {
+      "display_zh": "融合异常增伤",
+      "display_en": "Hybrid Status",
+      "scale_factor": 0.6,
+      "score_weight": 1.12,
+      "synergy_bonus": 9.0,
+      "tag": "融合词条"
+    },
+    "冰冻伤害+毒素伤害": {
+      "display_zh": "融合直出病毒",
+      "display_en": "Hybrid Viral",
+      "scale_factor": 0.6,
+      "score_weight": 1.15,
+      "synergy_bonus": 10.0,
+      "tag": "直出病毒"
+    },
+    "电击伤害+毒素伤害": {
+      "display_zh": "融合直出腐蚀",
+      "display_en": "Hybrid Corrosive",
+      "scale_factor": 0.6,
+      "score_weight": 1.12,
+      "synergy_bonus": 9.0,
+      "tag": "直出腐蚀"
+    }
+  }
+}

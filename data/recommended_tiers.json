@@ -1,0 +1,837 @@
+{
+  "schema_version": 2,
+  "auto_save_wm_to_local": true,
+  "special_rules": {
+    "奏凯": {
+      "en_name": "Laetum",
+      "aliases": ["奏凯", "悦音", "Laetum"],
+      "archetypes": [
+        {
+          "id": "non_crit_devour",
+          "name_zh": "非暴吞噬流",
+          "name_en": "Non-Crit Devouring",
+          "positives": ["多重射击", "射速", "伤害", "毒素伤害", "火焰伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"],
+          "inverted_negatives": ["暴击几率"],
+          "conflict_positives": ["暴击几率"],
+          "conflict_hint_zh": "含 +暴击几率，与非暴吞噬流冲突，建议改走双暴进化流",
+          "conflict_hint_en": "+Crit Chance clashes with Non-Crit Devouring; consider Crit Evolution"
+        },
+        {
+          "id": "crit_evolution",
+          "name_zh": "双暴进化流",
+          "name_en": "Crit Evolution",
+          "positives": ["暴击几率", "暴击伤害", "多重射击", "射速"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"],
+          "inverted_negatives": [],
+          "conflict_positives": []
+        }
+      ]
+    },
+    "逐枭": {
+      "en_name": "Felarx",
+      "aliases": ["逐枭", "逐电", "Felarx"],
+      "archetypes": [
+        {
+          "id": "non_crit_devour",
+          "name_zh": "非暴吞噬流",
+          "name_en": "Non-Crit Devouring",
+          "positives": ["多重射击", "射速", "伤害", "毒素伤害", "火焰伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"],
+          "inverted_negatives": ["暴击几率"],
+          "conflict_positives": ["暴击几率"],
+          "conflict_hint_zh": "含 +暴击几率，与非暴吞噬流冲突，建议改走双暴进化流",
+          "conflict_hint_en": "+Crit Chance clashes with Non-Crit Devouring; consider Crit Evolution"
+        },
+        {
+          "id": "crit_evolution",
+          "name_zh": "双暴进化流",
+          "name_en": "Crit Evolution",
+          "positives": ["暴击几率", "暴击伤害", "多重射击", "射速"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"],
+          "inverted_negatives": [],
+          "conflict_positives": []
+        }
+      ]
+    },
+    "凤殁": {
+      "en_name": "Phenmor",
+      "aliases": ["凤殁", "凤凰", "Phenmor"],
+      "archetypes": [
+        {
+          "id": "non_crit_devour",
+          "name_zh": "非暴吞噬流",
+          "name_en": "Non-Crit Devouring",
+          "positives": ["多重射击", "射速", "伤害", "毒素伤害", "火焰伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"],
+          "inverted_negatives": ["暴击几率"],
+          "conflict_positives": ["暴击几率"],
+          "conflict_hint_zh": "含 +暴击几率，与非暴吞噬流冲突，建议改走双暴进化流",
+          "conflict_hint_en": "+Crit Chance clashes with Non-Crit Devouring; consider Crit Evolution"
+        },
+        {
+          "id": "crit_evolution",
+          "name_zh": "双暴进化流",
+          "name_en": "Crit Evolution",
+          "positives": ["暴击几率", "暴击伤害", "多重射击", "射速"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"],
+          "inverted_negatives": [],
+          "conflict_positives": []
+        }
+      ]
+    },
+    "陶瓷匕首": {
+      "en_name": "Ceramic Dagger",
+      "aliases": ["陶瓷匕首", "Ceramic Dagger"],
+      "archetypes": [
+        {
+          "id": "heavy_statstick",
+          "name_zh": "重击/替身特化流",
+          "name_en": "Heavy / Stat-Stick Incarnon",
+          "positives": ["初始连击", "暴击伤害", "伤害", "暴击几率"],
+          "negatives": ["对 Infested 伤害", "滑行攻击暴击几率", "触发几率", "处决伤害"],
+          "deprioritized_positives": ["攻击速度"]
+        }
+      ]
+    },
+    "执法者": {
+      "en_name": "Magistar",
+      "aliases": ["执法者", "圣洁 执法者", "执政官之怒", "Magistar", "Sancti Magistar"],
+      "archetypes": [
+        {
+          "id": "heavy_statstick",
+          "name_zh": "重击/替身特化流",
+          "name_en": "Heavy / Stat-Stick Incarnon",
+          "positives": ["初始连击", "暴击伤害", "伤害", "暴击几率"],
+          "negatives": ["对 Infested 伤害", "滑行攻击暴击几率", "触发几率", "处决伤害"],
+          "deprioritized_positives": ["攻击速度"]
+        }
+      ]
+    },
+    "清刚": {
+      "en_name": "Innodem",
+      "aliases": ["清刚", "灵化之刃", "Innodem"],
+      "archetypes": [
+        {
+          "id": "heavy_statstick",
+          "name_zh": "重击/替身特化流",
+          "name_en": "Heavy / Stat-Stick Incarnon",
+          "positives": ["初始连击", "暴击伤害", "伤害", "暴击几率"],
+          "negatives": ["对 Infested 伤害", "滑行攻击暴击几率", "触发几率", "处决伤害"],
+          "deprioritized_positives": ["攻击速度"]
+        }
+      ]
+    },
+    "托里德": {
+      "en_name": "Torid",
+      "aliases": ["托里德", "托理德", "Torid"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化双暴多重流",
+          "name_en": "Incarnon Crit/MS Meta",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "毒素伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害", "武器后坐力"]
+        }
+      ]
+    },
+    "毒囊双枪": {
+      "en_name": "Dual Toxocyst",
+      "aliases": ["毒囊双枪", "双子毒妇", "双子毒牙", "Dual Toxocyst"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化双暴多重流",
+          "name_en": "Incarnon Crit/MS Meta",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "毒素伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "伯斯顿": {
+      "en_name": "Burston",
+      "aliases": ["伯斯顿", "伯斯顿 Prime", "Burston", "Burston Prime"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化双暴多重流",
+          "name_en": "Incarnon Crit/MS Meta",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "毒素伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "拉特昂": {
+      "en_name": "Latron",
+      "aliases": ["拉特昂", "拉特昂 Prime", "拉特昂 亡魂", "Latron", "Latron Prime", "Latron Wraith"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化双暴多重流",
+          "name_en": "Incarnon Crit/MS Meta",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "毒素伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "斯特朗": {
+      "en_name": "Strun",
+      "aliases": ["斯特朗", "斯特朗 Prime", "斯特朗 亡魂", "Strun", "Strun Prime", "Strun Wraith"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化双暴多重流",
+          "name_en": "Incarnon Crit/MS Meta",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "毒素伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "雷克斯": {
+      "en_name": "Lex",
+      "aliases": ["雷克斯", "雷克斯 Prime", "盗贼", "Lex", "Lex Prime"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化双暴多重流",
+          "name_en": "Incarnon Crit/MS Meta",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "毒素伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    }
+  },
+  "weapons": {
+    "托里德": {
+      "positives": [
+        "暴击伤害",
+        "多重射击",
+        "暴击几率",
+        "伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "武器后坐力"
+      ],
+      "source": "builtin"
+    },
+    "伯斯顿": {
+      "positives": [
+        "暴击伤害",
+        "多重射击",
+        "暴击几率",
+        "射速"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "伯斯顿 Prime": {
+      "positives": [
+        "暴击伤害",
+        "多重射击",
+        "暴击几率",
+        "射速"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "拉特昂": {
+      "positives": [
+        "暴击伤害",
+        "多重射击",
+        "暴击几率",
+        "毒素伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "穿刺伤害"
+      ],
+      "source": "builtin"
+    },
+    "拉特昂 Prime": {
+      "positives": [
+        "暴击伤害",
+        "多重射击",
+        "暴击几率",
+        "毒素伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "穿刺伤害"
+      ],
+      "source": "builtin"
+    },
+    "布莱顿": {
+      "positives": [
+        "暴击伤害",
+        "多重射击",
+        "暴击几率",
+        "伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "米特尔": {
+      "positives": [
+        "暴击伤害",
+        "多重射击",
+        "暴击几率",
+        "射速"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "波尔托骨刺": {
+      "positives": [
+        "多重射击",
+        "暴击伤害",
+        "暴击几率",
+        "伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "哈尔武": {
+      "positives": [
+        "暴击伤害",
+        "暴击几率",
+        "多重射击",
+        "伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "赤毒·布拉玛": {
+      "positives": [
+        "暴击伤害",
+        "暴击几率",
+        "多重射击",
+        "伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "武器后坐力"
+      ],
+      "source": "builtin"
+    },
+    "冰凇": {
+      "positives": [
+        "多重射击",
+        "暴击伤害",
+        "暴击几率",
+        "伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "武器后坐力"
+      ],
+      "source": "builtin"
+    },
+    "信条·冰凇": {
+      "positives": [
+        "多重射击",
+        "暴击伤害",
+        "暴击几率",
+        "射速"
+      ],
+      "negatives": [
+        "变焦",
+        "武器后坐力"
+      ],
+      "source": "builtin"
+    },
+    "赤毒·沙皇": {
+      "positives": [
+        "暴击伤害",
+        "多重射击",
+        "暴击几率",
+        "伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "武器后坐力"
+      ],
+      "source": "builtin"
+    },
+    "绝路": {
+      "positives": [
+        "暴击伤害",
+        "暴击几率",
+        "多重射击",
+        "火焰伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "绝路 Prime": {
+      "positives": [
+        "暴击伤害",
+        "暴击几率",
+        "多重射击",
+        "火焰伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "月神": {
+      "positives": [
+        "暴击伤害",
+        "多重射击",
+        "暴击几率",
+        "毒素伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "迅发电浆炮": {
+      "positives": [
+        "暴击伤害",
+        "多重射击",
+        "暴击几率",
+        "伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "帕里斯": {
+      "positives": [
+        "暴击伤害",
+        "多重射击",
+        "暴击几率",
+        "伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "穿刺伤害"
+      ],
+      "source": "builtin"
+    },
+    "恐惧": {
+      "positives": [
+        "暴击伤害",
+        "多重射击",
+        "暴击几率",
+        "射速"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "娜塔": {
+      "positives": [
+        "暴击伤害",
+        "多重射击",
+        "暴击几率",
+        "射速"
+      ],
+      "negatives": [
+        "变焦",
+        "武器后坐力"
+      ],
+      "source": "builtin"
+    },
+    "伊格尼斯": {
+      "positives": [
+        "暴击伤害",
+        "多重射击",
+        "暴击几率",
+        "射速"
+      ],
+      "negatives": [
+        "变焦",
+        "武器后坐力"
+      ],
+      "source": "builtin"
+    },
+    "信条·弧电离子枪": {
+      "positives": [
+        "暴击伤害",
+        "多重射击",
+        "暴击几率",
+        "射速"
+      ],
+      "negatives": [
+        "变焦",
+        "武器后坐力"
+      ],
+      "source": "builtin"
+    },
+    "斯特朗": {
+      "positives": [
+        "多重射击",
+        "暴击伤害",
+        "暴击几率",
+        "触发几率"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "野猪": {
+      "positives": [
+        "多重射击",
+        "暴击伤害",
+        "暴击几率",
+        "射速"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "塞多": {
+      "positives": [
+        "多重射击",
+        "暴击伤害",
+        "暴击几率",
+        "伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "赤毒·海克": {
+      "positives": [
+        "多重射击",
+        "暴击伤害",
+        "暴击几率",
+        "装填速度"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "赤毒·努寇微波枪": {
+      "positives": [
+        "暴击伤害",
+        "多重射击",
+        "射速",
+        "伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "武器后坐力"
+      ],
+      "source": "builtin"
+    },
+    "信条·循环离子枪": {
+      "positives": [
+        "暴击伤害",
+        "多重射击",
+        "暴击几率",
+        "射速"
+      ],
+      "negatives": [
+        "变焦",
+        "武器后坐力"
+      ],
+      "source": "builtin"
+    },
+    "双子毒牙": {
+      "positives": [
+        "多重射击",
+        "暴击伤害",
+        "暴击几率",
+        "射速"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "毒囊双枪": {
+      "positives": [
+        "多重射击",
+        "暴击伤害",
+        "暴击几率",
+        "射速"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "雷克斯": {
+      "positives": [
+        "多重射击",
+        "暴击伤害",
+        "暴击几率",
+        "伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "盗贼": {
+      "positives": [
+        "多重射击",
+        "暴击伤害",
+        "暴击几率",
+        "伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "拉托": {
+      "positives": [
+        "多重射击",
+        "暴击伤害",
+        "暴击几率",
+        "伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "丧钟": {
+      "positives": [
+        "多重射击",
+        "暴击伤害",
+        "暴击几率",
+        "装填速度"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "墓指": {
+      "positives": [
+        "多重射击",
+        "暴击伤害",
+        "暴击几率",
+        "伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "孢射": {
+      "positives": [
+        "多重射击",
+        "暴击伤害",
+        "暴击几率",
+        "伤害"
+      ],
+      "negatives": [
+        "变焦",
+        "武器后坐力"
+      ],
+      "source": "builtin"
+    },
+    "战刃": {
+      "positives": [
+        "暴击几率",
+        "暴击伤害",
+        "伤害",
+        "初始连击"
+      ],
+      "negatives": [
+        "处决伤害",
+        "滑行攻击暴击几率"
+      ],
+      "source": "wm",
+      "weapon_slug": "glaive",
+      "wm_updated_at": "2026-11-24T10:01:41Z",
+      "wm_min_price": 24,
+      "wm_median_price": 39,
+      "wm_high_tier_median": 6000,
+      "wm_sample_count": 198
+    },
+    "战刃 Prime": {
+      "positives": [
+        "暴击伤害",
+        "暴击几率",
+        "初始连击",
+        "伤害"
+      ],
+      "negatives": [
+        "处决伤害",
+        "滑行攻击暴击几率"
+      ],
+      "source": "builtin"
+    },
+    "驱魔之刃": {
+      "positives": [
+        "暴击伤害",
+        "暴击几率",
+        "初始连击",
+        "电击伤害"
+      ],
+      "negatives": [
+        "处决伤害",
+        "滑行攻击暴击几率"
+      ],
+      "source": "builtin"
+    },
+    "瘟疫 克里帕丝": {
+      "positives": [
+        "暴击伤害",
+        "攻击速度",
+        "攻击范围",
+        "暴击几率"
+      ],
+      "negatives": [
+        "处决伤害",
+        "穿刺伤害"
+      ],
+      "source": "builtin"
+    },
+    "陶瓷匕首": {
+      "positives": [
+        "暴击伤害",
+        "暴击几率",
+        "初始连击",
+        "伤害"
+      ],
+      "negatives": [
+        "处决伤害",
+        "滑行攻击暴击几率"
+      ],
+      "source": "builtin"
+    },
+    "魔导": {
+      "positives": [
+        "暴击伤害",
+        "暴击几率",
+        "伤害",
+        "初始连击"
+      ],
+      "negatives": [
+        "处决伤害",
+        "滑行攻击暴击几率"
+      ],
+      "source": "builtin"
+    },
+    "憎恨": {
+      "positives": [
+        "暴击伤害",
+        "攻击速度",
+        "攻击范围",
+        "暴击几率"
+      ],
+      "negatives": [
+        "处决伤害",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "侍刃": {
+      "positives": [
+        "暴击伤害",
+        "攻击速度",
+        "攻击范围",
+        "电击伤害"
+      ],
+      "negatives": [
+        "处决伤害",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "关刀": {
+      "positives": [
+        "暴击伤害",
+        "攻击速度",
+        "攻击范围",
+        "暴击几率"
+      ],
+      "negatives": [
+        "处决伤害",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "双持灵液": {
+      "positives": [
+        "暴击伤害",
+        "攻击速度",
+        "攻击范围",
+        "电击伤害"
+      ],
+      "negatives": [
+        "处决伤害",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "格拉姆": {
+      "positives": [
+        "暴击伤害",
+        "攻击速度",
+        "攻击范围",
+        "暴击几率"
+      ],
+      "negatives": [
+        "处决伤害",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    },
+    "皇家拐刃": {
+      "positives": [
+        "暴击伤害",
+        "攻击速度",
+        "攻击范围",
+        "暴击几率"
+      ],
+      "negatives": [
+        "处决伤害",
+        "冲击伤害"
+      ],
+      "source": "builtin"
+    }
+  },
+  "_comment": "本地内置主流武器紫卡推荐词条库。平时 F8 监控零网络请求，直接匹配本表（未收录武器按武器暴击/触发面板自动推导）；按下 F9 主动拉取 WM 数据后，若 auto_save_wm_to_local=true 会自动更新对应武器条目。"
+}
