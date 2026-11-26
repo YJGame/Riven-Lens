@@ -104,7 +104,7 @@ def parse_hotkey_string(raw: str) -> ParsedHotkey:
                 mods |= MOD_CONTROL
                 mod_names.append("Ctrl")
                 kb_mods.append("ctrl")
-        elif up == "ALT":
+        elif up in ("ALT", "OPTION", "OPT"):
             if not (mods & MOD_ALT):
                 mods |= MOD_ALT
                 mod_names.append("Alt")
@@ -114,11 +114,11 @@ def parse_hotkey_string(raw: str) -> ParsedHotkey:
                 mods |= MOD_SHIFT
                 mod_names.append("Shift")
                 kb_mods.append("shift")
-        elif up in ("WIN", "META", "SUPER"):
+        elif up in ("WIN", "META", "SUPER", "CMD", "COMMAND"):
             if not (mods & MOD_WIN):
                 mods |= MOD_WIN
-                mod_names.append("Win")
-                kb_mods.append("windows")
+                mod_names.append("Cmd" if up in ("CMD", "COMMAND") else "Win")
+                kb_mods.append("cmd" if up in ("CMD", "COMMAND") else "windows")
         else:
             if main_key is not None:
                 raise ValueError(f"不支持多个主键组合: '{raw}'")
@@ -362,6 +362,172 @@ class _EvdevHotkeyLoop(QThread):
                     pass
 
 
+# macOS Quartz virtual keycode (HIToolbox/Events.h) -> canonical key name matching `_KEY_TO_VK`.
+# Using physical keycodes ensures combos like `Ctrl+Alt+D` work even when Option transforms `.char` (e.g. `∂`).
+_MACOS_VK_TO_CANON: Dict[int, str] = {
+    0x00: "A", 0x0B: "B", 0x08: "C", 0x02: "D", 0x0E: "E", 0x03: "F", 0x05: "G",
+    0x04: "H", 0x22: "I", 0x26: "J", 0x28: "K", 0x25: "L", 0x2E: "M", 0x2D: "N",
+    0x1F: "O", 0x23: "P", 0x0C: "Q", 0x0F: "R", 0x01: "S", 0x11: "T", 0x20: "U",
+    0x09: "V", 0x0D: "W", 0x07: "X", 0x10: "Y", 0x06: "Z",
+    0x1D: "0", 0x12: "1", 0x13: "2", 0x14: "3", 0x15: "4",
+    0x17: "5", 0x16: "6", 0x1A: "7", 0x1C: "8", 0x19: "9",
+    0x7A: "F1", 0x78: "F2", 0x63: "F3", 0x76: "F4", 0x60: "F5", 0x61: "F6",
+    0x62: "F7", 0x64: "F8", 0x65: "F9", 0x6D: "F10", 0x67: "F11", 0x6F: "F12",
+    0x35: "ESC", 0x30: "TAB", 0x31: "SPACE", 0x75: "DELETE",
+    0x73: "HOME", 0x77: "END", 0x74: "PAGEUP", 0x79: "PAGEDOWN",
+    0x32: "`", 0x1B: "-", 0x18: "=", 0x21: "[", 0x1E: "]",
+}
+
+_PYNPUT_SPECIAL_TO_CANON: Dict[str, str] = {
+    **{f"f{i}": f"F{i}" for i in range(1, 13)},
+    "esc": "ESC",
+    "tab": "TAB",
+    "space": "SPACE",
+    "insert": "INSERT",
+    "delete": "DELETE",
+    "home": "HOME",
+    "end": "END",
+    "page_up": "PAGEUP",
+    "page_down": "PAGEDOWN",
+    "pause": "PAUSE",
+}
+
+
+def _pynput_key_to_mod_bit(key: object) -> int:
+    name = getattr(key, "name", None)
+    if not isinstance(name, str):
+        return 0
+    low = name.lower()
+    if low in ("ctrl", "ctrl_l", "ctrl_r"):
+        return MOD_CONTROL
+    if low in ("alt", "alt_l", "alt_r", "alt_gr"):
+        return MOD_ALT
+    if low in ("shift", "shift_l", "shift_r"):
+        return MOD_SHIFT
+    if low in ("cmd", "cmd_l", "cmd_r"):
+        return MOD_WIN
+    return 0
+
+
+def _pynput_key_to_win_vk(key: object) -> Optional[int]:
+    """Map a `pynput` Key/KeyCode (macOS Quartz) to our canonical Win32 VK code."""
+    name = getattr(key, "name", None)
+    if isinstance(name, str):
+        canon = _PYNPUT_SPECIAL_TO_CANON.get(name.lower())
+        if canon and canon in _KEY_TO_VK:
+            return _KEY_TO_VK[canon][0]
+
+    vk = getattr(key, "vk", None)
+    if isinstance(vk, int) and vk in _MACOS_VK_TO_CANON:
+        canon = _MACOS_VK_TO_CANON[vk]
+        if canon in _KEY_TO_VK:
+            return _KEY_TO_VK[canon][0]
+
+    ch = getattr(key, "char", None)
+    if isinstance(ch, str) and len(ch) == 1:
+        up = ch.upper()
+        if up in _KEY_TO_VK:
+            return _KEY_TO_VK[up][0]
+    return None
+
+
+class _MacOSHotkeyLoop(QThread):
+    """Non-suppressing macOS global hotkey listener via `pynput` (Quartz CGEventTap).
+
+    Never suppresses/swallows keystrokes so Warframe (CrossOver/Whisky/GeForce NOW/Parallels)
+    always receives ESC and all game keys normally. Requires macOS Accessibility or Input
+    Monitoring permission for global keystrokes outside our own windows.
+    """
+
+    hotkey_fired = pyqtSignal(int, str)  # hotkey_id, source
+
+    def __init__(self, bindings: Dict[int, ParsedHotkey]) -> None:
+        super().__init__()
+        self._bindings = dict(bindings)
+        self._stop_event = threading.Event()
+        self._listener: Optional[object] = None
+        self.started_ok = False
+        self.error_reason = ""
+        self._ready = False
+
+    def stop_loop(self) -> None:
+        self._stop_event.set()
+        listener = self._listener
+        if listener is not None:
+            try:
+                listener.stop()  # type: ignore[attr-defined]
+            except Exception:
+                pass
+
+    def wait_until_registered(self, timeout_sec: float = 0.8) -> None:
+        deadline = time.monotonic() + timeout_sec
+        while not self._ready and time.monotonic() < deadline:
+            time.sleep(0.01)
+
+    def run(self) -> None:
+        if sys.platform != "darwin":
+            self._ready = True
+            return
+        try:
+            from pynput import keyboard as pynput_kb  # type: ignore[import-not-found]
+        except Exception as exc:
+            self.error_reason = f"pynput not installed ({exc})"
+            self._ready = True
+            return
+
+        combo_to_id: Dict[Tuple[int, int], int] = {
+            (p.win_mods, p.win_vk): hk_id for hk_id, p in self._bindings.items()
+        }
+        pressed_mods: Set[int] = set()
+        last_fire_ts: Dict[int, float] = {}
+
+        def _on_press(key: object) -> None:
+            if self._stop_event.is_set():
+                return
+            mod_bit = _pynput_key_to_mod_bit(key)
+            if mod_bit:
+                pressed_mods.add(mod_bit)
+                return
+            vk = _pynput_key_to_win_vk(key)
+            if vk is None:
+                return
+            cur_mods = 0
+            for mb in pressed_mods:
+                cur_mods |= mb
+            hit_id = combo_to_id.get((cur_mods, vk))
+            if hit_id is not None:
+                now = time.monotonic()
+                if now - last_fire_ts.get(hit_id, 0.0) >= 0.18:
+                    last_fire_ts[hit_id] = now
+                    self.hotkey_fired.emit(hit_id, "macOS Quartz")
+
+        def _on_release(key: object) -> None:
+            mod_bit = _pynput_key_to_mod_bit(key)
+            if mod_bit:
+                pressed_mods.discard(mod_bit)
+
+        try:
+            listener = pynput_kb.Listener(on_press=_on_press, on_release=_on_release)
+            self._listener = listener
+            listener.start()
+            self.started_ok = True
+            self._ready = True
+            while not self._stop_event.wait(timeout=0.2):
+                if not listener.is_alive():
+                    break
+        except Exception as exc:
+            self.error_reason = f"macOS Quartz listener failed ({exc})"
+            self._ready = True
+        finally:
+            listener = self._listener
+            self._listener = None
+            if listener is not None:
+                try:
+                    listener.stop()  # type: ignore[attr-defined]
+                except Exception:
+                    pass
+
+
 _ACTION_NAME_TO_ID: Dict[str, int] = {
     "toggle": HOTKEY_ID_TOGGLE,
     "wm": HOTKEY_ID_WM,
@@ -387,6 +553,7 @@ class DynamicHotkeyManager(QObject):
         self._log = logger or (lambda _msg: None)
         self._win_thread: Optional[_Win32HotkeyLoop] = None
         self._evdev_thread: Optional[_EvdevHotkeyLoop] = None
+        self._macos_thread: Optional[_MacOSHotkeyLoop] = None
         self._kb_handles: List[object] = []
         self.active_toggle: Optional[ParsedHotkey] = None
         self.active_wm: Optional[ParsedHotkey] = None
@@ -394,6 +561,7 @@ class DynamicHotkeyManager(QObject):
         self.active_open_panel: Optional[ParsedHotkey] = None
         self._hotkeys_locked: bool = False
         self.linux_hotkey_backend: str = ""
+        self.macos_hotkey_backend: str = ""
 
     @property
     def hotkeys_locked(self) -> bool:
@@ -417,6 +585,11 @@ class DynamicHotkeyManager(QObject):
             self._evdev_thread.stop_loop()
             self._evdev_thread.wait(1000)
             self._evdev_thread = None
+
+        if self._macos_thread is not None:
+            self._macos_thread.stop_loop()
+            self._macos_thread.wait(1000)
+            self._macos_thread = None
 
         if self._kb_handles:
             try:
@@ -480,6 +653,37 @@ class DynamicHotkeyManager(QObject):
 
         p_lock = parse_hotkey_string(DEFAULT_LOCK_HOTKEY)
         p_export = parse_hotkey_string(DEFAULT_EXPORT_HOTKEY)
+
+        # ---- macOS (Apple Silicon & Intel): non-suppressing Quartz `pynput` + UNIX IPC ----
+        if sys.platform == "darwin":
+            mac_bindings: Dict[int, ParsedHotkey] = {
+                HOTKEY_ID_TOGGLE: p_toggle,
+                HOTKEY_ID_WM: p_wm,
+                HOTKEY_ID_HIDE: p_hide,
+                HOTKEY_ID_OPEN_PANEL: p_open_panel,
+                HOTKEY_ID_LOCK: p_lock,
+                HOTKEY_ID_EXPORT: p_export,
+            }
+            mac_thread = _MacOSHotkeyLoop(mac_bindings)
+            mac_thread.hotkey_fired.connect(self._on_win32_hotkey)
+            self._macos_thread = mac_thread
+            mac_thread.start()
+            mac_thread.wait_until_registered(0.8)
+            if mac_thread.started_ok:
+                self.macos_hotkey_backend = "pynput+ipc"
+                self._log(
+                    f"macOS Quartz global hotkeys active (non-suppressing): "
+                    f"{p_toggle.display} / {p_wm.display} / {p_hide.display} / {p_open_panel.display}"
+                )
+            else:
+                self._macos_thread = None
+                self.macos_hotkey_backend = "ipc_only"
+                self._log(
+                    f"macOS Quartz listener unavailable ({mac_thread.error_reason}); "
+                    "global hotkeys available via IPC (`--trigger toggle|wm|hide|open_panel`)."
+                )
+            report.ok = True
+            return report
 
         # ---- Linux (Wayland & X11): use non-suppressing evdev + UNIX IPC trigger server ----
         if sys.platform != "win32":

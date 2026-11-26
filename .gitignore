@@ -1,6 +1,8 @@
 # Virtual environments
 .venv/
 .venv_build/
+.venv_linux/
+.venv_macos/
 venv/
 env/
 
@@ -8,6 +10,8 @@ env/
 build/
 dist/
 dist_latest/
+dist_linux/
+dist_macos/
 release/
 
 # Local debug outputs, screenshots & logs

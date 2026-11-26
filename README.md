@@ -1,7 +1,7 @@
 # 裂罅透镜 (Riven Lens)
 
 **裂罅透镜 (Riven Lens)** 是一款面向《星际战甲》（Warframe）的**纯视觉 OCR 紫卡估价与虚空遗物（开核桃）实时悬浮窗工具**。  
-全程仅基于屏幕画面识别（**零内存读取、零游戏注入**），支持 **Windows** 与 **Linux Wayland**(未测试)。
+全程仅基于屏幕画面识别（**零内存读取、零游戏注入**），支持 **Windows**、**macOS (Apple Silicon & Intel)**(未测试) 与 **Linux Wayland**(未测试)。
 
 本程序使用antigravity,全AI生成! 
 ---
@@ -64,6 +64,14 @@ python main.py
 
 # 2. 生成自解压安装包 (.exe) 与绿色压缩包 (.zip) 到 release\
 powershell -NoProfile -ExecutionPolicy Bypass -File installer\build_windows_release.ps1
+```
+
+### macOS (Apple Silicon & Intel)
+
+详见 [macos/README_MACOS.md](macos/README_MACOS.md)，一键编译 `.app` 与 `.dmg` 安装镜像：
+
+```bash
+bash macos/build_macos.sh
 ```
 
 ### Linux (Wayland)

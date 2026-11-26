@@ -1327,6 +1327,18 @@ class RivenOverlayWindow(QWidget):
         if self.windowHandle() is not None:
             self.windowHandle().setFlag(Qt.WindowType.WindowTransparentForInput, click_through)
         self._apply_win32_exstyle(click_through=click_through)
+        self._apply_macos_style(click_through=click_through)
+
+    def _apply_macos_style(self, click_through: bool) -> None:
+        """Apply native macOS NSWindow overlay flags (non-hiding on deactivate, Space-wide, click-through)."""
+        if sys.platform != "darwin":
+            return
+        try:
+            from src.macos_support import apply_macos_overlay_window_style
+
+            apply_macos_overlay_window_style(int(self.winId()), click_through=click_through)
+        except Exception:
+            pass
 
     def _apply_win32_exstyle(self, click_through: bool) -> None:
         """Immediately update Win32 WS_EX_TRANSPARENT so click-through switches cleanly."""
@@ -1363,9 +1375,12 @@ class RivenOverlayWindow(QWidget):
             pass
 
     def force_topmost(self) -> None:
-        """Enforce Win32 HWND_TOPMOST without stealing focus from Borderless Fullscreen games."""
+        """Enforce topmost overlay stacking without stealing focus from Borderless Fullscreen games."""
         self.show()
         self.raise_()
+        if sys.platform == "darwin":
+            self._apply_macos_style(click_through=self._click_through)
+            return
         if sys.platform == "win32":
             try:
                 hwnd = int(self.winId())

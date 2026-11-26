@@ -411,7 +411,7 @@ def is_page_exited(
 
 
 class ScreenCapturer:
-    """High-speed screen capture and local screenshot loader (Windows/X11 `mss` + Linux Wayland)."""
+    """High-speed screen capture and local screenshot loader (Windows/macOS/X11 `mss` + Wayland + macOS `screencapture` fallback)."""
 
     def __init__(self, monitor_index: int = 1) -> None:
         """Initialize capturer.
@@ -421,6 +421,8 @@ class ScreenCapturer:
         """
         self.monitor_index = monitor_index
         self._wayland_capturer = None
+        self._macos_capturer = None
+        self._prefer_macos_screencapture: Optional[bool] = None
 
     def _get_wayland_capturer(self):
         from src.wayland_support import WaylandScreenCapturer, is_linux_wayland
@@ -433,6 +435,55 @@ class ScreenCapturer:
                 return None
             self._wayland_capturer = wl
         return self._wayland_capturer
+
+    def _get_macos_fallback_capturer(self):
+        from src.macos_support import MacOSScreenCapturer, detect_macos_capture_backend, is_macos
+
+        if not is_macos():
+            return None
+        if self._prefer_macos_screencapture is None:
+            self._prefer_macos_screencapture = detect_macos_capture_backend() == "screencapture"
+        if self._macos_capturer is None:
+            self._macos_capturer = MacOSScreenCapturer()
+        return self._macos_capturer
+
+    def _use_macos_screencapture_directly(self) -> bool:
+        cap = self._get_macos_fallback_capturer()
+        return bool(cap is not None and self._prefer_macos_screencapture and cap.is_available)
+
+    def _capture_mode_regions_via_macos_cli(
+        self,
+        mode_name: str,
+        mgr: object,
+        idx: int,
+    ) -> Tuple[Dict[str, np.ndarray], Dict[str, int]]:
+        mac = self._get_macos_fallback_capturer()
+        if mac is None:
+            raise RuntimeError("macOS screencapture backend unavailable.")
+        full_bgr, actual_mon = mac.grab_monitor_full(monitor_index=idx)
+        mon_w = int(actual_mon.width)
+        mon_h = int(actual_mon.height)
+        mode_regions = mgr.get_mode_regions(mode_name, mon_w, mon_h)  # type: ignore[attr-defined]
+        crops: Dict[str, np.ndarray] = {}
+        region_ratios: Dict[str, Tuple[float, float, float, float]] = {}
+        for box_key, reg in mode_regions.items():
+            cl = reg.clamp(mon_w, mon_h)
+            crops[box_key] = full_bgr[cl.top : cl.top + cl.height, cl.left : cl.left + cl.width].copy()
+            if mon_w > 0 and mon_h > 0:
+                region_ratios[box_key] = (
+                    float(cl.left) / float(mon_w),
+                    float(cl.top) / float(mon_h),
+                    float(cl.width) / float(mon_w),
+                    float(cl.height) / float(mon_h),
+                )
+        meta = {
+            "monitor_index": idx,
+            "monitor_width": mon_w,
+            "monitor_height": mon_h,
+            "mode": mode_name,
+            "region_ratios": region_ratios,
+        }
+        return crops, meta
 
     def get_monitor_info(self, monitor_index: Optional[int] = None) -> Dict[str, int]:
         """Return target monitor geometry (`left`, `top`, `width`, `height`)."""
@@ -502,26 +553,59 @@ class ScreenCapturer:
                 "capture_height": int(bgr.shape[0]),
             }
             return bgr, meta
-        with mss.mss() as sct:
-            if idx < 0 or idx >= len(sct.monitors):
-                raise ValueError(
-                    f"Monitor index {idx} out of range (available: 0..{len(sct.monitors) - 1})."
-                )
-            mon = sct.monitors[idx]
-            clamped = region.clamp(mon["width"], mon["height"])
-            grab_box = clamped.to_mss_dict(monitor_left=mon["left"], monitor_top=mon["top"])
-            frame = np.asarray(sct.grab(grab_box), dtype=np.uint8)
-            bgr = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
-            meta = {
+        if self._use_macos_screencapture_directly():
+            mac = self._get_macos_fallback_capturer()
+            assert mac is not None
+            full_bgr, actual_mon = mac.grab_monitor_full(monitor_index=idx)
+            clamped = region.clamp(actual_mon.width, actual_mon.height)
+            bgr = full_bgr[clamped.top : clamped.top + clamped.height, clamped.left : clamped.left + clamped.width].copy()
+            return bgr, {
                 "monitor_index": idx,
-                "monitor_width": mon["width"],
-                "monitor_height": mon["height"],
-                "capture_left": grab_box["left"],
-                "capture_top": grab_box["top"],
-                "capture_width": grab_box["width"],
-                "capture_height": grab_box["height"],
+                "monitor_width": actual_mon.width,
+                "monitor_height": actual_mon.height,
+                "capture_left": actual_mon.left + clamped.left,
+                "capture_top": actual_mon.top + clamped.top,
+                "capture_width": int(bgr.shape[1]),
+                "capture_height": int(bgr.shape[0]),
             }
-            return bgr, meta
+        try:
+            with mss.mss() as sct:
+                if idx < 0 or idx >= len(sct.monitors):
+                    raise ValueError(
+                        f"Monitor index {idx} out of range (available: 0..{len(sct.monitors) - 1})."
+                    )
+                mon = sct.monitors[idx]
+                clamped = region.clamp(mon["width"], mon["height"])
+                grab_box = clamped.to_mss_dict(monitor_left=mon["left"], monitor_top=mon["top"])
+                frame = np.asarray(sct.grab(grab_box), dtype=np.uint8)
+                bgr = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
+                meta = {
+                    "monitor_index": idx,
+                    "monitor_width": mon["width"],
+                    "monitor_height": mon["height"],
+                    "capture_left": grab_box["left"],
+                    "capture_top": grab_box["top"],
+                    "capture_width": grab_box["width"],
+                    "capture_height": grab_box["height"],
+                }
+                return bgr, meta
+        except Exception:
+            mac = self._get_macos_fallback_capturer()
+            if mac is not None and mac.is_available:
+                self._prefer_macos_screencapture = True
+                full_bgr, actual_mon = mac.grab_monitor_full(monitor_index=idx)
+                clamped = region.clamp(actual_mon.width, actual_mon.height)
+                bgr = full_bgr[clamped.top : clamped.top + clamped.height, clamped.left : clamped.left + clamped.width].copy()
+                return bgr, {
+                    "monitor_index": idx,
+                    "monitor_width": actual_mon.width,
+                    "monitor_height": actual_mon.height,
+                    "capture_left": actual_mon.left + clamped.left,
+                    "capture_top": actual_mon.top + clamped.top,
+                    "capture_width": int(bgr.shape[1]),
+                    "capture_height": int(bgr.shape[0]),
+                }
+            raise
 
     def capture_mode_regions(
         self,
@@ -565,36 +649,45 @@ class ScreenCapturer:
                 "region_ratios": region_ratios,
             }
             return crops, meta
-        with mss.mss() as sct:
-            if idx < 0 or idx >= len(sct.monitors):
-                raise ValueError(
-                    f"Monitor index {idx} out of range (available: 0..{len(sct.monitors) - 1})."
-                )
-            mon = sct.monitors[idx]
-            mon_w = int(mon["width"])
-            mon_h = int(mon["height"])
-            mode_regions = mgr.get_mode_regions(mode_name, mon_w, mon_h)  # type: ignore[attr-defined]
-            crops: Dict[str, np.ndarray] = {}
-            region_ratios: Dict[str, Tuple[float, float, float, float]] = {}
-            for box_key, reg in mode_regions.items():
-                grab_box = reg.to_mss_dict(monitor_left=mon["left"], monitor_top=mon["top"])
-                frame = np.asarray(sct.grab(grab_box), dtype=np.uint8)
-                crops[box_key] = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
-                if mon_w > 0 and mon_h > 0:
-                    region_ratios[box_key] = (
-                        float(reg.left) / float(mon_w),
-                        float(reg.top) / float(mon_h),
-                        float(reg.width) / float(mon_w),
-                        float(reg.height) / float(mon_h),
+        if self._use_macos_screencapture_directly():
+            return self._capture_mode_regions_via_macos_cli(mode_name, mgr, idx)
+        try:
+            with mss.mss() as sct:
+                if idx < 0 or idx >= len(sct.monitors):
+                    raise ValueError(
+                        f"Monitor index {idx} out of range (available: 0..{len(sct.monitors) - 1})."
                     )
-            meta = {
-                "monitor_index": idx,
-                "monitor_width": mon_w,
-                "monitor_height": mon_h,
-                "mode": mode_name,
-                "region_ratios": region_ratios,
-            }
-            return crops, meta
+                mon = sct.monitors[idx]
+                mon_w = int(mon["width"])
+                mon_h = int(mon["height"])
+                mode_regions = mgr.get_mode_regions(mode_name, mon_w, mon_h)  # type: ignore[attr-defined]
+                crops: Dict[str, np.ndarray] = {}
+                region_ratios: Dict[str, Tuple[float, float, float, float]] = {}
+                for box_key, reg in mode_regions.items():
+                    grab_box = reg.to_mss_dict(monitor_left=mon["left"], monitor_top=mon["top"])
+                    frame = np.asarray(sct.grab(grab_box), dtype=np.uint8)
+                    crops[box_key] = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
+                    if mon_w > 0 and mon_h > 0:
+                        region_ratios[box_key] = (
+                            float(reg.left) / float(mon_w),
+                            float(reg.top) / float(mon_h),
+                            float(reg.width) / float(mon_w),
+                            float(reg.height) / float(mon_h),
+                        )
+                meta = {
+                    "monitor_index": idx,
+                    "monitor_width": mon_w,
+                    "monitor_height": mon_h,
+                    "mode": mode_name,
+                    "region_ratios": region_ratios,
+                }
+                return crops, meta
+        except Exception:
+            mac = self._get_macos_fallback_capturer()
+            if mac is not None and mac.is_available:
+                self._prefer_macos_screencapture = True
+                return self._capture_mode_regions_via_macos_cli(mode_name, mgr, idx)
+            raise
 
     def capture_screen(
         self,

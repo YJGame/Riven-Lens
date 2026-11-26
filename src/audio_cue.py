@@ -231,6 +231,19 @@ class AudioCuePlayer:
                 )
                 return
 
+            if sys.platform == "darwin":
+                player = shutil.which("afplay") or "/usr/bin/afplay"
+                if not player:
+                    return
+                subprocess.run(
+                    [player, str(wav_path)],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    timeout=3,
+                    check=False,
+                )
+                return
+
             # Linux / POSIX fallback via PipeWire (`pw-play`), PulseAudio (`paplay`), or ALSA (`aplay`)
             player = shutil.which("pw-play") or shutil.which("paplay") or shutil.which("aplay")
             if not player:

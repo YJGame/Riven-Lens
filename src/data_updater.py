@@ -31,11 +31,14 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 
 
 def get_data_dir() -> Path:
-    """Resolve writable `data/` directory cleanly on Windows and Linux (source & frozen)."""
+    """Resolve writable `data/` directory cleanly on Windows, macOS, and Linux (source & frozen)."""
     if sys.platform != "win32":
-        # On Linux (especially read-only AppImage / /opt installs), persist mutable caches & configs
-        # under ~/.config/WarframeRivenOverlay/data and seed bundled baseline JSONs if missing.
-        cfg_data = Path.home() / ".config" / "WarframeRivenOverlay" / "data"
+        # On macOS (.app bundle) and Linux (AppImage / /opt), persist mutable caches & configs
+        # outside read-only app bundles and seed bundled baseline JSONs if missing.
+        if sys.platform == "darwin":
+            cfg_data = Path.home() / "Library" / "Application Support" / "WarframeRivenOverlay" / "data"
+        else:
+            cfg_data = Path.home() / ".config" / "WarframeRivenOverlay" / "data"
         meipass = getattr(sys, "_MEIPASS", None)
         bundled_dir = (
             Path(meipass) / "data"

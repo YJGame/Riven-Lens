@@ -27,7 +27,7 @@ ALLOWED_WINDOW_TITLE_KEYWORDS = (
 
 
 def get_foreground_window_title() -> str:
-    """Return the title of the currently focused OS window (Windows & Linux safe)."""
+    """Return the title of the currently focused OS window (Windows, macOS & Linux safe)."""
     try:
         if sys.platform == "win32":
             user32 = ctypes.windll.user32
@@ -40,6 +40,14 @@ def get_foreground_window_title() -> str:
             buf = ctypes.create_unicode_buffer(length + 1)
             user32.GetWindowTextW(hwnd, buf, length + 1)
             return buf.value.strip()
+
+        if sys.platform == "darwin":
+            from src.macos_support import get_macos_foreground_app_and_title
+
+            mac_title, mac_supported = get_macos_foreground_app_and_title()
+            if mac_supported:
+                return mac_title
+            return ""
 
         # Linux Wayland: query native compositor active-window API first
         from src.wayland_support import get_wayland_foreground_title, is_linux_wayland
@@ -87,17 +95,28 @@ def get_foreground_window_title() -> str:
 
 
 def is_overlay_allowed_for_title(title: str) -> bool:
-    """Return True if `title` belongs to Warframe or our own tool UI."""
+    """Return True if `title` belongs to Warframe, macOS Warframe hosts, or our own tool UI."""
     low = (title or "").strip().lower()
     if not low:
         return False
-    return any(kw in low for kw in ALLOWED_WINDOW_TITLE_KEYWORDS)
+    if any(kw in low for kw in ALLOWED_WINDOW_TITLE_KEYWORDS):
+        return True
+    if sys.platform == "darwin":
+        from src.macos_support import MACOS_WARFRAME_HOST_KEYWORDS
+
+        return any(kw in low for kw in MACOS_WARFRAME_HOST_KEYWORDS)
+    return False
 
 
 def is_focus_query_supported() -> bool:
-    """Return False on locked-down Wayland compositors (e.g. stock GNOME) where focus cannot be queried."""
+    """Return False when active-window queries are unavailable (e.g. locked-down Wayland or denied macOS)."""
     if sys.platform == "win32":
         return True
+    if sys.platform == "darwin":
+        from src.macos_support import get_macos_foreground_app_and_title
+
+        _, mac_supported = get_macos_foreground_app_and_title()
+        return mac_supported
     from src.wayland_support import get_wayland_foreground_title, is_linux_wayland
 
     if is_linux_wayland():

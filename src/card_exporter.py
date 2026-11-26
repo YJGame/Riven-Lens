@@ -47,7 +47,7 @@ class ExportedCardResult:
 
 
 def resolve_desktop_dir() -> Path:
-    """Resolve the user's Desktop directory cross-platform (Windows & Linux XDG)."""
+    """Resolve the user's Desktop directory cross-platform (Windows, macOS & Linux XDG)."""
     if sys.platform == "win32":
         # Prefer USERPROFILE/Desktop (handles localized Desktop folders & OneDrive fallback)
         candidates = [
@@ -60,6 +60,9 @@ def resolve_desktop_dir() -> Path:
         for cand in candidates:
             if cand.is_dir():
                 return cand
+        return Path.home() / "Desktop"
+
+    if sys.platform == "darwin":
         return Path.home() / "Desktop"
 
     # Linux / POSIX XDG user-dirs.dirs

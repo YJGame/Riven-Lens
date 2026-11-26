@@ -63,6 +63,8 @@ def get_ocr_models_dir() -> Path:
         from src.data_updater import get_data_dir
 
         return get_data_dir() / "ocr_models"
+    if sys.platform == "darwin":
+        return Path.home() / "Library" / "Application Support" / "WarframeRivenOverlay" / "ocr_models"
     return Path.home() / ".config" / "WarframeRivenOverlay" / "ocr_models"
 
 

@@ -591,12 +591,27 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
             "在此环境下无法显示悬浮窗或接收你的键盘 F8 按键。请在本机资源管理器中双击 `启动悬浮窗_管理员.bat` 或在自己的 PowerShell 窗口中运行。",
             flush=True,
         )
-    if not admin:
+    if sys.platform == "win32" and not admin:
         print(
             "[WARNING] 当前终端未以管理员身份运行。如果《星际战甲》或 WeGame 启动器以管理员权限运行，"
             "Windows UIPI 可能会拦截按键监听或悬浮窗置顶；若游戏内按 F8 无响应，请双击 `启动悬浮窗_管理员.bat` 以管理员身份运行。",
             flush=True,
         )
+    elif sys.platform == "darwin":
+        from src.macos_support import check_macos_permissions
+
+        perm = check_macos_permissions()
+        _debug_log(
+            f"macOS runtime: {perm.macos_summary}, "
+            f"screen_recording={perm.screen_recording}, accessibility={perm.accessibility}"
+        )
+        if not perm.all_granted:
+            missing_txt = "；".join(perm.missing_items_zh())
+            print(
+                f"[WARNING] macOS 权限未完整授予：{missing_txt}。"
+                "请打开「系统设置 -> 隐私与安全性」勾选允许 裂罅透镜 / 终端，然后重新启动软件。",
+                flush=True,
+            )
 
     QApplication.setHighDpiScaleFactorRoundingPolicy(
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
@@ -1756,6 +1771,14 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
                 f"Linux Wayland session detected: compositor={detect_wayland_compositor()}, "
                 f"capture_backend={detect_wayland_capture_backend()}, "
                 f"hotkey_backend={hotkey_manager.linux_hotkey_backend}"
+            )
+        elif sys.platform == "darwin":
+            from src.macos_support import detect_macos_capture_backend, get_macos_system_summary
+
+            _debug_log(
+                f"macOS session detected: {get_macos_system_summary()}, "
+                f"capture_backend={detect_macos_capture_backend()}, "
+                f"hotkey_backend={hotkey_manager.macos_hotkey_backend}"
             )
 
     def handle_quit(source: str) -> None:
