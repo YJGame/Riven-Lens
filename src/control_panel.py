@@ -200,6 +200,9 @@ class RivenControlPanel(QWidget):
     hotkey_lock_toggled = pyqtSignal()
     export_card_requested = pyqtSignal()
     user_manual_requested = pyqtSignal()
+    favorite_stats_requested = pyqtSignal()
+    open_wfsim_requested = pyqtSignal()
+    open_build_optimizer_requested = pyqtSignal()
     theme_changed = pyqtSignal(str, dict)                # (preset_key, colors_dict)
     panel_geometry_changed = pyqtSignal(int, int, int, int)  # x, y, width, height
     panel_closed = pyqtSignal()
@@ -208,11 +211,13 @@ class RivenControlPanel(QWidget):
         self,
         settings: UserSettings,
         initial_ui_lang: str = "zh_CN",
+        wfsim_edition: bool = False,
         parent: Optional[QWidget] = None,
     ) -> None:
         super().__init__(parent)
         self._ui_lang = initial_ui_lang
         self._settings = settings
+        self._wfsim_edition = bool(wfsim_edition)
         self._monitoring = False
         self._current_mode = MODE_PAUSED
         self._wm_busy = False
@@ -638,8 +643,37 @@ class RivenControlPanel(QWidget):
         self._btn_open_wm_browser.setObjectName("SecondaryBtn")
         self._btn_open_wm_browser.clicked.connect(self._on_open_wm_browser_clicked)
         wm_link_row.addWidget(self._btn_open_wm_browser)
+
+        self._btn_favorite_stats = QPushButton("")
+        self._btn_favorite_stats.setObjectName("AccentBtn")
+        self._btn_favorite_stats.clicked.connect(self.favorite_stats_requested.emit)
+        wm_link_row.addWidget(self._btn_favorite_stats)
         wm_link_row.addStretch(1)
         data_lay.addLayout(wm_link_row)
+
+        self._btn_open_wfsim: Optional[QPushButton] = None
+        self._btn_build_optimizer: Optional[QPushButton] = None
+        self._lbl_wfsim_status: Optional[QLabel] = None
+        if self._wfsim_edition:
+            wfsim_row = QHBoxLayout()
+            wfsim_row.setSpacing(8)
+            self._btn_build_optimizer = QPushButton("")
+            self._btn_build_optimizer.setObjectName("AccentBtn")
+            self._btn_build_optimizer.clicked.connect(self.open_build_optimizer_requested.emit)
+            wfsim_row.addWidget(self._btn_build_optimizer)
+
+            self._btn_open_wfsim = QPushButton("")
+            self._btn_open_wfsim.setObjectName("AccentBtn")
+            self._btn_open_wfsim.clicked.connect(self.open_wfsim_requested.emit)
+            wfsim_row.addWidget(self._btn_open_wfsim)
+            wfsim_row.addStretch(1)
+            data_lay.addLayout(wfsim_row)
+
+            self._lbl_wfsim_status = QLabel("")
+            self._lbl_wfsim_status.setWordWrap(True)
+            self._lbl_wfsim_status.setStyleSheet("color: #6EE7B7; font-size: 12px; font-weight: normal;")
+            self._lbl_wfsim_status.hide()
+            data_lay.addWidget(self._lbl_wfsim_status)
 
         self._sep_data = QFrame()
         self._sep_data.setFrameShape(QFrame.Shape.HLine)
@@ -905,6 +939,14 @@ class RivenControlPanel(QWidget):
 
         self.set_custom_sound_display(settings.custom_rare_sound_path)
         self.set_position_status(settings.overlay_pos_x_ratio, settings.overlay_pos_y_ratio)
+        self.refresh_favorite_stats_count()
+
+    def refresh_favorite_stats_count(self, count: Optional[int] = None) -> None:
+        n = len(self._settings.favorite_weapon_stats) if count is None else max(0, int(count))
+        if n > 0:
+            self._btn_favorite_stats.setText(I18N.t("panel.fav_stats_btn_count", self._ui_lang, count=n))
+        else:
+            self._btn_favorite_stats.setText(I18N.t("panel.fav_stats_btn", self._ui_lang))
 
     def set_custom_sound_display(self, path: str, error: str = "") -> None:
         self._settings.custom_rare_sound_path = str(path or "").strip()
@@ -932,6 +974,14 @@ class RivenControlPanel(QWidget):
         self._lbl_export_status.setStyleSheet(f"color: {color}; font-size: 11px; font-weight: normal;")
         self._lbl_export_status.setText(message)
         self._lbl_export_status.show()
+
+    def set_wfsim_feedback(self, message: str, is_error: bool = False) -> None:
+        if self._lbl_wfsim_status is None:
+            return
+        color = "#FCD34D" if is_error else "#6EE7B7"
+        self._lbl_wfsim_status.setStyleSheet(f"color: {color}; font-size: 12px; font-weight: normal;")
+        self._lbl_wfsim_status.setText(message)
+        self._lbl_wfsim_status.show()
 
     def set_monitoring_state(self, monitoring: bool) -> None:
         self._monitoring = monitoring
@@ -1151,8 +1201,10 @@ class RivenControlPanel(QWidget):
         if lang not in SUPPORTED_LANGS:
             lang = "en_US"
         self._ui_lang = lang
-        self.setWindowTitle(I18N.t("panel.window_title", lang))
-        self._header_title.setText(I18N.t("panel.header_title", lang))
+        title_key = "panel.wfsim_edition_title" if self._wfsim_edition else "panel.window_title"
+        hdr_key = "panel.wfsim_edition_title" if self._wfsim_edition else "panel.header_title"
+        self.setWindowTitle(I18N.t(title_key, lang))
+        self._header_title.setText(I18N.t(hdr_key, lang))
         self._update_header_status()
 
         self._grp_hotkeys.setTitle(I18N.t("panel.sec_hotkeys", lang))
@@ -1169,6 +1221,11 @@ class RivenControlPanel(QWidget):
         self._inp_weapon.setPlaceholderText(I18N.t("panel.wm_input_placeholder", lang))
         self._btn_fetch_wm.setText(I18N.t("panel.wm_fetch_btn", lang))
         self._btn_open_wm_browser.setText(I18N.t("panel.wm_open_browser_btn", lang))
+        self.refresh_favorite_stats_count()
+        if self._btn_build_optimizer is not None:
+            self._btn_build_optimizer.setText(I18N.t("panel.opt_open_btn", lang))
+        if self._btn_open_wfsim is not None:
+            self._btn_open_wfsim.setText(I18N.t("panel.wfsim_open_btn", lang))
         self._btn_update_db.setText(I18N.t("panel.db_update_btn", lang))
         self.refresh_db_timestamp()
 

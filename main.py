@@ -159,7 +159,12 @@ def build_arg_parser() -> argparse.ArgumentParser:
         type=str,
         default=None,
         choices=["toggle", "wm", "hide", "open_panel", "lock", "export", "quit"],
-        help="Linux/Wayland 快捷键 IPC 触发器：向已运行的裂罅透镜发送动作指令（toggle/wm/hide/open_panel/lock/export/quit）",
+        help="Linux/Wayland/macOS 快捷键 IPC 触发器：向已运行的裂罅透镜发送动作指令（toggle/wm/hide/open_panel/lock/export/quit）",
+    )
+    parser.add_argument(
+        "--wfsim-edition",
+        action="store_true",
+        help="以「WFSim 联动版」模式启动（在设置面板与本地配装优化器中启用一键跳转 wfsim.app 自动带入紫卡数值与配卡）",
     )
 
     parser.add_argument(
@@ -490,7 +495,10 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
     )
     from src.settings_manager import load_user_settings, save_user_settings
     from src.tray_manager import TrayManager, load_app_icon
+    from src.build_optimizer_dialog import BuildOptimizerDialog
+    from src.favorite_stats_dialog import FavoriteStatsDialog
     from src.user_manual_dialog import UserManualDialog
+    from src.wfsim_bridge import build_wfsim_url, is_wfsim_edition
     from src.wayland_support import (
         WaylandIPCServer,
         detect_wayland_capture_backend,
@@ -657,7 +665,12 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
         auto_collapse_seconds=0,
         theme_colors=settings.theme_colors,
     )
-    control_panel = RivenControlPanel(settings=settings, initial_ui_lang=initial_ui_lang)
+    wfsim_edition = is_wfsim_edition(bool(getattr(args, "wfsim_edition", False)))
+    control_panel = RivenControlPanel(
+        settings=settings,
+        initial_ui_lang=initial_ui_lang,
+        wfsim_edition=wfsim_edition,
+    )
     user_manual_dialog = UserManualDialog(settings=settings, lang=initial_ui_lang)
     capturer = ScreenCapturer(monitor_index=args.monitor)
     custom_region = _resolve_custom_region(args.region)
@@ -665,6 +678,17 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
     ocr = RivenOCREngine(preprocess_mode=args.preprocess)
     parser = RivenParser()
     evaluator = RivenEvaluator(weapons_db_path=args.weapons_db)
+    evaluator.set_user_favorite_stats(settings.favorite_weapon_stats)
+    favorite_stats_dialog = FavoriteStatsDialog(
+        evaluator=evaluator,
+        settings=settings,
+        lang=initial_ui_lang,
+    )
+    build_optimizer_dialog = (
+        BuildOptimizerDialog(settings=settings, lang=initial_ui_lang)
+        if wfsim_edition
+        else None
+    )
 
     # Silent 7-day auto-sync in background (never blocks startup; falls back to local cache on error)
     def _on_bg_data_synced(sync_res: dict) -> None:
@@ -729,6 +753,9 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
     def _apply_pending_overlay_theme() -> None:
         window.set_theme_colors(settings.theme_colors)
         user_manual_dialog.set_theme_colors(settings.theme_colors)
+        favorite_stats_dialog.set_theme_colors(settings.theme_colors)
+        if build_optimizer_dialog is not None:
+            build_optimizer_dialog.set_theme_colors(settings.theme_colors)
         if not window.isVisible() and control_panel.isVisible():
             window.show_preview_card()
 
@@ -764,6 +791,7 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
         "last_elapsed_ms": 0.0,
         "last_wm_report": None,
         "last_rendered_signature": None,
+        "awaiting_game_focus": False,
         "tray": None,
     }
 
@@ -956,6 +984,7 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
         was_active = mode_machine.current_mode != MODE_PAUSED
         mode_machine.set_mode(MODE_PAUSED)
         state["monitoring"] = False
+        state["awaiting_game_focus"] = False
         state["manual_req_id"] += 1  # Discard any in-flight F9 capture result
         state["last_rendered_signature"] = None
         _stop_f9_page_watcher(release_hold=True)
@@ -1077,6 +1106,8 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
         if ui_lang != state["active_lang"]:
             state["active_lang"] = ui_lang
             control_panel.retranslate_ui(ui_lang)
+            user_manual_dialog.set_language(ui_lang)
+            favorite_stats_dialog.set_language(ui_lang)
         window.set_language(ui_lang)
 
         new_weapon = primary_card.evaluation.weapon_name or primary_card.riven.weapon_name
@@ -1121,6 +1152,7 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
         state["last_rendered_signature"] = None
         mode_machine.set_mode(new_mode)
         state["monitoring"] = True
+        state["awaiting_game_focus"] = source in ("ControlPanel", "SystemTray", "LaunchPref")
         window.set_language(state["active_lang"])
         _sync_tray_and_panel()
         _debug_log(
@@ -1162,6 +1194,9 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
         window.set_language(ui_lang)
         control_panel.retranslate_ui(ui_lang)
         user_manual_dialog.set_language(ui_lang)
+        favorite_stats_dialog.set_language(ui_lang)
+        if build_optimizer_dialog is not None:
+            build_optimizer_dialog.set_language(ui_lang)
         _sync_tray_and_panel()
         _debug_log(f"UI language mode changed -> mode={new_mode}, active_lang={ui_lang}")
         if ui_lang in ("zh_CN", "en_US"):
@@ -1723,11 +1758,17 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
             window.hide()
         _sync_esc_timer()
 
+    def _pause_mode_on_leaving_game(reason: str) -> None:
+        if mode_machine.current_mode != MODE_PAUSED or state["monitoring"]:
+            stop_monitor(reason=reason)
+
     def open_control_panel() -> None:
+        _pause_mode_on_leaving_game("ControlPanelOpened")
         control_panel.set_monitoring_state(state["monitoring"])
         control_panel.show_and_activate()
 
     def open_user_manual() -> None:
+        _pause_mode_on_leaving_game("UserManualOpened")
         user_manual_dialog.refresh_hotkeys(
             settings.hotkey_toggle_monitor,
             settings.hotkey_fetch_wm,
@@ -1735,6 +1776,123 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
             settings.hotkey_open_panel,
         )
         user_manual_dialog.show_and_activate()
+
+    def open_favorite_stats_dialog() -> None:
+        _pause_mode_on_leaving_game("FavoriteStatsOpened")
+        favorite_stats_dialog.show_and_activate(preselect_weapon=state["last_weapon_name"])
+
+    def handle_open_build_optimizer(source: str) -> None:
+        """Open the local Riven-aware 7-Mod + Arcane build optimizer for the latest scanned card."""
+        if build_optimizer_dialog is None:
+            return
+        _pause_mode_on_leaving_game(f"BuildOptimizerOpened:{source}")
+        ui_lang = state["active_lang"]
+        if not state["last_cards"]:
+            msg = I18N.t("panel.opt_need_card", ui_lang)
+            control_panel.set_wfsim_feedback(msg, is_error=True)
+            window.show_toast(msg, duration_ms=2200)
+            return
+        target_card = state["last_cards"][-1]
+        build_optimizer_dialog.show_for_card(target_card.evaluation, target_card.riven)
+        _debug_log(f"Opened local Riven build optimizer (source={source}, weapon={target_card.evaluation.weapon_name})")
+
+    def handle_send_optimized_to_wfsim(ev_obj: object, riven_obj: object, opt_res: object) -> None:
+        _pause_mode_on_leaving_game("WFSimOpened")
+        ui_lang = state["active_lang"]
+        res = build_wfsim_url(
+            ev_obj,  # type: ignore[arg-type]
+            riven_obj,  # type: ignore[arg-type]
+            custom_mods=getattr(opt_res, "mod_ids", None),
+            custom_arcanes=getattr(opt_res, "arcane_ids", None),
+            custom_build_label="本地优化配装",
+        )
+        if not res.ok:
+            control_panel.set_wfsim_feedback(f"⚠ {res.error}", is_error=True)
+            window.show_toast(res.error, duration_ms=2400)
+            return
+        webbrowser.open(res.url)
+        w_disp = _display_weapon_for_lang(ui_lang) or res.weapon_id
+        msg = I18N.t(
+            "panel.wfsim_opened_ok",
+            ui_lang,
+            weapon=w_disp,
+            build=res.build_label,
+            count=len(res.included_stats),
+        )
+        control_panel.set_wfsim_feedback(msg, is_error=False)
+        window.show_toast(msg, duration_ms=2800)
+        _debug_log(
+            f"Opened WFSim with locally optimized build (weapon={res.weapon_id}, "
+            f"mods={getattr(opt_res, 'mod_ids', [])}, arcane={getattr(opt_res, 'arcane_ids', [])})"
+        )
+
+    def handle_open_wfsim(source: str) -> None:
+        """Build a WFSim deep-link with the current scanned Riven + baseline build and open in browser."""
+        _pause_mode_on_leaving_game(f"WFSimOpened:{source}")
+        ui_lang = state["active_lang"]
+        if not state["last_cards"]:
+            msg = I18N.t("panel.wfsim_need_card", ui_lang)
+            control_panel.set_wfsim_feedback(msg, is_error=True)
+            window.show_toast(msg, duration_ms=2200)
+            return
+        target_card = state["last_cards"][-1]
+        res = build_wfsim_url(target_card.evaluation, target_card.riven, include_baseline_build=True)
+        if not res.ok:
+            control_panel.set_wfsim_feedback(f"⚠ {res.error}", is_error=True)
+            window.show_toast(res.error, duration_ms=2400)
+            _debug_log(f"WFSim link build failed (source={source}): {res.error}")
+            return
+        webbrowser.open(res.url)
+        w_disp = _display_weapon_for_lang(ui_lang) or res.weapon_id
+        msg = I18N.t(
+            "panel.wfsim_opened_ok",
+            ui_lang,
+            weapon=w_disp,
+            build=res.build_label,
+            count=len(res.included_stats),
+        )
+        control_panel.set_wfsim_feedback(msg, is_error=False)
+        window.show_toast(msg, duration_ms=2800)
+        _debug_log(
+            f"Opened WFSim deep-link (source={source}, weapon={res.weapon_id}, "
+            f"stats={len(res.included_stats)}, url_len={len(res.url)})"
+        )
+
+    def handle_favorites_saved(favs_dict: dict) -> None:
+        settings.favorite_weapon_stats = dict(favs_dict)
+        evaluator.set_user_favorite_stats(settings.favorite_weapon_stats)
+        save_user_settings(settings)
+        control_panel.refresh_favorite_stats_count(len(settings.favorite_weapon_stats))
+        # Live re-evaluate any currently displayed Riven card(s) so highlights update instantly
+        if state["last_cards"]:
+            re_cards: List[EvaluatedRivenCard] = []
+            for old_c in state["last_cards"]:
+                new_ev = evaluator.evaluate(old_c.riven, disposition_override=args.disposition)
+                re_cards.append(
+                    EvaluatedRivenCard(
+                        label=old_c.label,
+                        riven=old_c.riven,
+                        evaluation=new_ev,
+                        avg_confidence=old_c.avg_confidence,
+                    )
+                )
+            new_comp = (
+                compare_riven_evaluations(re_cards[0].evaluation, re_cards[1].evaluation)
+                if len(re_cards) == 2
+                else None
+            )
+            state["last_cards"] = re_cards
+            state["last_comparison"] = new_comp
+            if window.isVisible() and window.display_mode == "cards":
+                window.update_cards(
+                    re_cards,
+                    elapsed_ms=state["last_elapsed_ms"],
+                    layout_label=state["last_layout_label"],
+                    comparison=new_comp,
+                    lang=state["active_lang"],
+                    force_redraw=True,
+                )
+        _debug_log(f"User favorite weapon stats updated & saved ({len(settings.favorite_weapon_stats)} weapons).")
 
     def handle_toggle_control_panel(source: str) -> None:
         _debug_log(f"Open control panel hotkey triggered ({settings.hotkey_open_panel}, source={source})")
@@ -1789,6 +1947,9 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
         if ipc_server is not None:
             ipc_server.stop()
         hotkey_manager.unregister_all()
+        if build_optimizer_dialog is not None:
+            build_optimizer_dialog.hide()
+        favorite_stats_dialog.hide()
         user_manual_dialog.hide()
         control_panel.hide()
         window.hide_all_overlays()
@@ -1843,6 +2004,13 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
     control_panel.hotkey_lock_toggled.connect(lambda: handle_toggle_hotkey_lock("ControlPanel"))
     control_panel.export_card_requested.connect(lambda: handle_export_card("ControlPanel"))
     control_panel.user_manual_requested.connect(open_user_manual)
+    control_panel.favorite_stats_requested.connect(open_favorite_stats_dialog)
+    if wfsim_edition:
+        control_panel.open_wfsim_requested.connect(lambda: handle_open_wfsim("ControlPanel"))
+        control_panel.open_build_optimizer_requested.connect(lambda: handle_open_build_optimizer("ControlPanel"))
+        if build_optimizer_dialog is not None:
+            build_optimizer_dialog.send_optimized_to_wfsim.connect(handle_send_optimized_to_wfsim)
+    favorite_stats_dialog.favorites_saved.connect(handle_favorites_saved)
     control_panel.theme_changed.connect(handle_theme_changed)
     control_panel.panel_geometry_changed.connect(handle_panel_geometry_changed)
     control_panel.panel_closed.connect(handle_panel_closed)
@@ -1855,20 +2023,31 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
         on_quit=lambda: handle_quit("SystemTray"),
         on_select_mode=lambda m: set_work_mode(m, source="SystemTray"),
         on_toggle_lock=lambda: handle_toggle_hotkey_lock("SystemTray"),
+        on_open_optimizer=(lambda: handle_open_build_optimizer("SystemTray")) if wfsim_edition else None,
         initial_ui_lang=initial_ui_lang,
         toggle_hotkey=settings.hotkey_toggle_monitor,
         wm_hotkey=settings.hotkey_fetch_wm,
         initial_mode=mode_machine.current_mode,
     )
 
-    # Smart Foreground Focus Timer (450ms lightweight poll — hides overlays when Alt-Tabbed out of Warframe)
+    # Smart Foreground Focus Timer (450ms lightweight poll — switches mode to Standby on leaving Warframe)
     focus_timer = QTimer()
     focus_timer.setInterval(450)
 
     def poll_foreground_focus() -> None:
-        if not state["monitoring"] and not window.has_any_visible_overlay() and not focus_watcher.is_hidden_by_focus:
-            return
         if state["calibrator"] is not None:
+            return
+        if state["monitoring"] and mode_machine.current_mode != MODE_PAUSED:
+            pause_act, new_await = focus_watcher.evaluate_game_focus_for_standby(
+                is_active_mode=True,
+                drag_unlocked=window.is_drag_unlocked,
+                awaiting_game_focus=state["awaiting_game_focus"],
+            )
+            state["awaiting_game_focus"] = new_await
+            if pause_act == "pause":
+                stop_monitor(reason=f"LeftGame:{focus_watcher.last_title}")
+                return
+        if not state["monitoring"] and not window.has_any_visible_overlay() and not focus_watcher.is_hidden_by_focus:
             return
         action = focus_watcher.evaluate_focus(drag_unlocked=window.is_drag_unlocked)
         if action == "hide":

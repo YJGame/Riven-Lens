@@ -166,6 +166,34 @@ def _parse_pos_pair(value: Any) -> Optional[List[float]]:
     return [rx, ry]
 
 
+def _parse_favorite_weapon_stats(value: Any) -> Dict[str, Dict[str, List[str]]]:
+    """Sanitize persisted per-weapon user favorite stats `{weapon_key: {positives: [...], negatives: [...]}}`."""
+    if not isinstance(value, dict):
+        return {}
+    cleaned: Dict[str, Dict[str, List[str]]] = {}
+    for raw_weapon, entry in value.items():
+        w_key = str(raw_weapon or "").strip()
+        if not w_key or not isinstance(entry, dict):
+            continue
+        pos_list: List[str] = []
+        seen_pos: set[str] = set()
+        for item in entry.get("positives") or []:
+            s = str(item or "").strip()
+            if s and s not in seen_pos:
+                seen_pos.add(s)
+                pos_list.append(s)
+        neg_list: List[str] = []
+        seen_neg: set[str] = set()
+        for item in entry.get("negatives") or []:
+            s = str(item or "").strip()
+            if s and s not in seen_neg:
+                seen_neg.add(s)
+                neg_list.append(s)
+        if pos_list or neg_list:
+            cleaned[w_key] = {"positives": pos_list, "negatives": neg_list}
+    return cleaned
+
+
 def get_settings_path() -> Path:
     return get_data_dir() / DEFAULT_SETTINGS_FILENAME
 
@@ -198,8 +226,10 @@ class UserSettings:
         default_factory=lambda: dict(THEME_PRESETS[DEFAULT_THEME_PRESET])
     )
     first_run_guide_shown: bool = False
+    favorite_weapon_stats: Dict[str, Dict[str, List[str]]] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
+        self.favorite_weapon_stats = _parse_favorite_weapon_stats(self.favorite_weapon_stats)
         # Keep legacy `overlay_pos_x_ratio`/`overlay_pos_y_ratio` synchronized with `riven_pos`
         if self.riven_pos is None and self.overlay_pos_x_ratio is not None and self.overlay_pos_y_ratio is not None:
             self.riven_pos = [round(float(self.overlay_pos_x_ratio), 5), round(float(self.overlay_pos_y_ratio), 5)]
@@ -244,6 +274,40 @@ class UserSettings:
         self.wm_pos = None
         self.synergy_pos = None
         self.relic_pos = None
+
+    def get_weapon_favorite_stats(self, weapon_name: str) -> Optional[Dict[str, List[str]]]:
+        key = (weapon_name or "").strip()
+        entry = self.favorite_weapon_stats.get(key)
+        if not entry:
+            return None
+        return {
+            "positives": list(entry.get("positives") or []),
+            "negatives": list(entry.get("negatives") or []),
+        }
+
+    def set_weapon_favorite_stats(
+        self,
+        weapon_name: str,
+        positives: List[str],
+        negatives: List[str],
+    ) -> None:
+        key = (weapon_name or "").strip()
+        if not key:
+            return
+        pos_clean = list(dict.fromkeys(str(s).strip() for s in positives if str(s).strip()))
+        neg_clean = list(dict.fromkeys(str(s).strip() for s in negatives if str(s).strip()))
+        if not pos_clean and not neg_clean:
+            self.favorite_weapon_stats.pop(key, None)
+        else:
+            self.favorite_weapon_stats[key] = {
+                "positives": pos_clean,
+                "negatives": neg_clean,
+            }
+
+    def remove_weapon_favorite_stats(self, weapon_name: str) -> None:
+        key = (weapon_name or "").strip()
+        if key:
+            self.favorite_weapon_stats.pop(key, None)
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -299,6 +363,7 @@ class UserSettings:
             theme_preset=raw_preset,
             theme_colors=resolved_colors,
             first_run_guide_shown=bool(raw.get("first_run_guide_shown", False)),
+            favorite_weapon_stats=_parse_favorite_weapon_stats(raw.get("favorite_weapon_stats")),
         )
 
 

@@ -87,6 +87,7 @@ class TrayManager(QObject):
         on_quit: Callable[[], None],
         on_select_mode: Optional[Callable[[str], None]] = None,
         on_toggle_lock: Optional[Callable[[], None]] = None,
+        on_open_optimizer: Optional[Callable[[], None]] = None,
         initial_ui_lang: str = "zh_CN",
         toggle_hotkey: str = "F8",
         wm_hotkey: str = "F9",
@@ -141,6 +142,13 @@ class TrayManager(QObject):
         self._act_wm = QAction("", self._menu)
         self._act_wm.triggered.connect(on_fetch_wm)
         self._menu.addAction(self._act_wm)
+
+        # Optional WFSim edition optimizer action (WFSim sending is strictly via panel)
+        self._act_optimizer: Optional[QAction] = None
+        if on_open_optimizer is not None:
+            self._act_optimizer = QAction("", self._menu)
+            self._act_optimizer.triggered.connect(lambda _chk=False: on_open_optimizer())
+            self._menu.addAction(self._act_optimizer)
 
         # 5. Update Weapons & Riven Database
         self._act_update_db = QAction("", self._menu)
@@ -240,6 +248,8 @@ class TrayManager(QObject):
         self._act_lock.setText(I18N.t(lock_key, ui_lang))
         self._act_lock.setChecked(self._hotkeys_locked)
         self._act_wm.setText(I18N.t("tray.fetch_wm", ui_lang, hotkey=self._wm_hotkey))
+        if self._act_optimizer is not None:
+            self._act_optimizer.setText(I18N.t("tray.open_build_optimizer", ui_lang))
         db_key = "tray.updating_db" if self._db_updating else "tray.update_db"
         self._act_update_db.setText(I18N.t(db_key, ui_lang))
         self._act_quit.setText(I18N.t("tray.quit", ui_lang))

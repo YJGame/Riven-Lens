@@ -12,6 +12,7 @@ dist/
 dist_latest/
 dist_linux/
 dist_macos/
+dist_wfsim/
 release/
 
 # Local debug outputs, screenshots & logs

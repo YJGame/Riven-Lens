@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated_at": 1795602391,
-  "updated_at_iso": "2026-11-25T10:26:31Z",
+  "updated_at": 1795819150,
+  "updated_at_iso": "2026-11-27T22:39:10Z",
   "sources": [
     "https://api.warframe.market/v2/items",
     "https://api.warframe.market/v1/tools/ducats",
@@ -15,9 +15,9 @@
       "slug": "acceltra_prime_barrel",
       "zh_name": "迅发电浆炮 Prime 枪管",
       "en_name": "Acceltra Prime Barrel",
-      "plat_price": 18.6,
+      "plat_price": 19.5,
       "ducats": 100,
-      "volume": 377,
+      "volume": 365,
       "vaulted": true
     },
     {
@@ -27,7 +27,7 @@
       "en_name": "Acceltra Prime Blueprint",
       "plat_price": 4.2,
       "ducats": 15,
-      "volume": 303,
+      "volume": 291,
       "vaulted": true
     },
     {
@@ -35,9 +35,9 @@
       "slug": "acceltra_prime_receiver",
       "zh_name": "迅发电浆炮 Prime 枪机",
       "en_name": "Acceltra Prime Receiver",
-      "plat_price": 7.3,
+      "plat_price": 7.2,
       "ducats": 45,
-      "volume": 467,
+      "volume": 399,
       "vaulted": true
     },
     {
@@ -45,9 +45,9 @@
       "slug": "acceltra_prime_stock",
       "zh_name": "迅发电浆炮 Prime 枪托",
       "en_name": "Acceltra Prime Stock",
-      "plat_price": 24.6,
+      "plat_price": 24.0,
       "ducats": 65,
-      "volume": 313,
+      "volume": 320,
       "vaulted": true
     },
     {
@@ -55,9 +55,9 @@
       "slug": "afentis_prime_barrel",
       "zh_name": "圣英 Prime 枪管",
       "en_name": "Afentis Prime Barrel",
-      "plat_price": 4.8,
+      "plat_price": 6.0,
       "ducats": 45,
-      "volume": 284,
+      "volume": 348,
       "vaulted": false
     },
     {
@@ -67,7 +67,7 @@
       "en_name": "Afentis Prime Blade",
       "plat_price": 9.9,
       "ducats": 100,
-      "volume": 306,
+      "volume": 296,
       "vaulted": false
     },
     {
@@ -75,9 +75,9 @@
       "slug": "afentis_prime_blueprint",
       "zh_name": "圣英 Prime 蓝图",
       "en_name": "Afentis Prime Blueprint",
-      "plat_price": 15.5,
+      "plat_price": 15.1,
       "ducats": 100,
-      "volume": 338,
+      "volume": 308,
       "vaulted": false
     },
     {
@@ -85,9 +85,9 @@
       "slug": "afentis_prime_handle",
       "zh_name": "圣英 Prime 握柄",
       "en_name": "Afentis Prime Handle",
-      "plat_price": 5.0,
+      "plat_price": 5.6,
       "ducats": 15,
-      "volume": 220,
+      "volume": 262,
       "vaulted": false
     },
     {
@@ -97,7 +97,7 @@
       "en_name": "Afuris Prime Barrel",
       "plat_price": 7.7,
       "ducats": 15,
-      "volume": 316,
+      "volume": 303,
       "vaulted": true
     },
     {
@@ -105,9 +105,9 @@
       "slug": "afuris_prime_blueprint",
       "zh_name": "盗贼双枪 Prime 蓝图",
       "en_name": "Afuris Prime Blueprint",
-      "plat_price": 4.5,
+      "plat_price": 4.3,
       "ducats": 15,
-      "volume": 202,
+      "volume": 223,
       "vaulted": true
     },
     {
@@ -115,9 +115,9 @@
       "slug": "afuris_prime_link",
       "zh_name": "盗贼双枪 Prime 连接器",
       "en_name": "Afuris Prime Link",
-      "plat_price": 5.4,
+      "plat_price": 5.2,
       "ducats": 45,
-      "volume": 217,
+      "volume": 184,
       "vaulted": true
     },
     {
@@ -125,9 +125,9 @@
       "slug": "afuris_prime_receiver",
       "zh_name": "盗贼双枪 Prime 枪机",
       "en_name": "Afuris Prime Receiver",
-      "plat_price": 42.9,
+      "plat_price": 40.2,
       "ducats": 100,
-      "volume": 387,
+      "volume": 310,
       "vaulted": true
     },
     {
@@ -135,9 +135,9 @@
       "slug": "akarius_prime_barrel",
       "zh_name": "阿利乌双枪 Prime 枪管",
       "en_name": "Akarius Prime Barrel",
-      "plat_price": 9.6,
+      "plat_price": 9.5,
       "ducats": 15,
-      "volume": 528,
+      "volume": 390,
       "vaulted": true
     },
     {
@@ -145,9 +145,9 @@
       "slug": "akarius_prime_blueprint",
       "zh_name": "阿利乌双枪 Prime 蓝图",
       "en_name": "Akarius Prime Blueprint",
-      "plat_price": 16.0,
+      "plat_price": 16.3,
       "ducats": 100,
-      "volume": 391,
+      "volume": 399,
       "vaulted": true
     },
     {
@@ -157,7 +157,7 @@
       "en_name": "Akarius Prime Link",
       "plat_price": 4.8,
       "ducats": 45,
-      "volume": 475,
+      "volume": 370,
       "vaulted": true
     },
     {
@@ -165,9 +165,9 @@
       "slug": "akarius_prime_receiver",
       "zh_name": "阿利乌双枪 Prime 枪机",
       "en_name": "Akarius Prime Receiver",
-      "plat_price": 32.2,
+      "plat_price": 32.8,
       "ducats": 65,
-      "volume": 574,
+      "volume": 614,
       "vaulted": true
     },
     {
@@ -175,9 +175,9 @@
       "slug": "akbolto_prime_barrel",
       "zh_name": "螺钉双枪 Prime 枪管",
       "en_name": "Akbolto Prime Barrel",
-      "plat_price": 8.8,
+      "plat_price": 8.3,
       "ducats": 45,
-      "volume": 436,
+      "volume": 418,
       "vaulted": true
     },
     {
@@ -185,9 +185,9 @@
       "slug": "akbolto_prime_blueprint",
       "zh_name": "螺钉双枪 Prime 蓝图",
       "en_name": "Akbolto Prime Blueprint",
-      "plat_price": 4.4,
+      "plat_price": 4.5,
       "ducats": 15,
-      "volume": 272,
+      "volume": 289,
       "vaulted": true
     },
     {
@@ -195,9 +195,9 @@
       "slug": "akbolto_prime_link",
       "zh_name": "螺钉双枪 Prime 连接器",
       "en_name": "Akbolto Prime Link",
-      "plat_price": 5.0,
+      "plat_price": 5.1,
       "ducats": 45,
-      "volume": 189,
+      "volume": 194,
       "vaulted": true
     },
     {
@@ -205,9 +205,9 @@
       "slug": "akbolto_prime_receiver",
       "zh_name": "螺钉双枪 Prime 枪机",
       "en_name": "Akbolto Prime Receiver",
-      "plat_price": 30.4,
+      "plat_price": 29.8,
       "ducats": 100,
-      "volume": 201,
+      "volume": 178,
       "vaulted": true
     },
     {
@@ -217,7 +217,7 @@
       "en_name": "Akbronco Prime Blueprint",
       "plat_price": 3.6,
       "ducats": 15,
-      "volume": 150,
+      "volume": 169,
       "vaulted": false
     },
     {
@@ -225,9 +225,9 @@
       "slug": "akbronco_prime_link",
       "zh_name": "野马双枪 Prime 连接器",
       "en_name": "Akbronco Prime Link",
-      "plat_price": 3.6,
+      "plat_price": 3.5,
       "ducats": 45,
-      "volume": 355,
+      "volume": 329,
       "vaulted": false
     },
     {
@@ -235,9 +235,9 @@
       "slug": "akjagara_prime_barrel",
       "zh_name": "觉醒双枪 Prime 枪管",
       "en_name": "Akjagara Prime Barrel",
-      "plat_price": 33.4,
+      "plat_price": 32.8,
       "ducats": 100,
-      "volume": 172,
+      "volume": 198,
       "vaulted": true
     },
     {
@@ -247,7 +247,7 @@
       "en_name": "Akjagara Prime Blueprint",
       "plat_price": 4.4,
       "ducats": 15,
-      "volume": 190,
+      "volume": 181,
       "vaulted": true
     },
     {
@@ -255,9 +255,9 @@
       "slug": "akjagara_prime_link",
       "zh_name": "觉醒双枪 Prime 连接器",
       "en_name": "Akjagara Prime Link",
-      "plat_price": 8.9,
+      "plat_price": 9.5,
       "ducats": 45,
-      "volume": 176,
+      "volume": 154,
       "vaulted": true
     },
     {
@@ -265,9 +265,9 @@
       "slug": "akjagara_prime_receiver",
       "zh_name": "觉醒双枪 Prime 枪机",
       "en_name": "Akjagara Prime Receiver",
-      "plat_price": 15.5,
+      "plat_price": 14.5,
       "ducats": 45,
-      "volume": 188,
+      "volume": 189,
       "vaulted": true
     },
     {
@@ -277,7 +277,7 @@
       "en_name": "Aklex Prime Blueprint",
       "plat_price": 9.4,
       "ducats": 45,
-      "volume": 317,
+      "volume": 485,
       "vaulted": true
     },
     {
@@ -285,9 +285,9 @@
       "slug": "aklex_prime_link",
       "zh_name": "雷克斯双枪 Prime 连接器",
       "en_name": "Aklex Prime Link",
-      "plat_price": 43.2,
+      "plat_price": 39.8,
       "ducats": 100,
-      "volume": 488,
+      "volume": 438,
       "vaulted": true
     },
     {
@@ -295,9 +295,9 @@
       "slug": "akmagnus_prime_blueprint",
       "zh_name": "麦格努斯双枪 Prime 蓝图",
       "en_name": "Akmagnus Prime Blueprint",
-      "plat_price": 20.7,
+      "plat_price": 20.3,
       "ducats": 15,
-      "volume": 291,
+      "volume": 255,
       "vaulted": true
     },
     {
@@ -305,9 +305,9 @@
       "slug": "akmagnus_prime_link",
       "zh_name": "麦格努斯双枪 Prime 连接器",
       "en_name": "Akmagnus Prime Link",
-      "plat_price": 19.1,
+      "plat_price": 18.7,
       "ducats": 45,
-      "volume": 344,
+      "volume": 326,
       "vaulted": true
     },
     {
@@ -315,9 +315,9 @@
       "slug": "aksomati_prime_barrel",
       "zh_name": "轻灵月神双枪 Prime 枪管",
       "en_name": "Aksomati Prime Barrel",
-      "plat_price": 11.8,
+      "plat_price": 11.5,
       "ducats": 45,
-      "volume": 215,
+      "volume": 218,
       "vaulted": true
     },
     {
@@ -325,9 +325,9 @@
       "slug": "aksomati_prime_blueprint",
       "zh_name": "轻灵月神双枪 Prime 蓝图",
       "en_name": "Aksomati Prime Blueprint",
-      "plat_price": 4.9,
+      "plat_price": 5.0,
       "ducats": 15,
-      "volume": 260,
+      "volume": 241,
       "vaulted": true
     },
     {
@@ -335,9 +335,9 @@
       "slug": "aksomati_prime_link",
       "zh_name": "轻灵月神双枪 Prime 连接器",
       "en_name": "Aksomati Prime Link",
-      "plat_price": 26.1,
+      "plat_price": 28.5,
       "ducats": 100,
-      "volume": 162,
+      "volume": 176,
       "vaulted": true
     },
     {
@@ -345,9 +345,9 @@
       "slug": "aksomati_prime_receiver",
       "zh_name": "轻灵月神双枪 Prime 枪机",
       "en_name": "Aksomati Prime Receiver",
-      "plat_price": 9.5,
+      "plat_price": 9.4,
       "ducats": 15,
-      "volume": 206,
+      "volume": 272,
       "vaulted": true
     },
     {
@@ -355,9 +355,9 @@
       "slug": "akstiletto_prime_barrel",
       "zh_name": "史提托双枪 Prime 枪管",
       "en_name": "Akstiletto Prime Barrel",
-      "plat_price": 16.8,
+      "plat_price": 16.2,
       "ducats": 25,
-      "volume": 359,
+      "volume": 292,
       "vaulted": true
     },
     {
@@ -365,9 +365,9 @@
       "slug": "akstiletto_prime_blueprint",
       "zh_name": "史提托双枪 Prime 蓝图",
       "en_name": "Akstiletto Prime Blueprint",
-      "plat_price": 17.5,
+      "plat_price": 17.3,
       "ducats": 100,
-      "volume": 193,
+      "volume": 202,
       "vaulted": true
     },
     {
@@ -375,9 +375,9 @@
       "slug": "akstiletto_prime_link",
       "zh_name": "史提托双枪 Prime 连接器",
       "en_name": "Akstiletto Prime Link",
-      "plat_price": 11.2,
+      "plat_price": 9.7,
       "ducats": 45,
-      "volume": 199,
+      "volume": 140,
       "vaulted": true
     },
     {
@@ -385,9 +385,9 @@
       "slug": "akstiletto_prime_receiver",
       "zh_name": "史提托双枪 Prime 枪机",
       "en_name": "Akstiletto Prime Receiver",
-      "plat_price": 22.5,
+      "plat_price": 21.9,
       "ducats": 45,
-      "volume": 271,
+      "volume": 331,
       "vaulted": true
     },
     {
@@ -395,9 +395,9 @@
       "slug": "akvasto_prime_blueprint",
       "zh_name": "瓦斯托双枪 Prime 蓝图",
       "en_name": "Akvasto Prime Blueprint",
-      "plat_price": 47.4,
+      "plat_price": 40.0,
       "ducats": 100,
-      "volume": 252,
+      "volume": 158,
       "vaulted": true
     },
     {
@@ -405,9 +405,9 @@
       "slug": "akvasto_prime_link",
       "zh_name": "瓦斯托双枪 Prime 连接器",
       "en_name": "Akvasto Prime Link",
-      "plat_price": 15.7,
+      "plat_price": 15.5,
       "ducats": 45,
-      "volume": 212,
+      "volume": 270,
       "vaulted": true
     },
     {
@@ -417,7 +417,7 @@
       "en_name": "Alternox Prime Barrel",
       "plat_price": 3.9,
       "ducats": 45,
-      "volume": 249,
+      "volume": 266,
       "vaulted": false
     },
     {
@@ -425,9 +425,9 @@
       "slug": "alternox_prime_blueprint",
       "zh_name": "电幻步枪 Prime 蓝图",
       "en_name": "Alternox Prime Blueprint",
-      "plat_price": 9.1,
+      "plat_price": 8.8,
       "ducats": 100,
-      "volume": 367,
+      "volume": 278,
       "vaulted": false
     },
     {
@@ -435,9 +435,9 @@
       "slug": "alternox_prime_receiver",
       "zh_name": "电幻步枪 Prime 枪机",
       "en_name": "Alternox Prime Receiver",
-      "plat_price": 4.7,
+      "plat_price": 4.6,
       "ducats": 15,
-      "volume": 229,
+      "volume": 232,
       "vaulted": false
     },
     {
@@ -445,9 +445,9 @@
       "slug": "alternox_prime_stock",
       "zh_name": "电幻步枪 Prime 枪托",
       "en_name": "Alternox Prime Stock",
-      "plat_price": 12.3,
+      "plat_price": 12.8,
       "ducats": 100,
-      "volume": 306,
+      "volume": 401,
       "vaulted": false
     },
     {
@@ -455,9 +455,9 @@
       "slug": "ankyros_prime_blade",
       "zh_name": "甲龙双拳 Prime 刀刃",
       "en_name": "Ankyros Prime Blade",
-      "plat_price": 9.7,
+      "plat_price": 9.8,
       "ducats": 65,
-      "volume": 324,
+      "volume": 299,
       "vaulted": true
     },
     {
@@ -465,9 +465,9 @@
       "slug": "ankyros_prime_blueprint",
       "zh_name": "甲龙双拳 Prime 蓝图",
       "en_name": "Ankyros Prime Blueprint",
-      "plat_price": 9.3,
+      "plat_price": 9.4,
       "ducats": 15,
-      "volume": 147,
+      "volume": 132,
       "vaulted": true
     },
     {
@@ -475,9 +475,9 @@
       "slug": "ankyros_prime_gauntlet",
       "zh_name": "甲龙双拳 Prime 拳套",
       "en_name": "Ankyros Prime Gauntlet",
-      "plat_price": 16.6,
+      "plat_price": 16.8,
       "ducats": 15,
-      "volume": 485,
+      "volume": 488,
       "vaulted": true
     },
     {
@@ -487,7 +487,7 @@
       "en_name": "Ash Prime Blueprint",
       "plat_price": 11.4,
       "ducats": 45,
-      "volume": 408,
+      "volume": 415,
       "vaulted": true
     },
     {
@@ -495,9 +495,9 @@
       "slug": "ash_prime_chassis_blueprint",
       "zh_name": "Ash Prime 机体 蓝图",
       "en_name": "Ash Prime Chassis Blueprint",
-      "plat_price": 14.2,
+      "plat_price": 14.9,
       "ducats": 15,
-      "volume": 326,
+      "volume": 353,
       "vaulted": true
     },
     {
@@ -505,9 +505,9 @@
       "slug": "ash_prime_neuroptics_blueprint",
       "zh_name": "Ash Prime 头部神经光元 蓝图",
       "en_name": "Ash Prime Neuroptics Blueprint",
-      "plat_price": 9.7,
+      "plat_price": 13.5,
       "ducats": 45,
-      "volume": 386,
+      "volume": 602,
       "vaulted": true
     },
     {
@@ -515,9 +515,9 @@
       "slug": "ash_prime_systems_blueprint",
       "zh_name": "Ash Prime 系统 蓝图",
       "en_name": "Ash Prime Systems Blueprint",
-      "plat_price": 17.8,
+      "plat_price": 18.2,
       "ducats": 65,
-      "volume": 960,
+      "volume": 1079,
       "vaulted": true
     },
     {
@@ -525,9 +525,9 @@
       "slug": "astilla_prime_barrel",
       "zh_name": "碎裂者 Prime 枪管",
       "en_name": "Astilla Prime Barrel",
-      "plat_price": 26.8,
+      "plat_price": 25.3,
       "ducats": 100,
-      "volume": 180,
+      "volume": 203,
       "vaulted": true
     },
     {
@@ -535,9 +535,9 @@
       "slug": "astilla_prime_blueprint",
       "zh_name": "碎裂者 Prime 蓝图",
       "en_name": "Astilla Prime Blueprint",
-      "plat_price": 7.0,
+      "plat_price": 7.6,
       "ducats": 45,
-      "volume": 353,
+      "volume": 514,
       "vaulted": true
     },
     {
@@ -545,9 +545,9 @@
       "slug": "astilla_prime_receiver",
       "zh_name": "碎裂者 Prime 枪机",
       "en_name": "Astilla Prime Receiver",
-      "plat_price": 8.0,
+      "plat_price": 8.1,
       "ducats": 15,
-      "volume": 204,
+      "volume": 186,
       "vaulted": true
     },
     {
@@ -555,9 +555,9 @@
       "slug": "astilla_prime_stock",
       "zh_name": "碎裂者 Prime 枪托",
       "en_name": "Astilla Prime Stock",
-      "plat_price": 7.7,
+      "plat_price": 7.6,
       "ducats": 45,
-      "volume": 225,
+      "volume": 241,
       "vaulted": true
     },
     {
@@ -565,9 +565,9 @@
       "slug": "athodai_prime_barrel",
       "zh_name": "阿索代 Prime 枪管",
       "en_name": "Athodai Prime Barrel",
-      "plat_price": 9.9,
+      "plat_price": 9.8,
       "ducats": 100,
-      "volume": 255,
+      "volume": 251,
       "vaulted": false
     },
     {
@@ -575,9 +575,9 @@
       "slug": "athodai_prime_blueprint",
       "zh_name": "阿索代 Prime 蓝图",
       "en_name": "Athodai Prime Blueprint",
-      "plat_price": 4.5,
+      "plat_price": 4.4,
       "ducats": 15,
-      "volume": 192,
+      "volume": 202,
       "vaulted": false
     },
     {
@@ -587,7 +587,7 @@
       "en_name": "Athodai Prime Receiver",
       "plat_price": 8.8,
       "ducats": 45,
-      "volume": 245,
+      "volume": 265,
       "vaulted": false
     },
     {
@@ -597,7 +597,7 @@
       "en_name": "Atlas Prime Blueprint",
       "plat_price": 4.7,
       "ducats": 15,
-      "volume": 335,
+      "volume": 333,
       "vaulted": true
     },
     {
@@ -605,9 +605,9 @@
       "slug": "atlas_prime_chassis_blueprint",
       "zh_name": "Atlas Prime 机体 蓝图",
       "en_name": "Atlas Prime Chassis Blueprint",
-      "plat_price": 8.4,
+      "plat_price": 8.3,
       "ducats": 45,
-      "volume": 440,
+      "volume": 392,
       "vaulted": true
     },
     {
@@ -615,9 +615,9 @@
       "slug": "atlas_prime_neuroptics_blueprint",
       "zh_name": "Atlas Prime 头部神经光元 蓝图",
       "en_name": "Atlas Prime Neuroptics Blueprint",
-      "plat_price": 53.7,
+      "plat_price": 55.9,
       "ducats": 100,
-      "volume": 569,
+      "volume": 505,
       "vaulted": true
     },
     {
@@ -627,7 +627,7 @@
       "en_name": "Atlas Prime Systems Blueprint",
       "plat_price": 5.4,
       "ducats": 45,
-      "volume": 453,
+      "volume": 350,
       "vaulted": true
     },
     {
@@ -635,9 +635,9 @@
       "slug": "ballistica_prime_blueprint",
       "zh_name": "布里斯提卡 Prime 蓝图",
       "en_name": "Ballistica Prime Blueprint",
-      "plat_price": 40.5,
+      "plat_price": 39.4,
       "ducats": 100,
-      "volume": 275,
+      "volume": 304,
       "vaulted": true
     },
     {
@@ -655,9 +655,9 @@
       "slug": "ballistica_prime_receiver",
       "zh_name": "布里斯提卡 Prime 枪机",
       "en_name": "Ballistica Prime Receiver",
-      "plat_price": 8.9,
+      "plat_price": 8.8,
       "ducats": 45,
-      "volume": 370,
+      "volume": 335,
       "vaulted": true
     },
     {
@@ -665,9 +665,9 @@
       "slug": "ballistica_prime_string",
       "zh_name": "布里斯提卡 Prime 弓弦",
       "en_name": "Ballistica Prime String",
-      "plat_price": 23.0,
+      "plat_price": 21.8,
       "ducats": 45,
-      "volume": 291,
+      "volume": 274,
       "vaulted": true
     },
     {
@@ -675,9 +675,9 @@
       "slug": "ballistica_prime_upper_limb",
       "zh_name": "布里斯提卡 Prime 上弓臂",
       "en_name": "Ballistica Prime Upper Limb",
-      "plat_price": 14.0,
+      "plat_price": 13.3,
       "ducats": 45,
-      "volume": 303,
+      "volume": 314,
       "vaulted": true
     },
     {
@@ -685,9 +685,9 @@
       "slug": "banshee_prime_blueprint",
       "zh_name": "Banshee Prime 蓝图",
       "en_name": "Banshee Prime Blueprint",
-      "plat_price": 8.8,
+      "plat_price": 8.9,
       "ducats": 45,
-      "volume": 547,
+      "volume": 596,
       "vaulted": true
     },
     {
@@ -695,9 +695,9 @@
       "slug": "banshee_prime_chassis_blueprint",
       "zh_name": "Banshee Prime 机体 蓝图",
       "en_name": "Banshee Prime Chassis Blueprint",
-      "plat_price": 36.3,
+      "plat_price": 35.8,
       "ducats": 100,
-      "volume": 586,
+      "volume": 570,
       "vaulted": true
     },
     {
@@ -705,9 +705,9 @@
       "slug": "banshee_prime_neuroptics_blueprint",
       "zh_name": "Banshee Prime 头部神经光元 蓝图",
       "en_name": "Banshee Prime Neuroptics Blueprint",
-      "plat_price": 5.5,
+      "plat_price": 5.4,
       "ducats": 15,
-      "volume": 955,
+      "volume": 905,
       "vaulted": true
     },
     {
@@ -717,7 +717,7 @@
       "en_name": "Banshee Prime Systems Blueprint",
       "plat_price": 24.9,
       "ducats": 65,
-      "volume": 976,
+      "volume": 794,
       "vaulted": true
     },
     {
@@ -725,9 +725,9 @@
       "slug": "baruuk_prime_blueprint",
       "zh_name": "Baruuk Prime 蓝图",
       "en_name": "Baruuk Prime Blueprint",
-      "plat_price": 18.1,
+      "plat_price": 19.0,
       "ducats": 100,
-      "volume": 629,
+      "volume": 743,
       "vaulted": true
     },
     {
@@ -735,9 +735,9 @@
       "slug": "baruuk_prime_chassis_blueprint",
       "zh_name": "Baruuk Prime 机体 蓝图",
       "en_name": "Baruuk Prime Chassis Blueprint",
-      "plat_price": 5.2,
+      "plat_price": 5.0,
       "ducats": 45,
-      "volume": 581,
+      "volume": 547,
       "vaulted": true
     },
     {
@@ -747,7 +747,7 @@
       "en_name": "Baruuk Prime Neuroptics Blueprint",
       "plat_price": 19.7,
       "ducats": 65,
-      "volume": 926,
+      "volume": 1147,
       "vaulted": true
     },
     {
@@ -755,9 +755,9 @@
       "slug": "baruuk_prime_systems_blueprint",
       "zh_name": "Baruuk Prime 系统 蓝图",
       "en_name": "Baruuk Prime Systems Blueprint",
-      "plat_price": 9.2,
+      "plat_price": 8.8,
       "ducats": 15,
-      "volume": 346,
+      "volume": 296,
       "vaulted": true
     },
     {
@@ -765,9 +765,9 @@
       "slug": "baza_prime_barrel",
       "zh_name": "苍鹰 Prime 枪管",
       "en_name": "Baza Prime Barrel",
-      "plat_price": 6.9,
+      "plat_price": 7.3,
       "ducats": 45,
-      "volume": 304,
+      "volume": 382,
       "vaulted": true
     },
     {
@@ -775,9 +775,9 @@
       "slug": "baza_prime_blueprint",
       "zh_name": "苍鹰 Prime 蓝图",
       "en_name": "Baza Prime Blueprint",
-      "plat_price": 8.5,
+      "plat_price": 8.6,
       "ducats": 65,
-      "volume": 477,
+      "volume": 440,
       "vaulted": true
     },
     {
@@ -787,7 +787,7 @@
       "en_name": "Baza Prime Receiver",
       "plat_price": 8.6,
       "ducats": 15,
-      "volume": 252,
+      "volume": 238,
       "vaulted": true
     },
     {
@@ -795,9 +795,9 @@
       "slug": "baza_prime_stock",
       "zh_name": "苍鹰 Prime 枪托",
       "en_name": "Baza Prime Stock",
-      "plat_price": 28.9,
+      "plat_price": 30.3,
       "ducats": 100,
-      "volume": 143,
+      "volume": 130,
       "vaulted": true
     },
     {
@@ -805,9 +805,9 @@
       "slug": "bo_prime_blueprint",
       "zh_name": "玻之武杖 Prime 蓝图",
       "en_name": "Bo Prime Blueprint",
-      "plat_price": 17.9,
+      "plat_price": 17.8,
       "ducats": 15,
-      "volume": 493,
+      "volume": 539,
       "vaulted": true
     },
     {
@@ -815,9 +815,9 @@
       "slug": "bo_prime_handle",
       "zh_name": "玻之武杖 Prime 握柄",
       "en_name": "Bo Prime Handle",
-      "plat_price": 18.6,
+      "plat_price": 18.1,
       "ducats": 45,
-      "volume": 625,
+      "volume": 570,
       "vaulted": true
     },
     {
@@ -825,9 +825,9 @@
       "slug": "bo_prime_ornament",
       "zh_name": "玻之武杖 Prime 饰物",
       "en_name": "Bo Prime Ornament",
-      "plat_price": 26.9,
+      "plat_price": 27.0,
       "ducats": 15,
-      "volume": 706,
+      "volume": 826,
       "vaulted": true
     },
     {
@@ -835,9 +835,9 @@
       "slug": "boar_prime_barrel",
       "zh_name": "野猪 Prime 枪管",
       "en_name": "Boar Prime Barrel",
-      "plat_price": 19.4,
+      "plat_price": 19.6,
       "ducats": 45,
-      "volume": 334,
+      "volume": 394,
       "vaulted": true
     },
     {
@@ -845,9 +845,9 @@
       "slug": "boar_prime_blueprint",
       "zh_name": "野猪 Prime 蓝图",
       "en_name": "Boar Prime Blueprint",
-      "plat_price": 11.9,
+      "plat_price": 11.8,
       "ducats": 15,
-      "volume": 620,
+      "volume": 697,
       "vaulted": true
     },
     {
@@ -855,9 +855,9 @@
       "slug": "boar_prime_receiver",
       "zh_name": "野猪 Prime 枪机",
       "en_name": "Boar Prime Receiver",
-      "plat_price": 20.4,
+      "plat_price": 19.9,
       "ducats": 15,
-      "volume": 291,
+      "volume": 268,
       "vaulted": true
     },
     {
@@ -865,9 +865,9 @@
       "slug": "boar_prime_stock",
       "zh_name": "野猪 Prime 枪托",
       "en_name": "Boar Prime Stock",
-      "plat_price": 57.6,
+      "plat_price": 56.5,
       "ducats": 100,
-      "volume": 383,
+      "volume": 445,
       "vaulted": true
     },
     {
@@ -875,9 +875,9 @@
       "slug": "boltor_prime_barrel",
       "zh_name": "螺钉步枪 Prime 枪管",
       "en_name": "Boltor Prime Barrel",
-      "plat_price": 13.9,
+      "plat_price": 13.6,
       "ducats": 15,
-      "volume": 318,
+      "volume": 302,
       "vaulted": true
     },
     {
@@ -885,9 +885,9 @@
       "slug": "boltor_prime_blueprint",
       "zh_name": "螺钉步枪 Prime 蓝图",
       "en_name": "Boltor Prime Blueprint",
-      "plat_price": 19.9,
+      "plat_price": 20.5,
       "ducats": 100,
-      "volume": 256,
+      "volume": 237,
       "vaulted": true
     },
     {
@@ -895,9 +895,9 @@
       "slug": "boltor_prime_receiver",
       "zh_name": "螺钉步枪 Prime 枪机",
       "en_name": "Boltor Prime Receiver",
-      "plat_price": 8.5,
+      "plat_price": 8.8,
       "ducats": 45,
-      "volume": 537,
+      "volume": 456,
       "vaulted": true
     },
     {
@@ -907,7 +907,7 @@
       "en_name": "Boltor Prime Stock",
       "plat_price": 9.6,
       "ducats": 15,
-      "volume": 281,
+      "volume": 295,
       "vaulted": true
     },
     {
@@ -915,9 +915,9 @@
       "slug": "braton_prime_barrel",
       "zh_name": "布莱顿 Prime 枪管",
       "en_name": "Braton Prime Barrel",
-      "plat_price": 3.5,
+      "plat_price": 3.4,
       "ducats": 15,
-      "volume": 246,
+      "volume": 266,
       "vaulted": false
     },
     {
@@ -925,7 +925,7 @@
       "slug": "braton_prime_blueprint",
       "zh_name": "布莱顿 Prime 蓝图",
       "en_name": "Braton Prime Blueprint",
-      "plat_price": 2.7,
+      "plat_price": 2.4,
       "ducats": 25,
       "volume": 337,
       "vaulted": false
@@ -935,9 +935,9 @@
       "slug": "braton_prime_receiver",
       "zh_name": "布莱顿 Prime 枪机",
       "en_name": "Braton Prime Receiver",
-      "plat_price": 4.9,
+      "plat_price": 4.8,
       "ducats": 45,
-      "volume": 246,
+      "volume": 241,
       "vaulted": false
     },
     {
@@ -947,7 +947,7 @@
       "en_name": "Braton Prime Stock",
       "plat_price": 2.7,
       "ducats": 25,
-      "volume": 422,
+      "volume": 431,
       "vaulted": false
     },
     {
@@ -955,9 +955,9 @@
       "slug": "bronco_prime_barrel",
       "zh_name": "野马 Prime 枪管",
       "en_name": "Bronco Prime Barrel",
-      "plat_price": 3.0,
+      "plat_price": 2.9,
       "ducats": 25,
-      "volume": 352,
+      "volume": 357,
       "vaulted": false
     },
     {
@@ -967,7 +967,7 @@
       "en_name": "Bronco Prime Blueprint",
       "plat_price": 4.2,
       "ducats": 15,
-      "volume": 149,
+      "volume": 150,
       "vaulted": false
     },
     {
@@ -977,7 +977,7 @@
       "en_name": "Bronco Prime Receiver",
       "plat_price": 3.0,
       "ducats": 15,
-      "volume": 230,
+      "volume": 247,
       "vaulted": false
     },
     {
@@ -987,7 +987,7 @@
       "en_name": "Burston Prime Barrel",
       "plat_price": 4.3,
       "ducats": 45,
-      "volume": 323,
+      "volume": 324,
       "vaulted": false
     },
     {
@@ -995,9 +995,9 @@
       "slug": "burston_prime_blueprint",
       "zh_name": "伯斯顿 Prime 蓝图",
       "en_name": "Burston Prime Blueprint",
-      "plat_price": 3.6,
+      "plat_price": 3.4,
       "ducats": 15,
-      "volume": 234,
+      "volume": 231,
       "vaulted": false
     },
     {
@@ -1007,7 +1007,7 @@
       "en_name": "Burston Prime Receiver",
       "plat_price": 3.7,
       "ducats": 15,
-      "volume": 312,
+      "volume": 289,
       "vaulted": false
     },
     {
@@ -1017,7 +1017,7 @@
       "en_name": "Burston Prime Stock",
       "plat_price": 3.1,
       "ducats": 15,
-      "volume": 318,
+      "volume": 301,
       "vaulted": false
     },
     {
@@ -1025,9 +1025,9 @@
       "slug": "caliban_prime_blueprint",
       "zh_name": "Caliban Prime 蓝图",
       "en_name": "Caliban Prime Blueprint",
-      "plat_price": 3.6,
+      "plat_price": 3.4,
       "ducats": 45,
-      "volume": 507,
+      "volume": 531,
       "vaulted": false
     },
     {
@@ -1037,7 +1037,7 @@
       "en_name": "Caliban Prime Chassis Blueprint",
       "plat_price": 3.3,
       "ducats": 15,
-      "volume": 553,
+      "volume": 498,
       "vaulted": false
     },
     {
@@ -1045,9 +1045,9 @@
       "slug": "caliban_prime_neuroptics_blueprint",
       "zh_name": "Caliban Prime 头部神经光元 蓝图",
       "en_name": "Caliban Prime Neuroptics Blueprint",
-      "plat_price": 11.1,
+      "plat_price": 9.8,
       "ducats": 100,
-      "volume": 480,
+      "volume": 308,
       "vaulted": false
     },
     {
@@ -1055,9 +1055,9 @@
       "slug": "caliban_prime_systems_blueprint",
       "zh_name": "Caliban Prime 系统 蓝图",
       "en_name": "Caliban Prime Systems Blueprint",
-      "plat_price": 15.8,
+      "plat_price": 16.2,
       "ducats": 100,
-      "volume": 441,
+      "volume": 450,
       "vaulted": false
     },
     {
@@ -1065,9 +1065,9 @@
       "slug": "carrier_prime_blueprint",
       "zh_name": "搬运者 Prime 蓝图",
       "en_name": "Carrier Prime Blueprint",
-      "plat_price": 13.2,
+      "plat_price": 13.5,
       "ducats": 15,
-      "volume": 271,
+      "volume": 247,
       "vaulted": true
     },
     {
@@ -1077,7 +1077,7 @@
       "en_name": "Carrier Prime Carapace",
       "plat_price": 15.8,
       "ducats": 15,
-      "volume": 213,
+      "volume": 230,
       "vaulted": true
     },
     {
@@ -1085,9 +1085,9 @@
       "slug": "carrier_prime_cerebrum",
       "zh_name": "搬运者 Prime 头部",
       "en_name": "Carrier Prime Cerebrum",
-      "plat_price": 49.3,
+      "plat_price": 49.1,
       "ducats": 65,
-      "volume": 226,
+      "volume": 224,
       "vaulted": true
     },
     {
@@ -1097,7 +1097,7 @@
       "en_name": "Carrier Prime Systems",
       "plat_price": 9.0,
       "ducats": 15,
-      "volume": 261,
+      "volume": 263,
       "vaulted": true
     },
     {
@@ -1107,7 +1107,7 @@
       "en_name": "Cedo Prime Barrel",
       "plat_price": 3.8,
       "ducats": 45,
-      "volume": 418,
+      "volume": 439,
       "vaulted": false
     },
     {
@@ -1115,9 +1115,9 @@
       "slug": "cedo_prime_blueprint",
       "zh_name": "塞多 Prime 蓝图",
       "en_name": "Cedo Prime Blueprint",
-      "plat_price": 9.8,
+      "plat_price": 9.7,
       "ducats": 100,
-      "volume": 333,
+      "volume": 342,
       "vaulted": false
     },
     {
@@ -1125,9 +1125,9 @@
       "slug": "cedo_prime_receiver",
       "zh_name": "塞多 Prime 枪机",
       "en_name": "Cedo Prime Receiver",
-      "plat_price": 4.3,
+      "plat_price": 4.2,
       "ducats": 45,
-      "volume": 409,
+      "volume": 435,
       "vaulted": false
     },
     {
@@ -1135,9 +1135,9 @@
       "slug": "cedo_prime_stock",
       "zh_name": "塞多 Prime 枪托",
       "en_name": "Cedo Prime Stock",
-      "plat_price": 6.4,
+      "plat_price": 6.3,
       "ducats": 15,
-      "volume": 232,
+      "volume": 220,
       "vaulted": false
     },
     {
@@ -1145,9 +1145,9 @@
       "slug": "cernos_prime_blueprint",
       "zh_name": "西诺斯 Prime 蓝图",
       "en_name": "Cernos Prime Blueprint",
-      "plat_price": 7.0,
+      "plat_price": 5.4,
       "ducats": 45,
-      "volume": 201,
+      "volume": 192,
       "vaulted": false
     },
     {
@@ -1155,9 +1155,9 @@
       "slug": "cernos_prime_grip",
       "zh_name": "西诺斯 Prime 弓身",
       "en_name": "Cernos Prime Grip",
-      "plat_price": 8.8,
+      "plat_price": 9.4,
       "ducats": 15,
-      "volume": 240,
+      "volume": 252,
       "vaulted": false
     },
     {
@@ -1165,9 +1165,9 @@
       "slug": "cernos_prime_lower_limb",
       "zh_name": "西诺斯 Prime 下弓臂",
       "en_name": "Cernos Prime Lower Limb",
-      "plat_price": 31.1,
+      "plat_price": 31.0,
       "ducats": 100,
-      "volume": 221,
+      "volume": 208,
       "vaulted": false
     },
     {
@@ -1175,9 +1175,9 @@
       "slug": "cernos_prime_string",
       "zh_name": "西诺斯 Prime 弓弦",
       "en_name": "Cernos Prime String",
-      "plat_price": 8.1,
+      "plat_price": 8.2,
       "ducats": 25,
-      "volume": 220,
+      "volume": 236,
       "vaulted": false
     },
     {
@@ -1185,9 +1185,9 @@
       "slug": "cernos_prime_upper_limb",
       "zh_name": "西诺斯 Prime 上弓臂",
       "en_name": "Cernos Prime Upper Limb",
-      "plat_price": 9.0,
+      "plat_price": 9.1,
       "ducats": 15,
-      "volume": 164,
+      "volume": 192,
       "vaulted": false
     },
     {
@@ -1195,9 +1195,9 @@
       "slug": "chroma_prime_blueprint",
       "zh_name": "Chroma Prime 蓝图",
       "en_name": "Chroma Prime Blueprint",
-      "plat_price": 9.6,
+      "plat_price": 9.7,
       "ducats": 15,
-      "volume": 313,
+      "volume": 317,
       "vaulted": true
     },
     {
@@ -1207,7 +1207,7 @@
       "en_name": "Chroma Prime Chassis Blueprint",
       "plat_price": 9.6,
       "ducats": 25,
-      "volume": 485,
+      "volume": 465,
       "vaulted": true
     },
     {
@@ -1215,9 +1215,9 @@
       "slug": "chroma_prime_neuroptics_blueprint",
       "zh_name": "Chroma Prime 头部神经光元 蓝图",
       "en_name": "Chroma Prime Neuroptics Blueprint",
-      "plat_price": 30.8,
+      "plat_price": 30.4,
       "ducats": 100,
-      "volume": 393,
+      "volume": 351,
       "vaulted": true
     },
     {
@@ -1225,9 +1225,9 @@
       "slug": "chroma_prime_systems_blueprint",
       "zh_name": "Chroma Prime 系统 蓝图",
       "en_name": "Chroma Prime Systems Blueprint",
-      "plat_price": 29.8,
+      "plat_price": 30.1,
       "ducats": 65,
-      "volume": 476,
+      "volume": 423,
       "vaulted": true
     },
     {
@@ -1235,9 +1235,9 @@
       "slug": "citrine_prime_blueprint",
       "zh_name": "Citrine Prime 蓝图",
       "en_name": "Citrine Prime Blueprint",
-      "plat_price": 12.9,
+      "plat_price": 13.2,
       "ducats": 100,
-      "volume": 547,
+      "volume": 550,
       "vaulted": false
     },
     {
@@ -1245,9 +1245,9 @@
       "slug": "citrine_prime_chassis_blueprint",
       "zh_name": "Citrine Prime 机体 蓝图",
       "en_name": "Citrine Prime Chassis Blueprint",
-      "plat_price": 7.5,
+      "plat_price": 7.3,
       "ducats": 15,
-      "volume": 621,
+      "volume": 710,
       "vaulted": false
     },
     {
@@ -1255,9 +1255,9 @@
       "slug": "citrine_prime_neuroptics_blueprint",
       "zh_name": "Citrine Prime 头部神经光元 蓝图",
       "en_name": "Citrine Prime Neuroptics Blueprint",
-      "plat_price": 30.5,
+      "plat_price": 29.8,
       "ducats": 100,
-      "volume": 439,
+      "volume": 424,
       "vaulted": false
     },
     {
@@ -1265,9 +1265,9 @@
       "slug": "citrine_prime_systems_blueprint",
       "zh_name": "Citrine Prime 系统 蓝图",
       "en_name": "Citrine Prime Systems Blueprint",
-      "plat_price": 7.6,
+      "plat_price": 7.5,
       "ducats": 45,
-      "volume": 561,
+      "volume": 508,
       "vaulted": false
     },
     {
@@ -1275,9 +1275,9 @@
       "slug": "cobra_and_crane_prime_blade",
       "zh_name": "眼镜蛇 & 鹤 Prime 刀刃",
       "en_name": "Cobra & Crane Prime Blade",
-      "plat_price": 5.5,
+      "plat_price": 5.6,
       "ducats": 45,
-      "volume": 222,
+      "volume": 184,
       "vaulted": true
     },
     {
@@ -1287,7 +1287,7 @@
       "en_name": "Cobra & Crane Prime Blueprint",
       "plat_price": 4.7,
       "ducats": 45,
-      "volume": 302,
+      "volume": 194,
       "vaulted": true
     },
     {
@@ -1295,9 +1295,9 @@
       "slug": "cobra_and_crane_prime_guard",
       "zh_name": "眼镜蛇 & 鹤 Prime 护手",
       "en_name": "Cobra & Crane Prime Guard",
-      "plat_price": 16.0,
+      "plat_price": 16.3,
       "ducats": 100,
-      "volume": 245,
+      "volume": 226,
       "vaulted": true
     },
     {
@@ -1305,9 +1305,9 @@
       "slug": "cobra_and_crane_prime_hilt",
       "zh_name": "眼镜蛇 & 鹤 Prime 握柄",
       "en_name": "Cobra & Crane Prime Hilt",
-      "plat_price": 6.6,
+      "plat_price": 5.9,
       "ducats": 15,
-      "volume": 198,
+      "volume": 178,
       "vaulted": true
     },
     {
@@ -1315,9 +1315,9 @@
       "slug": "corinth_prime_barrel",
       "zh_name": "科林斯 Prime 枪管",
       "en_name": "Corinth Prime Barrel",
-      "plat_price": 46.4,
+      "plat_price": 47.5,
       "ducats": 100,
-      "volume": 326,
+      "volume": 302,
       "vaulted": true
     },
     {
@@ -1325,9 +1325,9 @@
       "slug": "corinth_prime_blueprint",
       "zh_name": "科林斯 Prime 蓝图",
       "en_name": "Corinth Prime Blueprint",
-      "plat_price": 5.6,
+      "plat_price": 5.2,
       "ducats": 15,
-      "volume": 179,
+      "volume": 152,
       "vaulted": true
     },
     {
@@ -1337,7 +1337,7 @@
       "en_name": "Corinth Prime Receiver",
       "plat_price": 7.1,
       "ducats": 45,
-      "volume": 293,
+      "volume": 281,
       "vaulted": true
     },
     {
@@ -1347,7 +1347,7 @@
       "en_name": "Corinth Prime Stock",
       "plat_price": 18.1,
       "ducats": 100,
-      "volume": 217,
+      "volume": 223,
       "vaulted": true
     },
     {
@@ -1355,9 +1355,9 @@
       "slug": "corufell_prime_blueprint",
       "zh_name": "闪劫 Prime 蓝图",
       "en_name": "Corufell Prime Blueprint",
-      "plat_price": 5.2,
+      "plat_price": 5.1,
       "ducats": 15,
-      "volume": 231,
+      "volume": 241,
       "vaulted": false
     },
     {
@@ -1365,9 +1365,9 @@
       "slug": "corufell_prime_handle",
       "zh_name": "闪劫 Prime 握柄",
       "en_name": "Corufell Prime Handle",
-      "plat_price": 8.4,
+      "plat_price": 8.0,
       "ducats": 45,
-      "volume": 521,
+      "volume": 512,
       "vaulted": false
     },
     {
@@ -1375,9 +1375,9 @@
       "slug": "corufell_prime_receiver",
       "zh_name": "闪劫 Prime 枪机",
       "en_name": "Corufell Prime Receiver",
-      "plat_price": 14.7,
+      "plat_price": 14.4,
       "ducats": 100,
-      "volume": 395,
+      "volume": 369,
       "vaulted": false
     },
     {
@@ -1385,9 +1385,9 @@
       "slug": "corufell_prime_stock",
       "zh_name": "闪劫 Prime 枪托",
       "en_name": "Corufell Prime Stock",
-      "plat_price": 5.9,
+      "plat_price": 5.8,
       "ducats": 15,
-      "volume": 232,
+      "volume": 267,
       "vaulted": false
     },
     {
@@ -1395,9 +1395,9 @@
       "slug": "corvas_prime_barrel",
       "zh_name": "黑鸦 Prime 枪管",
       "en_name": "Corvas Prime Barrel",
-      "plat_price": 29.5,
+      "plat_price": 29.2,
       "ducats": 100,
-      "volume": 296,
+      "volume": 247,
       "vaulted": true
     },
     {
@@ -1407,7 +1407,7 @@
       "en_name": "Corvas Prime Blueprint",
       "plat_price": 7.4,
       "ducats": 45,
-      "volume": 291,
+      "volume": 195,
       "vaulted": true
     },
     {
@@ -1417,7 +1417,7 @@
       "en_name": "Corvas Prime Receiver",
       "plat_price": 8.8,
       "ducats": 15,
-      "volume": 157,
+      "volume": 153,
       "vaulted": true
     },
     {
@@ -1425,9 +1425,9 @@
       "slug": "corvas_prime_stock",
       "zh_name": "黑鸦 Prime 枪托",
       "en_name": "Corvas Prime Stock",
-      "plat_price": 6.4,
+      "plat_price": 6.3,
       "ducats": 15,
-      "volume": 269,
+      "volume": 272,
       "vaulted": true
     },
     {
@@ -1435,9 +1435,9 @@
       "slug": "daikyu_prime_blueprint",
       "zh_name": "大久和弓 Prime 蓝图",
       "en_name": "Daikyu Prime Blueprint",
-      "plat_price": 2.8,
+      "plat_price": 2.6,
       "ducats": 15,
-      "volume": 204,
+      "volume": 208,
       "vaulted": false
     },
     {
@@ -1447,7 +1447,7 @@
       "en_name": "Daikyu Prime Grip",
       "plat_price": 9.6,
       "ducats": 100,
-      "volume": 229,
+      "volume": 258,
       "vaulted": false
     },
     {
@@ -1455,7 +1455,7 @@
       "slug": "daikyu_prime_lower_limb",
       "zh_name": "大久和弓 Prime 下弓臂",
       "en_name": "Daikyu Prime Lower Limb",
-      "plat_price": 4.4,
+      "plat_price": 4.3,
       "ducats": 45,
       "volume": 213,
       "vaulted": false
@@ -1467,7 +1467,7 @@
       "en_name": "Daikyu Prime String",
       "plat_price": 3.6,
       "ducats": 15,
-      "volume": 224,
+      "volume": 250,
       "vaulted": false
     },
     {
@@ -1477,7 +1477,7 @@
       "en_name": "Daikyu Prime Upper Limb",
       "plat_price": 3.4,
       "ducats": 45,
-      "volume": 458,
+      "volume": 416,
       "vaulted": false
     },
     {
@@ -1485,9 +1485,9 @@
       "slug": "dakra_prime_blade",
       "zh_name": "达克拉 Prime 刀刃",
       "en_name": "Dakra Prime Blade",
-      "plat_price": 19.3,
+      "plat_price": 18.3,
       "ducats": 65,
-      "volume": 224,
+      "volume": 223,
       "vaulted": true
     },
     {
@@ -1495,9 +1495,9 @@
       "slug": "dakra_prime_blueprint",
       "zh_name": "达克拉 Prime 蓝图",
       "en_name": "Dakra Prime Blueprint",
-      "plat_price": 9.5,
+      "plat_price": 8.8,
       "ducats": 45,
-      "volume": 221,
+      "volume": 193,
       "vaulted": true
     },
     {
@@ -1505,9 +1505,9 @@
       "slug": "dakra_prime_handle",
       "zh_name": "达克拉 Prime 握柄",
       "en_name": "Dakra Prime Handle",
-      "plat_price": 10.0,
+      "plat_price": 9.7,
       "ducats": 15,
-      "volume": 213,
+      "volume": 228,
       "vaulted": true
     },
     {
@@ -1515,9 +1515,9 @@
       "slug": "destreza_prime_blade",
       "zh_name": "技巧之剑 Prime 刀刃",
       "en_name": "Destreza Prime Blade",
-      "plat_price": 65.8,
+      "plat_price": 64.2,
       "ducats": 100,
-      "volume": 290,
+      "volume": 294,
       "vaulted": true
     },
     {
@@ -1525,9 +1525,9 @@
       "slug": "destreza_prime_blueprint",
       "zh_name": "技巧之剑 Prime 蓝图",
       "en_name": "Destreza Prime Blueprint",
-      "plat_price": 9.0,
+      "plat_price": 8.9,
       "ducats": 45,
-      "volume": 303,
+      "volume": 308,
       "vaulted": true
     },
     {
@@ -1535,9 +1535,9 @@
       "slug": "destreza_prime_handle",
       "zh_name": "技巧之剑 Prime 握柄",
       "en_name": "Destreza Prime Handle",
-      "plat_price": 15.4,
+      "plat_price": 15.3,
       "ducats": 15,
-      "volume": 339,
+      "volume": 355,
       "vaulted": true
     },
     {
@@ -1545,9 +1545,9 @@
       "slug": "dethcube_prime_blueprint",
       "zh_name": "死亡魔方 Prime 蓝图",
       "en_name": "Dethcube Prime Blueprint",
-      "plat_price": 24.3,
+      "plat_price": 24.8,
       "ducats": 100,
-      "volume": 353,
+      "volume": 329,
       "vaulted": true
     },
     {
@@ -1555,9 +1555,9 @@
       "slug": "dethcube_prime_carapace",
       "zh_name": "死亡魔方 Prime 外壳",
       "en_name": "Dethcube Prime Carapace",
-      "plat_price": 5.2,
+      "plat_price": 5.3,
       "ducats": 45,
-      "volume": 487,
+      "volume": 422,
       "vaulted": true
     },
     {
@@ -1565,9 +1565,9 @@
       "slug": "dethcube_prime_cerebrum",
       "zh_name": "死亡魔方 Prime 头部",
       "en_name": "Dethcube Prime Cerebrum",
-      "plat_price": 35.0,
+      "plat_price": 34.2,
       "ducats": 65,
-      "volume": 593,
+      "volume": 595,
       "vaulted": true
     },
     {
@@ -1575,9 +1575,9 @@
       "slug": "dethcube_prime_systems",
       "zh_name": "死亡魔方 Prime 系统",
       "en_name": "Dethcube Prime Systems",
-      "plat_price": 8.5,
+      "plat_price": 8.3,
       "ducats": 15,
-      "volume": 274,
+      "volume": 325,
       "vaulted": true
     },
     {
@@ -1587,7 +1587,7 @@
       "en_name": "Dual Kamas Prime Blade",
       "plat_price": 40.0,
       "ducats": 100,
-      "volume": 528,
+      "volume": 516,
       "vaulted": true
     },
     {
@@ -1595,9 +1595,9 @@
       "slug": "dual_kamas_prime_blueprint",
       "zh_name": "双短柄战镰 Prime 蓝图",
       "en_name": "Dual Kamas Prime Blueprint",
-      "plat_price": 7.4,
+      "plat_price": 8.0,
       "ducats": 15,
-      "volume": 162,
+      "volume": 173,
       "vaulted": true
     },
     {
@@ -1605,9 +1605,9 @@
       "slug": "dual_kamas_prime_handle",
       "zh_name": "双短柄战镰 Prime 握柄",
       "en_name": "Dual Kamas Prime Handle",
-      "plat_price": 8.8,
+      "plat_price": 8.9,
       "ducats": 45,
-      "volume": 433,
+      "volume": 582,
       "vaulted": true
     },
     {
@@ -1615,9 +1615,9 @@
       "slug": "dual_keres_prime_blade",
       "zh_name": "凯瑞斯双刀 Prime 刀刃",
       "en_name": "Dual Keres Prime Blade",
-      "plat_price": 9.3,
+      "plat_price": 9.4,
       "ducats": 15,
-      "volume": 249,
+      "volume": 221,
       "vaulted": true
     },
     {
@@ -1625,9 +1625,9 @@
       "slug": "dual_keres_prime_blueprint",
       "zh_name": "凯瑞斯双刀 Prime 蓝图",
       "en_name": "Dual Keres Prime Blueprint",
-      "plat_price": 18.9,
+      "plat_price": 19.1,
       "ducats": 100,
-      "volume": 214,
+      "volume": 212,
       "vaulted": true
     },
     {
@@ -1637,7 +1637,7 @@
       "en_name": "Dual Keres Prime Handle",
       "plat_price": 10.6,
       "ducats": 45,
-      "volume": 239,
+      "volume": 215,
       "vaulted": true
     },
     {
@@ -1645,9 +1645,9 @@
       "slug": "dual_zoren_prime_blade",
       "zh_name": "佐伦双斧 Prime 刀刃",
       "en_name": "Dual Zoren Prime Blade",
-      "plat_price": 9.9,
+      "plat_price": 10.0,
       "ducats": 100,
-      "volume": 263,
+      "volume": 251,
       "vaulted": false
     },
     {
@@ -1657,7 +1657,7 @@
       "en_name": "Dual Zoren Prime Blueprint",
       "plat_price": 3.4,
       "ducats": 45,
-      "volume": 333,
+      "volume": 321,
       "vaulted": false
     },
     {
@@ -1665,9 +1665,9 @@
       "slug": "dual_zoren_prime_handle",
       "zh_name": "佐伦双斧 Prime 握柄",
       "en_name": "Dual Zoren Prime Handle",
-      "plat_price": 3.4,
+      "plat_price": 3.2,
       "ducats": 15,
-      "volume": 365,
+      "volume": 347,
       "vaulted": false
     },
     {
@@ -1675,9 +1675,9 @@
       "slug": "ember_prime_blueprint",
       "zh_name": "Ember Prime 蓝图",
       "en_name": "Ember Prime Blueprint",
-      "plat_price": 24.7,
+      "plat_price": 23.9,
       "ducats": 100,
-      "volume": 483,
+      "volume": 447,
       "vaulted": true
     },
     {
@@ -1685,9 +1685,9 @@
       "slug": "ember_prime_chassis_blueprint",
       "zh_name": "Ember Prime 机体 蓝图",
       "en_name": "Ember Prime Chassis Blueprint",
-      "plat_price": 9.5,
+      "plat_price": 9.3,
       "ducats": 15,
-      "volume": 574,
+      "volume": 665,
       "vaulted": true
     },
     {
@@ -1697,7 +1697,7 @@
       "en_name": "Ember Prime Neuroptics Blueprint",
       "plat_price": 9.7,
       "ducats": 15,
-      "volume": 484,
+      "volume": 482,
       "vaulted": true
     },
     {
@@ -1705,9 +1705,9 @@
       "slug": "ember_prime_systems_blueprint",
       "zh_name": "Ember Prime 系统 蓝图",
       "en_name": "Ember Prime Systems Blueprint",
-      "plat_price": 9.8,
+      "plat_price": 14.1,
       "ducats": 45,
-      "volume": 435,
+      "volume": 732,
       "vaulted": true
     },
     {
@@ -1717,7 +1717,7 @@
       "en_name": "Epitaph Prime Barrel",
       "plat_price": 4.6,
       "ducats": 45,
-      "volume": 481,
+      "volume": 426,
       "vaulted": true
     },
     {
@@ -1725,9 +1725,9 @@
       "slug": "epitaph_prime_blueprint",
       "zh_name": "葬铭 Prime 蓝图",
       "en_name": "Epitaph Prime Blueprint",
-      "plat_price": 5.7,
+      "plat_price": 5.9,
       "ducats": 15,
-      "volume": 208,
+      "volume": 193,
       "vaulted": true
     },
     {
@@ -1735,9 +1735,9 @@
       "slug": "epitaph_prime_receiver",
       "zh_name": "葬铭 Prime 枪机",
       "en_name": "Epitaph Prime Receiver",
-      "plat_price": 14.3,
+      "plat_price": 14.4,
       "ducats": 100,
-      "volume": 320,
+      "volume": 315,
       "vaulted": true
     },
     {
@@ -1747,7 +1747,7 @@
       "en_name": "Equinox Prime Blueprint",
       "plat_price": 15.0,
       "ducats": 45,
-      "volume": 270,
+      "volume": 249,
       "vaulted": true
     },
     {
@@ -1755,9 +1755,9 @@
       "slug": "equinox_prime_chassis_blueprint",
       "zh_name": "Equinox Prime 机体 蓝图",
       "en_name": "Equinox Prime Chassis Blueprint",
-      "plat_price": 7.2,
+      "plat_price": 6.9,
       "ducats": 15,
-      "volume": 585,
+      "volume": 609,
       "vaulted": true
     },
     {
@@ -1767,7 +1767,7 @@
       "en_name": "Equinox Prime Neuroptics Blueprint",
       "plat_price": 8.2,
       "ducats": 45,
-      "volume": 485,
+      "volume": 462,
       "vaulted": true
     },
     {
@@ -1775,9 +1775,9 @@
       "slug": "equinox_prime_systems_blueprint",
       "zh_name": "Equinox Prime 系统 蓝图",
       "en_name": "Equinox Prime Systems Blueprint",
-      "plat_price": 34.5,
+      "plat_price": 34.8,
       "ducats": 100,
-      "volume": 287,
+      "volume": 277,
       "vaulted": true
     },
     {
@@ -1785,9 +1785,9 @@
       "slug": "euphona_prime_barrel",
       "zh_name": "悦音 Prime 枪管",
       "en_name": "Euphona Prime Barrel",
-      "plat_price": 5.8,
+      "plat_price": 6.0,
       "ducats": 45,
-      "volume": 512,
+      "volume": 348,
       "vaulted": true
     },
     {
@@ -1797,7 +1797,7 @@
       "en_name": "Euphona Prime Blueprint",
       "plat_price": 4.5,
       "ducats": 15,
-      "volume": 287,
+      "volume": 277,
       "vaulted": true
     },
     {
@@ -1805,9 +1805,9 @@
       "slug": "euphona_prime_receiver",
       "zh_name": "悦音 Prime 枪机",
       "en_name": "Euphona Prime Receiver",
-      "plat_price": 43.7,
+      "plat_price": 40.7,
       "ducats": 100,
-      "volume": 306,
+      "volume": 398,
       "vaulted": true
     },
     {
@@ -1817,7 +1817,7 @@
       "en_name": "Fang Prime Blade",
       "plat_price": 3.6,
       "ducats": 15,
-      "volume": 255,
+      "volume": 220,
       "vaulted": false
     },
     {
@@ -1825,7 +1825,7 @@
       "slug": "fang_prime_blueprint",
       "zh_name": "狼牙 Prime 蓝图",
       "en_name": "Fang Prime Blueprint",
-      "plat_price": 2.1,
+      "plat_price": 2.2,
       "ducats": 15,
       "volume": 201,
       "vaulted": false
@@ -1837,7 +1837,7 @@
       "en_name": "Fang Prime Handle",
       "plat_price": 3.1,
       "ducats": 25,
-      "volume": 354,
+      "volume": 378,
       "vaulted": false
     },
     {
@@ -1845,9 +1845,9 @@
       "slug": "fragor_prime_blueprint",
       "zh_name": "重击巨锤 Prime 蓝图",
       "en_name": "Fragor Prime Blueprint",
-      "plat_price": 14.0,
+      "plat_price": 13.5,
       "ducats": 65,
-      "volume": 327,
+      "volume": 216,
       "vaulted": true
     },
     {
@@ -1855,9 +1855,9 @@
       "slug": "fragor_prime_handle",
       "zh_name": "重击巨锤 Prime 握柄",
       "en_name": "Fragor Prime Handle",
-      "plat_price": 14.7,
+      "plat_price": 14.1,
       "ducats": 65,
-      "volume": 225,
+      "volume": 226,
       "vaulted": true
     },
     {
@@ -1865,9 +1865,9 @@
       "slug": "fragor_prime_head",
       "zh_name": "重击巨锤 Prime 锤头",
       "en_name": "Fragor Prime Head",
-      "plat_price": 9.9,
+      "plat_price": 10.0,
       "ducats": 15,
-      "volume": 264,
+      "volume": 268,
       "vaulted": true
     },
     {
@@ -1875,9 +1875,9 @@
       "slug": "frost_prime_blueprint",
       "zh_name": "Frost Prime 蓝图",
       "en_name": "Frost Prime Blueprint",
-      "plat_price": 39.5,
+      "plat_price": 39.4,
       "ducats": 100,
-      "volume": 397,
+      "volume": 381,
       "vaulted": true
     },
     {
@@ -1885,9 +1885,9 @@
       "slug": "frost_prime_chassis_blueprint",
       "zh_name": "Frost Prime 机体 蓝图",
       "en_name": "Frost Prime Chassis Blueprint",
-      "plat_price": 17.4,
+      "plat_price": 16.6,
       "ducats": 15,
-      "volume": 521,
+      "volume": 475,
       "vaulted": true
     },
     {
@@ -1895,9 +1895,9 @@
       "slug": "frost_prime_neuroptics_blueprint",
       "zh_name": "Frost Prime 头部神经光元 蓝图",
       "en_name": "Frost Prime Neuroptics Blueprint",
-      "plat_price": 13.4,
+      "plat_price": 13.1,
       "ducats": 15,
-      "volume": 610,
+      "volume": 560,
       "vaulted": true
     },
     {
@@ -1905,9 +1905,9 @@
       "slug": "frost_prime_systems_blueprint",
       "zh_name": "Frost Prime 系统 蓝图",
       "en_name": "Frost Prime Systems Blueprint",
-      "plat_price": 13.1,
+      "plat_price": 13.3,
       "ducats": 45,
-      "volume": 493,
+      "volume": 546,
       "vaulted": true
     },
     {
@@ -1915,9 +1915,9 @@
       "slug": "fulmin_prime_barrel",
       "zh_name": "雷霆 Prime 枪管",
       "en_name": "Fulmin Prime Barrel",
-      "plat_price": 6.8,
+      "plat_price": 7.1,
       "ducats": 15,
-      "volume": 246,
+      "volume": 245,
       "vaulted": true
     },
     {
@@ -1925,9 +1925,9 @@
       "slug": "fulmin_prime_blueprint",
       "zh_name": "雷霆 Prime 蓝图",
       "en_name": "Fulmin Prime Blueprint",
-      "plat_price": 5.5,
+      "plat_price": 5.2,
       "ducats": 45,
-      "volume": 334,
+      "volume": 243,
       "vaulted": true
     },
     {
@@ -1935,9 +1935,9 @@
       "slug": "fulmin_prime_receiver",
       "zh_name": "雷霆 Prime 枪机",
       "en_name": "Fulmin Prime Receiver",
-      "plat_price": 29.3,
+      "plat_price": 28.6,
       "ducats": 100,
-      "volume": 215,
+      "volume": 236,
       "vaulted": true
     },
     {
@@ -1945,9 +1945,9 @@
       "slug": "fulmin_prime_stock",
       "zh_name": "雷霆 Prime 枪托",
       "en_name": "Fulmin Prime Stock",
-      "plat_price": 7.3,
+      "plat_price": 7.4,
       "ducats": 45,
-      "volume": 361,
+      "volume": 286,
       "vaulted": true
     },
     {
@@ -1955,9 +1955,9 @@
       "slug": "galatine_prime_blade",
       "zh_name": "迦伦提恩 Prime 刀刃",
       "en_name": "Galatine Prime Blade",
-      "plat_price": 7.4,
+      "plat_price": 7.3,
       "ducats": 15,
-      "volume": 245,
+      "volume": 234,
       "vaulted": true
     },
     {
@@ -1965,9 +1965,9 @@
       "slug": "galatine_prime_blueprint",
       "zh_name": "迦伦提恩 Prime 蓝图",
       "en_name": "Galatine Prime Blueprint",
-      "plat_price": 39.7,
+      "plat_price": 39.9,
       "ducats": 100,
-      "volume": 137,
+      "volume": 128,
       "vaulted": true
     },
     {
@@ -1977,7 +1977,7 @@
       "en_name": "Galatine Prime Handle",
       "plat_price": 7.9,
       "ducats": 45,
-      "volume": 269,
+      "volume": 264,
       "vaulted": true
     },
     {
@@ -1985,9 +1985,9 @@
       "slug": "gara_prime_blueprint",
       "zh_name": "Gara Prime 蓝图",
       "en_name": "Gara Prime Blueprint",
-      "plat_price": 34.2,
+      "plat_price": 34.5,
       "ducats": 100,
-      "volume": 1327,
+      "volume": 1225,
       "vaulted": true
     },
     {
@@ -1995,9 +1995,9 @@
       "slug": "gara_prime_chassis_blueprint",
       "zh_name": "Gara Prime 机体 蓝图",
       "en_name": "Gara Prime Chassis Blueprint",
-      "plat_price": 17.4,
+      "plat_price": 17.3,
       "ducats": 45,
-      "volume": 528,
+      "volume": 456,
       "vaulted": true
     },
     {
@@ -2005,9 +2005,9 @@
       "slug": "gara_prime_neuroptics_blueprint",
       "zh_name": "Gara Prime 头部神经光元 蓝图",
       "en_name": "Gara Prime Neuroptics Blueprint",
-      "plat_price": 8.2,
+      "plat_price": 8.1,
       "ducats": 45,
-      "volume": 632,
+      "volume": 628,
       "vaulted": true
     },
     {
@@ -2015,9 +2015,9 @@
       "slug": "gara_prime_systems_blueprint",
       "zh_name": "Gara Prime 系统 蓝图",
       "en_name": "Gara Prime Systems Blueprint",
-      "plat_price": 9.1,
+      "plat_price": 9.0,
       "ducats": 15,
-      "volume": 426,
+      "volume": 324,
       "vaulted": true
     },
     {
@@ -2025,9 +2025,9 @@
       "slug": "garuda_prime_blueprint",
       "zh_name": "Garuda Prime 蓝图",
       "en_name": "Garuda Prime Blueprint",
-      "plat_price": 5.0,
+      "plat_price": 5.1,
       "ducats": 15,
-      "volume": 377,
+      "volume": 359,
       "vaulted": true
     },
     {
@@ -2035,9 +2035,9 @@
       "slug": "garuda_prime_chassis_blueprint",
       "zh_name": "Garuda Prime 机体 蓝图",
       "en_name": "Garuda Prime Chassis Blueprint",
-      "plat_price": 8.9,
+      "plat_price": 8.6,
       "ducats": 45,
-      "volume": 583,
+      "volume": 492,
       "vaulted": true
     },
     {
@@ -2045,9 +2045,9 @@
       "slug": "garuda_prime_neuroptics_blueprint",
       "zh_name": "Garuda Prime 头部神经光元 蓝图",
       "en_name": "Garuda Prime Neuroptics Blueprint",
-      "plat_price": 28.8,
+      "plat_price": 28.9,
       "ducats": 100,
-      "volume": 330,
+      "volume": 317,
       "vaulted": true
     },
     {
@@ -2055,9 +2055,9 @@
       "slug": "garuda_prime_systems_blueprint",
       "zh_name": "Garuda Prime 系统 蓝图",
       "en_name": "Garuda Prime Systems Blueprint",
-      "plat_price": 35.7,
+      "plat_price": 36.9,
       "ducats": 65,
-      "volume": 1465,
+      "volume": 1237,
       "vaulted": true
     },
     {
@@ -2065,9 +2065,9 @@
       "slug": "gauss_prime_blueprint",
       "zh_name": "Gauss Prime 蓝图",
       "en_name": "Gauss Prime Blueprint",
-      "plat_price": 6.5,
+      "plat_price": 6.6,
       "ducats": 25,
-      "volume": 1100,
+      "volume": 917,
       "vaulted": true
     },
     {
@@ -2075,9 +2075,9 @@
       "slug": "gauss_prime_chassis_blueprint",
       "zh_name": "Gauss Prime 机体 蓝图",
       "en_name": "Gauss Prime Chassis Blueprint",
-      "plat_price": 5.9,
+      "plat_price": 5.8,
       "ducats": 15,
-      "volume": 343,
+      "volume": 382,
       "vaulted": true
     },
     {
@@ -2085,9 +2085,9 @@
       "slug": "gauss_prime_neuroptics_blueprint",
       "zh_name": "Gauss Prime 头部神经光元 蓝图",
       "en_name": "Gauss Prime Neuroptics Blueprint",
-      "plat_price": 9.5,
+      "plat_price": 9.7,
       "ducats": 45,
-      "volume": 543,
+      "volume": 521,
       "vaulted": true
     },
     {
@@ -2095,9 +2095,9 @@
       "slug": "gauss_prime_systems_blueprint",
       "zh_name": "Gauss Prime 系统 蓝图",
       "en_name": "Gauss Prime Systems Blueprint",
-      "plat_price": 29.3,
+      "plat_price": 28.9,
       "ducats": 100,
-      "volume": 438,
+      "volume": 365,
       "vaulted": true
     },
     {
@@ -2105,9 +2105,9 @@
       "slug": "glaive_prime_blade",
       "zh_name": "战刃 Prime 刀刃",
       "en_name": "Glaive Prime Blade",
-      "plat_price": 20.4,
+      "plat_price": 19.0,
       "ducats": 45,
-      "volume": 472,
+      "volume": 446,
       "vaulted": true
     },
     {
@@ -2115,9 +2115,9 @@
       "slug": "glaive_prime_blueprint",
       "zh_name": "战刃 Prime 蓝图",
       "en_name": "Glaive Prime Blueprint",
-      "plat_price": 19.5,
+      "plat_price": 19.8,
       "ducats": 100,
-      "volume": 476,
+      "volume": 472,
       "vaulted": true
     },
     {
@@ -2125,9 +2125,9 @@
       "slug": "glaive_prime_disc",
       "zh_name": "战刃 Prime 圆盘",
       "en_name": "Glaive Prime Disc",
-      "plat_price": 9.4,
+      "plat_price": 9.5,
       "ducats": 45,
-      "volume": 579,
+      "volume": 528,
       "vaulted": true
     },
     {
@@ -2137,7 +2137,7 @@
       "en_name": "Gram Prime Blade",
       "plat_price": 6.5,
       "ducats": 15,
-      "volume": 217,
+      "volume": 228,
       "vaulted": true
     },
     {
@@ -2145,9 +2145,9 @@
       "slug": "gram_prime_blueprint",
       "zh_name": "格拉姆 Prime 蓝图",
       "en_name": "Gram Prime Blueprint",
-      "plat_price": 8.7,
+      "plat_price": 8.5,
       "ducats": 45,
-      "volume": 161,
+      "volume": 168,
       "vaulted": true
     },
     {
@@ -2155,9 +2155,9 @@
       "slug": "gram_prime_handle",
       "zh_name": "格拉姆 Prime 握柄",
       "en_name": "Gram Prime Handle",
-      "plat_price": 26.0,
+      "plat_price": 26.1,
       "ducats": 100,
-      "volume": 195,
+      "volume": 196,
       "vaulted": true
     },
     {
@@ -2165,7 +2165,7 @@
       "slug": "grendel_prime_blueprint",
       "zh_name": "Grendel Prime 蓝图",
       "en_name": "Grendel Prime Blueprint",
-      "plat_price": 16.8,
+      "plat_price": 16.3,
       "ducats": 100,
       "volume": 407,
       "vaulted": true
@@ -2175,9 +2175,9 @@
       "slug": "grendel_prime_chassis_blueprint",
       "zh_name": "Grendel Prime 机体 蓝图",
       "en_name": "Grendel Prime Chassis Blueprint",
-      "plat_price": 5.6,
+      "plat_price": 5.4,
       "ducats": 45,
-      "volume": 454,
+      "volume": 340,
       "vaulted": true
     },
     {
@@ -2187,7 +2187,7 @@
       "en_name": "Grendel Prime Neuroptics Blueprint",
       "plat_price": 7.9,
       "ducats": 15,
-      "volume": 362,
+      "volume": 293,
       "vaulted": true
     },
     {
@@ -2195,9 +2195,9 @@
       "slug": "grendel_prime_systems_blueprint",
       "zh_name": "Grendel Prime 系统 蓝图",
       "en_name": "Grendel Prime Systems Blueprint",
-      "plat_price": 35.6,
+      "plat_price": 35.3,
       "ducats": 65,
-      "volume": 771,
+      "volume": 825,
       "vaulted": true
     },
     {
@@ -2205,9 +2205,9 @@
       "slug": "guandao_prime_blade",
       "zh_name": "关刀 Prime 刀刃",
       "en_name": "Guandao Prime Blade",
-      "plat_price": 9.4,
+      "plat_price": 9.5,
       "ducats": 15,
-      "volume": 226,
+      "volume": 254,
       "vaulted": true
     },
     {
@@ -2217,7 +2217,7 @@
       "en_name": "Guandao Prime Blueprint",
       "plat_price": 6.8,
       "ducats": 45,
-      "volume": 279,
+      "volume": 245,
       "vaulted": true
     },
     {
@@ -2227,7 +2227,7 @@
       "en_name": "Guandao Prime Handle",
       "plat_price": 25.8,
       "ducats": 100,
-      "volume": 203,
+      "volume": 182,
       "vaulted": true
     },
     {
@@ -2235,9 +2235,9 @@
       "slug": "gunsen_prime_blade",
       "zh_name": "军扇 Prime 刀刃",
       "en_name": "Gunsen Prime Blade",
-      "plat_price": 21.4,
+      "plat_price": 20.2,
       "ducats": 100,
-      "volume": 269,
+      "volume": 273,
       "vaulted": true
     },
     {
@@ -2245,9 +2245,9 @@
       "slug": "gunsen_prime_blueprint",
       "zh_name": "军扇 Prime 蓝图",
       "en_name": "Gunsen Prime Blueprint",
-      "plat_price": 5.4,
+      "plat_price": 4.4,
       "ducats": 15,
-      "volume": 160,
+      "volume": 105,
       "vaulted": true
     },
     {
@@ -2257,7 +2257,7 @@
       "en_name": "Gunsen Prime Handle",
       "plat_price": 8.3,
       "ducats": 45,
-      "volume": 243,
+      "volume": 265,
       "vaulted": true
     },
     {
@@ -2265,9 +2265,9 @@
       "slug": "gyre_prime_blueprint",
       "zh_name": "Gyre Prime 蓝图",
       "en_name": "Gyre Prime Blueprint",
-      "plat_price": 6.9,
+      "plat_price": 6.8,
       "ducats": 45,
-      "volume": 460,
+      "volume": 353,
       "vaulted": false
     },
     {
@@ -2275,9 +2275,9 @@
       "slug": "gyre_prime_chassis_blueprint",
       "zh_name": "Gyre Prime 机体 蓝图",
       "en_name": "Gyre Prime Chassis Blueprint",
-      "plat_price": 4.7,
+      "plat_price": 4.5,
       "ducats": 45,
-      "volume": 339,
+      "volume": 356,
       "vaulted": false
     },
     {
@@ -2285,9 +2285,9 @@
       "slug": "gyre_prime_neuroptics_blueprint",
       "zh_name": "Gyre Prime 头部神经光元 蓝图",
       "en_name": "Gyre Prime Neuroptics Blueprint",
-      "plat_price": 9.7,
+      "plat_price": 9.8,
       "ducats": 100,
-      "volume": 301,
+      "volume": 304,
       "vaulted": false
     },
     {
@@ -2295,9 +2295,9 @@
       "slug": "gyre_prime_systems_blueprint",
       "zh_name": "Gyre Prime 系统 蓝图",
       "en_name": "Gyre Prime Systems Blueprint",
-      "plat_price": 3.7,
+      "plat_price": 3.6,
       "ducats": 15,
-      "volume": 480,
+      "volume": 487,
       "vaulted": false
     },
     {
@@ -2305,9 +2305,9 @@
       "slug": "harrow_prime_blueprint",
       "zh_name": "Harrow Prime 蓝图",
       "en_name": "Harrow Prime Blueprint",
-      "plat_price": 8.3,
+      "plat_price": 7.6,
       "ducats": 45,
-      "volume": 648,
+      "volume": 522,
       "vaulted": true
     },
     {
@@ -2315,9 +2315,9 @@
       "slug": "harrow_prime_chassis_blueprint",
       "zh_name": "Harrow Prime 机体 蓝图",
       "en_name": "Harrow Prime Chassis Blueprint",
-      "plat_price": 11.5,
+      "plat_price": 11.9,
       "ducats": 15,
-      "volume": 285,
+      "volume": 277,
       "vaulted": true
     },
     {
@@ -2325,9 +2325,9 @@
       "slug": "harrow_prime_neuroptics_blueprint",
       "zh_name": "Harrow Prime 头部神经光元 蓝图",
       "en_name": "Harrow Prime Neuroptics Blueprint",
-      "plat_price": 9.4,
+      "plat_price": 8.7,
       "ducats": 45,
-      "volume": 406,
+      "volume": 492,
       "vaulted": true
     },
     {
@@ -2335,9 +2335,9 @@
       "slug": "harrow_prime_systems_blueprint",
       "zh_name": "Harrow Prime 系统 蓝图",
       "en_name": "Harrow Prime Systems Blueprint",
-      "plat_price": 34.5,
+      "plat_price": 34.4,
       "ducats": 100,
-      "volume": 308,
+      "volume": 307,
       "vaulted": true
     },
     {
@@ -2345,9 +2345,9 @@
       "slug": "helios_prime_blueprint",
       "zh_name": "赫利俄斯 Prime 蓝图",
       "en_name": "Helios Prime Blueprint",
-      "plat_price": 7.4,
+      "plat_price": 7.2,
       "ducats": 45,
-      "volume": 365,
+      "volume": 376,
       "vaulted": true
     },
     {
@@ -2355,9 +2355,9 @@
       "slug": "helios_prime_carapace",
       "zh_name": "赫利俄斯 Prime 外壳",
       "en_name": "Helios Prime Carapace",
-      "plat_price": 5.8,
+      "plat_price": 5.9,
       "ducats": 15,
-      "volume": 485,
+      "volume": 468,
       "vaulted": true
     },
     {
@@ -2365,9 +2365,9 @@
       "slug": "helios_prime_cerebrum",
       "zh_name": "赫利俄斯 Prime 头部",
       "en_name": "Helios Prime Cerebrum",
-      "plat_price": 30.7,
+      "plat_price": 30.5,
       "ducats": 100,
-      "volume": 317,
+      "volume": 286,
       "vaulted": true
     },
     {
@@ -2375,9 +2375,9 @@
       "slug": "helios_prime_systems",
       "zh_name": "赫利俄斯 Prime 系统",
       "en_name": "Helios Prime Systems",
-      "plat_price": 10.3,
+      "plat_price": 10.4,
       "ducats": 45,
-      "volume": 390,
+      "volume": 380,
       "vaulted": true
     },
     {
@@ -2385,9 +2385,9 @@
       "slug": "hikou_prime_blueprint",
       "zh_name": "飞扬 Prime 蓝图",
       "en_name": "Hikou Prime Blueprint",
-      "plat_price": 6.6,
+      "plat_price": 6.5,
       "ducats": 15,
-      "volume": 205,
+      "volume": 190,
       "vaulted": false
     },
     {
@@ -2395,9 +2395,9 @@
       "slug": "hikou_prime_pouch",
       "zh_name": "飞扬 Prime 镖袋",
       "en_name": "Hikou Prime Pouch",
-      "plat_price": 12.9,
+      "plat_price": 13.6,
       "ducats": 15,
-      "volume": 234,
+      "volume": 212,
       "vaulted": false
     },
     {
@@ -2405,9 +2405,9 @@
       "slug": "hikou_prime_stars",
       "zh_name": "飞扬 Prime 星镖",
       "en_name": "Hikou Prime Stars",
-      "plat_price": 9.7,
+      "plat_price": 9.8,
       "ducats": 15,
-      "volume": 288,
+      "volume": 247,
       "vaulted": false
     },
     {
@@ -2415,9 +2415,9 @@
       "slug": "hildryn_prime_blueprint",
       "zh_name": "Hildryn Prime 蓝图",
       "en_name": "Hildryn Prime Blueprint",
-      "plat_price": 38.3,
+      "plat_price": 37.5,
       "ducats": 100,
-      "volume": 1243,
+      "volume": 1120,
       "vaulted": true
     },
     {
@@ -2425,9 +2425,9 @@
       "slug": "hildryn_prime_chassis_blueprint",
       "zh_name": "Hildryn Prime 机体 蓝图",
       "en_name": "Hildryn Prime Chassis Blueprint",
-      "plat_price": 10.5,
+      "plat_price": 10.1,
       "ducats": 45,
-      "volume": 316,
+      "volume": 353,
       "vaulted": true
     },
     {
@@ -2435,9 +2435,9 @@
       "slug": "hildryn_prime_neuroptics_blueprint",
       "zh_name": "Hildryn Prime 头部神经光元 蓝图",
       "en_name": "Hildryn Prime Neuroptics Blueprint",
-      "plat_price": 9.0,
+      "plat_price": 8.9,
       "ducats": 45,
-      "volume": 597,
+      "volume": 546,
       "vaulted": true
     },
     {
@@ -2445,9 +2445,9 @@
       "slug": "hildryn_prime_systems_blueprint",
       "zh_name": "Hildryn Prime 系统 蓝图",
       "en_name": "Hildryn Prime Systems Blueprint",
-      "plat_price": 4.7,
+      "plat_price": 4.8,
       "ducats": 15,
-      "volume": 682,
+      "volume": 646,
       "vaulted": true
     },
     {
@@ -2455,9 +2455,9 @@
       "slug": "hydroid_prime_blueprint",
       "zh_name": "Hydroid Prime 蓝图",
       "en_name": "Hydroid Prime Blueprint",
-      "plat_price": 15.8,
+      "plat_price": 15.5,
       "ducats": 45,
-      "volume": 265,
+      "volume": 293,
       "vaulted": true
     },
     {
@@ -2465,9 +2465,9 @@
       "slug": "hydroid_prime_chassis_blueprint",
       "zh_name": "Hydroid Prime 机体 蓝图",
       "en_name": "Hydroid Prime Chassis Blueprint",
-      "plat_price": 8.7,
+      "plat_price": 9.3,
       "ducats": 15,
-      "volume": 399,
+      "volume": 315,
       "vaulted": true
     },
     {
@@ -2475,9 +2475,9 @@
       "slug": "hydroid_prime_neuroptics_blueprint",
       "zh_name": "Hydroid Prime 头部神经光元 蓝图",
       "en_name": "Hydroid Prime Neuroptics Blueprint",
-      "plat_price": 15.2,
+      "plat_price": 15.3,
       "ducats": 45,
-      "volume": 317,
+      "volume": 365,
       "vaulted": true
     },
     {
@@ -2485,9 +2485,9 @@
       "slug": "hydroid_prime_systems_blueprint",
       "zh_name": "Hydroid Prime 系统 蓝图",
       "en_name": "Hydroid Prime Systems Blueprint",
-      "plat_price": 36.1,
+      "plat_price": 34.6,
       "ducats": 100,
-      "volume": 668,
+      "volume": 710,
       "vaulted": true
     },
     {
@@ -2495,9 +2495,9 @@
       "slug": "hystrix_prime_barrel",
       "zh_name": "豪猪 Prime 枪管",
       "en_name": "Hystrix Prime Barrel",
-      "plat_price": 7.5,
+      "plat_price": 7.3,
       "ducats": 15,
-      "volume": 238,
+      "volume": 230,
       "vaulted": true
     },
     {
@@ -2505,9 +2505,9 @@
       "slug": "hystrix_prime_blueprint",
       "zh_name": "豪猪 Prime 蓝图",
       "en_name": "Hystrix Prime Blueprint",
-      "plat_price": 8.3,
+      "plat_price": 7.5,
       "ducats": 45,
-      "volume": 427,
+      "volume": 228,
       "vaulted": true
     },
     {
@@ -2515,9 +2515,9 @@
       "slug": "hystrix_prime_receiver",
       "zh_name": "豪猪 Prime 枪机",
       "en_name": "Hystrix Prime Receiver",
-      "plat_price": 22.9,
+      "plat_price": 23.8,
       "ducats": 100,
-      "volume": 178,
+      "volume": 192,
       "vaulted": true
     },
     {
@@ -2525,9 +2525,9 @@
       "slug": "inaros_prime_blueprint",
       "zh_name": "Inaros Prime 蓝图",
       "en_name": "Inaros Prime Blueprint",
-      "plat_price": 9.2,
+      "plat_price": 9.4,
       "ducats": 45,
-      "volume": 367,
+      "volume": 334,
       "vaulted": true
     },
     {
@@ -2535,9 +2535,9 @@
       "slug": "inaros_prime_chassis_blueprint",
       "zh_name": "Inaros Prime 机体 蓝图",
       "en_name": "Inaros Prime Chassis Blueprint",
-      "plat_price": 5.6,
+      "plat_price": 5.7,
       "ducats": 45,
-      "volume": 427,
+      "volume": 474,
       "vaulted": true
     },
     {
@@ -2545,9 +2545,9 @@
       "slug": "inaros_prime_neuroptics_blueprint",
       "zh_name": "Inaros Prime 头部神经光元 蓝图",
       "en_name": "Inaros Prime Neuroptics Blueprint",
-      "plat_price": 43.3,
+      "plat_price": 42.8,
       "ducats": 100,
-      "volume": 317,
+      "volume": 278,
       "vaulted": true
     },
     {
@@ -2555,9 +2555,9 @@
       "slug": "inaros_prime_systems_blueprint",
       "zh_name": "Inaros Prime 系统 蓝图",
       "en_name": "Inaros Prime Systems Blueprint",
-      "plat_price": 9.0,
+      "plat_price": 9.1,
       "ducats": 15,
-      "volume": 444,
+      "volume": 430,
       "vaulted": true
     },
     {
@@ -2565,9 +2565,9 @@
       "slug": "ivara_prime_blueprint",
       "zh_name": "Ivara Prime 蓝图",
       "en_name": "Ivara Prime Blueprint",
-      "plat_price": 9.5,
+      "plat_price": 9.6,
       "ducats": 45,
-      "volume": 506,
+      "volume": 367,
       "vaulted": true
     },
     {
@@ -2575,9 +2575,9 @@
       "slug": "ivara_prime_chassis_blueprint",
       "zh_name": "Ivara Prime 机体 蓝图",
       "en_name": "Ivara Prime Chassis Blueprint",
-      "plat_price": 19.5,
+      "plat_price": 19.8,
       "ducats": 100,
-      "volume": 1446,
+      "volume": 1367,
       "vaulted": true
     },
     {
@@ -2585,9 +2585,9 @@
       "slug": "ivara_prime_neuroptics_blueprint",
       "zh_name": "Ivara Prime 头部神经光元 蓝图",
       "en_name": "Ivara Prime Neuroptics Blueprint",
-      "plat_price": 8.9,
+      "plat_price": 8.8,
       "ducats": 15,
-      "volume": 318,
+      "volume": 292,
       "vaulted": true
     },
     {
@@ -2597,7 +2597,7 @@
       "en_name": "Ivara Prime Systems Blueprint",
       "plat_price": 9.8,
       "ducats": 45,
-      "volume": 318,
+      "volume": 283,
       "vaulted": true
     },
     {
@@ -2605,9 +2605,9 @@
       "slug": "karyst_prime_blade",
       "zh_name": "凯洛斯特 Prime 刀刃",
       "en_name": "Karyst Prime Blade",
-      "plat_price": 26.8,
+      "plat_price": 29.1,
       "ducats": 100,
-      "volume": 193,
+      "volume": 173,
       "vaulted": true
     },
     {
@@ -2615,9 +2615,9 @@
       "slug": "karyst_prime_blueprint",
       "zh_name": "凯洛斯特 Prime 蓝图",
       "en_name": "Karyst Prime Blueprint",
-      "plat_price": 8.0,
+      "plat_price": 7.8,
       "ducats": 15,
-      "volume": 172,
+      "volume": 183,
       "vaulted": true
     },
     {
@@ -2625,9 +2625,9 @@
       "slug": "karyst_prime_handle",
       "zh_name": "凯洛斯特 Prime 握柄",
       "en_name": "Karyst Prime Handle",
-      "plat_price": 5.6,
+      "plat_price": 5.8,
       "ducats": 45,
-      "volume": 214,
+      "volume": 228,
       "vaulted": true
     },
     {
@@ -2635,9 +2635,9 @@
       "slug": "kavasa_prime_band",
       "zh_name": "喀婆萨 Prime 项圈带",
       "en_name": "Kavasa Prime Band",
-      "plat_price": 8.9,
+      "plat_price": 8.7,
       "ducats": 45,
-      "volume": 177,
+      "volume": 154,
       "vaulted": true
     },
     {
@@ -2645,9 +2645,9 @@
       "slug": "kavasa_prime_buckle",
       "zh_name": "喀婆萨 Prime 项圈扣",
       "en_name": "Kavasa Prime Buckle",
-      "plat_price": 24.1,
+      "plat_price": 23.6,
       "ducats": 65,
-      "volume": 83,
+      "volume": 87,
       "vaulted": true
     },
     {
@@ -2655,9 +2655,9 @@
       "slug": "kavasa_prime_kubrow_collar_blueprint",
       "zh_name": "喀婆萨 Prime 库狛项圈 蓝图",
       "en_name": "Kavasa Prime Kubrow Collar Blueprint",
-      "plat_price": 8.2,
+      "plat_price": 8.8,
       "ducats": 45,
-      "volume": 149,
+      "volume": 105,
       "vaulted": true
     },
     {
@@ -2665,9 +2665,9 @@
       "slug": "kestrel_prime_blade",
       "zh_name": "红隼 Prime 刀刃",
       "en_name": "Kestrel Prime Blade",
-      "plat_price": 4.5,
+      "plat_price": 4.3,
       "ducats": 15,
-      "volume": 256,
+      "volume": 250,
       "vaulted": false
     },
     {
@@ -2675,9 +2675,9 @@
       "slug": "kestrel_prime_blueprint",
       "zh_name": "红隼 Prime 蓝图",
       "en_name": "Kestrel Prime Blueprint",
-      "plat_price": 4.1,
+      "plat_price": 4.0,
       "ducats": 45,
-      "volume": 233,
+      "volume": 210,
       "vaulted": false
     },
     {
@@ -2685,9 +2685,9 @@
       "slug": "kestrel_prime_grip",
       "zh_name": "红隼 Prime 握把",
       "en_name": "Kestrel Prime Grip",
-      "plat_price": 9.7,
+      "plat_price": 9.6,
       "ducats": 100,
-      "volume": 252,
+      "volume": 231,
       "vaulted": false
     },
     {
@@ -2695,9 +2695,9 @@
       "slug": "khora_prime_blueprint",
       "zh_name": "Khora Prime 蓝图",
       "en_name": "Khora Prime Blueprint",
-      "plat_price": 30.3,
+      "plat_price": 29.6,
       "ducats": 65,
-      "volume": 484,
+      "volume": 433,
       "vaulted": true
     },
     {
@@ -2707,7 +2707,7 @@
       "en_name": "Khora Prime Chassis Blueprint",
       "plat_price": 8.7,
       "ducats": 45,
-      "volume": 565,
+      "volume": 620,
       "vaulted": true
     },
     {
@@ -2715,9 +2715,9 @@
       "slug": "khora_prime_neuroptics_blueprint",
       "zh_name": "Khora Prime 头部神经光元 蓝图",
       "en_name": "Khora Prime Neuroptics Blueprint",
-      "plat_price": 29.3,
+      "plat_price": 29.6,
       "ducats": 100,
-      "volume": 1071,
+      "volume": 982,
       "vaulted": true
     },
     {
@@ -2727,7 +2727,7 @@
       "en_name": "Khora Prime Systems Blueprint",
       "plat_price": 8.3,
       "ducats": 15,
-      "volume": 466,
+      "volume": 485,
       "vaulted": true
     },
     {
@@ -2735,9 +2735,9 @@
       "slug": "knell_prime_barrel",
       "zh_name": "丧钟 Prime 枪管",
       "en_name": "Knell Prime Barrel",
-      "plat_price": 35.0,
+      "plat_price": 34.6,
       "ducats": 100,
-      "volume": 235,
+      "volume": 246,
       "vaulted": true
     },
     {
@@ -2747,7 +2747,7 @@
       "en_name": "Knell Prime Blueprint",
       "plat_price": 5.0,
       "ducats": 15,
-      "volume": 139,
+      "volume": 134,
       "vaulted": true
     },
     {
@@ -2757,7 +2757,7 @@
       "en_name": "Knell Prime Receiver",
       "plat_price": 5.0,
       "ducats": 45,
-      "volume": 205,
+      "volume": 193,
       "vaulted": true
     },
     {
@@ -2765,9 +2765,9 @@
       "slug": "kogake_prime_blueprint",
       "zh_name": "科加基 Prime 蓝图",
       "en_name": "Kogake Prime Blueprint",
-      "plat_price": 6.5,
+      "plat_price": 7.3,
       "ducats": 45,
-      "volume": 285,
+      "volume": 324,
       "vaulted": true
     },
     {
@@ -2777,7 +2777,7 @@
       "en_name": "Kogake Prime Boot",
       "plat_price": 7.8,
       "ducats": 15,
-      "volume": 272,
+      "volume": 240,
       "vaulted": true
     },
     {
@@ -2785,9 +2785,9 @@
       "slug": "kogake_prime_gauntlet",
       "zh_name": "科加基 Prime 拳套",
       "en_name": "Kogake Prime Gauntlet",
-      "plat_price": 20.2,
+      "plat_price": 20.6,
       "ducats": 100,
-      "volume": 307,
+      "volume": 261,
       "vaulted": true
     },
     {
@@ -2797,7 +2797,7 @@
       "en_name": "Kompressa Prime Barrel",
       "plat_price": 9.6,
       "ducats": 100,
-      "volume": 274,
+      "volume": 262,
       "vaulted": false
     },
     {
@@ -2805,9 +2805,9 @@
       "slug": "kompressa_prime_blueprint",
       "zh_name": "卡帕压力枪 Prime 蓝图",
       "en_name": "Kompressa Prime Blueprint",
-      "plat_price": 2.2,
+      "plat_price": 2.1,
       "ducats": 15,
-      "volume": 269,
+      "volume": 276,
       "vaulted": false
     },
     {
@@ -2817,7 +2817,7 @@
       "en_name": "Kompressa Prime Receiver",
       "plat_price": 4.7,
       "ducats": 45,
-      "volume": 358,
+      "volume": 373,
       "vaulted": false
     },
     {
@@ -2825,9 +2825,9 @@
       "slug": "kronen_prime_blade",
       "zh_name": "皇家拐刃 Prime 刀刃",
       "en_name": "Kronen Prime Blade",
-      "plat_price": 41.6,
+      "plat_price": 42.2,
       "ducats": 100,
-      "volume": 283,
+      "volume": 282,
       "vaulted": true
     },
     {
@@ -2837,7 +2837,7 @@
       "en_name": "Kronen Prime Blueprint",
       "plat_price": 4.6,
       "ducats": 15,
-      "volume": 306,
+      "volume": 319,
       "vaulted": true
     },
     {
@@ -2845,9 +2845,9 @@
       "slug": "kronen_prime_handle",
       "zh_name": "皇家拐刃 Prime 握柄",
       "en_name": "Kronen Prime Handle",
-      "plat_price": 10.9,
+      "plat_price": 10.8,
       "ducats": 45,
-      "volume": 285,
+      "volume": 247,
       "vaulted": true
     },
     {
@@ -2855,9 +2855,9 @@
       "slug": "larkspur_prime_barrel",
       "zh_name": "翠雀 Prime 枪管",
       "en_name": "Larkspur Prime Barrel",
-      "plat_price": 40.2,
+      "plat_price": 40.0,
       "ducats": 100,
-      "volume": 266,
+      "volume": 281,
       "vaulted": true
     },
     {
@@ -2865,9 +2865,9 @@
       "slug": "larkspur_prime_blueprint",
       "zh_name": "翠雀 Prime 蓝图",
       "en_name": "Larkspur Prime Blueprint",
-      "plat_price": 6.8,
+      "plat_price": 7.9,
       "ducats": 15,
-      "volume": 282,
+      "volume": 266,
       "vaulted": true
     },
     {
@@ -2875,9 +2875,9 @@
       "slug": "larkspur_prime_receiver",
       "zh_name": "翠雀 Prime 枪机",
       "en_name": "Larkspur Prime Receiver",
-      "plat_price": 8.9,
+      "plat_price": 8.8,
       "ducats": 45,
-      "volume": 304,
+      "volume": 295,
       "vaulted": true
     },
     {
@@ -2887,7 +2887,7 @@
       "en_name": "Larkspur Prime Stock",
       "plat_price": 8.4,
       "ducats": 45,
-      "volume": 336,
+      "volume": 313,
       "vaulted": true
     },
     {
@@ -2895,9 +2895,9 @@
       "slug": "latron_prime_barrel",
       "zh_name": "拉特昂 Prime 枪管",
       "en_name": "Latron Prime Barrel",
-      "plat_price": 22.2,
+      "plat_price": 20.1,
       "ducats": 15,
-      "volume": 427,
+      "volume": 336,
       "vaulted": true
     },
     {
@@ -2905,9 +2905,9 @@
       "slug": "latron_prime_blueprint",
       "zh_name": "拉特昂 Prime 蓝图",
       "en_name": "Latron Prime Blueprint",
-      "plat_price": 24.8,
+      "plat_price": 24.4,
       "ducats": 15,
-      "volume": 353,
+      "volume": 311,
       "vaulted": true
     },
     {
@@ -2915,9 +2915,9 @@
       "slug": "latron_prime_receiver",
       "zh_name": "拉特昂 Prime 枪机",
       "en_name": "Latron Prime Receiver",
-      "plat_price": 21.2,
+      "plat_price": 22.0,
       "ducats": 15,
-      "volume": 746,
+      "volume": 636,
       "vaulted": true
     },
     {
@@ -2925,9 +2925,9 @@
       "slug": "latron_prime_stock",
       "zh_name": "拉特昂 Prime 枪托",
       "en_name": "Latron Prime Stock",
-      "plat_price": 21.0,
+      "plat_price": 21.4,
       "ducats": 15,
-      "volume": 463,
+      "volume": 438,
       "vaulted": true
     },
     {
@@ -2937,7 +2937,7 @@
       "en_name": "Lavos Prime Blueprint",
       "plat_price": 4.0,
       "ducats": 45,
-      "volume": 480,
+      "volume": 514,
       "vaulted": false
     },
     {
@@ -2945,9 +2945,9 @@
       "slug": "lavos_prime_chassis_blueprint",
       "zh_name": "Lavos Prime 机体 蓝图",
       "en_name": "Lavos Prime Chassis Blueprint",
-      "plat_price": 2.9,
+      "plat_price": 2.4,
       "ducats": 15,
-      "volume": 613,
+      "volume": 420,
       "vaulted": false
     },
     {
@@ -2955,9 +2955,9 @@
       "slug": "lavos_prime_neuroptics_blueprint",
       "zh_name": "Lavos Prime 头部神经光元 蓝图",
       "en_name": "Lavos Prime Neuroptics Blueprint",
-      "plat_price": 4.7,
+      "plat_price": 4.6,
       "ducats": 45,
-      "volume": 414,
+      "volume": 455,
       "vaulted": false
     },
     {
@@ -2965,9 +2965,9 @@
       "slug": "lavos_prime_systems_blueprint",
       "zh_name": "Lavos Prime 系统 蓝图",
       "en_name": "Lavos Prime Systems Blueprint",
-      "plat_price": 11.9,
+      "plat_price": 12.1,
       "ducats": 100,
-      "volume": 361,
+      "volume": 343,
       "vaulted": false
     },
     {
@@ -2975,9 +2975,9 @@
       "slug": "lex_prime_barrel",
       "zh_name": "雷克斯 Prime 枪管",
       "en_name": "Lex Prime Barrel",
-      "plat_price": 4.4,
+      "plat_price": 4.8,
       "ducats": 15,
-      "volume": 153,
+      "volume": 184,
       "vaulted": false
     },
     {
@@ -2985,9 +2985,9 @@
       "slug": "lex_prime_blueprint",
       "zh_name": "雷克斯 Prime 蓝图",
       "en_name": "Lex Prime Blueprint",
-      "plat_price": 3.2,
+      "plat_price": 3.1,
       "ducats": 25,
-      "volume": 233,
+      "volume": 245,
       "vaulted": false
     },
     {
@@ -2995,9 +2995,9 @@
       "slug": "lex_prime_receiver",
       "zh_name": "雷克斯 Prime 枪机",
       "en_name": "Lex Prime Receiver",
-      "plat_price": 3.8,
+      "plat_price": 3.9,
       "ducats": 15,
-      "volume": 192,
+      "volume": 168,
       "vaulted": false
     },
     {
@@ -3007,7 +3007,7 @@
       "en_name": "Limbo Prime Blueprint",
       "plat_price": 8.8,
       "ducats": 45,
-      "volume": 411,
+      "volume": 417,
       "vaulted": true
     },
     {
@@ -3015,9 +3015,9 @@
       "slug": "limbo_prime_chassis_blueprint",
       "zh_name": "Limbo Prime 机体 蓝图",
       "en_name": "Limbo Prime Chassis Blueprint",
-      "plat_price": 49.2,
+      "plat_price": 49.7,
       "ducats": 100,
-      "volume": 278,
+      "volume": 264,
       "vaulted": true
     },
     {
@@ -3025,9 +3025,9 @@
       "slug": "limbo_prime_neuroptics_blueprint",
       "zh_name": "Limbo Prime 头部神经光元 蓝图",
       "en_name": "Limbo Prime Neuroptics Blueprint",
-      "plat_price": 28.9,
+      "plat_price": 29.5,
       "ducats": 100,
-      "volume": 729,
+      "volume": 672,
       "vaulted": true
     },
     {
@@ -3037,7 +3037,7 @@
       "en_name": "Limbo Prime Systems Blueprint",
       "plat_price": 4.8,
       "ducats": 15,
-      "volume": 354,
+      "volume": 349,
       "vaulted": true
     },
     {
@@ -3045,9 +3045,9 @@
       "slug": "loki_prime_blueprint",
       "zh_name": "Loki Prime 蓝图",
       "en_name": "Loki Prime Blueprint",
-      "plat_price": 13.2,
+      "plat_price": 12.2,
       "ducats": 15,
-      "volume": 595,
+      "volume": 645,
       "vaulted": true
     },
     {
@@ -3055,9 +3055,9 @@
       "slug": "loki_prime_chassis_blueprint",
       "zh_name": "Loki Prime 机体 蓝图",
       "en_name": "Loki Prime Chassis Blueprint",
-      "plat_price": 20.6,
+      "plat_price": 20.2,
       "ducats": 45,
-      "volume": 371,
+      "volume": 436,
       "vaulted": true
     },
     {
@@ -3065,9 +3065,9 @@
       "slug": "loki_prime_neuroptics_blueprint",
       "zh_name": "Loki Prime 头部神经光元 蓝图",
       "en_name": "Loki Prime Neuroptics Blueprint",
-      "plat_price": 17.5,
+      "plat_price": 17.1,
       "ducats": 15,
-      "volume": 547,
+      "volume": 555,
       "vaulted": true
     },
     {
@@ -3077,7 +3077,7 @@
       "en_name": "Loki Prime Systems Blueprint",
       "plat_price": 30.4,
       "ducats": 100,
-      "volume": 599,
+      "volume": 585,
       "vaulted": true
     },
     {
@@ -3085,9 +3085,9 @@
       "slug": "mag_prime_blueprint",
       "zh_name": "Mag Prime 蓝图",
       "en_name": "Mag Prime Blueprint",
-      "plat_price": 35.0,
+      "plat_price": 38.8,
       "ducats": 100,
-      "volume": 346,
+      "volume": 484,
       "vaulted": true
     },
     {
@@ -3097,7 +3097,7 @@
       "en_name": "Mag Prime Chassis Blueprint",
       "plat_price": 9.9,
       "ducats": 45,
-      "volume": 574,
+      "volume": 575,
       "vaulted": true
     },
     {
@@ -3105,9 +3105,9 @@
       "slug": "mag_prime_neuroptics_blueprint",
       "zh_name": "Mag Prime 头部神经光元 蓝图",
       "en_name": "Mag Prime Neuroptics Blueprint",
-      "plat_price": 10.0,
+      "plat_price": 10.2,
       "ducats": 15,
-      "volume": 834,
+      "volume": 697,
       "vaulted": true
     },
     {
@@ -3115,9 +3115,9 @@
       "slug": "mag_prime_systems_blueprint",
       "zh_name": "Mag Prime 系统 蓝图",
       "en_name": "Mag Prime Systems Blueprint",
-      "plat_price": 15.4,
+      "plat_price": 16.2,
       "ducats": 15,
-      "volume": 239,
+      "volume": 326,
       "vaulted": true
     },
     {
@@ -3125,9 +3125,9 @@
       "slug": "magnus_prime_barrel",
       "zh_name": "麦格努斯 Prime 枪管",
       "en_name": "Magnus Prime Barrel",
-      "plat_price": 20.6,
+      "plat_price": 22.5,
       "ducats": 100,
-      "volume": 344,
+      "volume": 352,
       "vaulted": true
     },
     {
@@ -3135,9 +3135,9 @@
       "slug": "magnus_prime_blueprint",
       "zh_name": "麦格努斯 Prime 蓝图",
       "en_name": "Magnus Prime Blueprint",
-      "plat_price": 8.7,
+      "plat_price": 8.9,
       "ducats": 15,
-      "volume": 267,
+      "volume": 249,
       "vaulted": true
     },
     {
@@ -3147,7 +3147,7 @@
       "en_name": "Magnus Prime Receiver",
       "plat_price": 6.8,
       "ducats": 45,
-      "volume": 279,
+      "volume": 295,
       "vaulted": true
     },
     {
@@ -3155,9 +3155,9 @@
       "slug": "masseter_prime_blade",
       "zh_name": "咀嚼金杖 Prime 刀刃",
       "en_name": "Masseter Prime Blade",
-      "plat_price": 18.7,
+      "plat_price": 18.6,
       "ducats": 100,
-      "volume": 459,
+      "volume": 456,
       "vaulted": true
     },
     {
@@ -3165,9 +3165,9 @@
       "slug": "masseter_prime_blueprint",
       "zh_name": "咀嚼金杖 Prime 蓝图",
       "en_name": "Masseter Prime Blueprint",
-      "plat_price": 4.4,
+      "plat_price": 4.3,
       "ducats": 45,
-      "volume": 179,
+      "volume": 174,
       "vaulted": true
     },
     {
@@ -3175,9 +3175,9 @@
       "slug": "masseter_prime_handle",
       "zh_name": "咀嚼金杖 Prime 握柄",
       "en_name": "Masseter Prime Handle",
-      "plat_price": 4.1,
+      "plat_price": 4.4,
       "ducats": 15,
-      "volume": 214,
+      "volume": 130,
       "vaulted": true
     },
     {
@@ -3185,9 +3185,9 @@
       "slug": "mesa_prime_blueprint",
       "zh_name": "Mesa Prime 蓝图",
       "en_name": "Mesa Prime Blueprint",
-      "plat_price": 7.3,
+      "plat_price": 7.1,
       "ducats": 45,
-      "volume": 706,
+      "volume": 686,
       "vaulted": true
     },
     {
@@ -3195,9 +3195,9 @@
       "slug": "mesa_prime_chassis_blueprint",
       "zh_name": "Mesa Prime 机体 蓝图",
       "en_name": "Mesa Prime Chassis Blueprint",
-      "plat_price": 6.8,
+      "plat_price": 5.6,
       "ducats": 15,
-      "volume": 577,
+      "volume": 432,
       "vaulted": true
     },
     {
@@ -3205,9 +3205,9 @@
       "slug": "mesa_prime_neuroptics_blueprint",
       "zh_name": "Mesa Prime 头部神经光元 蓝图",
       "en_name": "Mesa Prime Neuroptics Blueprint",
-      "plat_price": 25.1,
+      "plat_price": 25.9,
       "ducats": 100,
-      "volume": 541,
+      "volume": 487,
       "vaulted": true
     },
     {
@@ -3215,9 +3215,9 @@
       "slug": "mesa_prime_systems_blueprint",
       "zh_name": "Mesa Prime 系统 蓝图",
       "en_name": "Mesa Prime Systems Blueprint",
-      "plat_price": 16.1,
+      "plat_price": 16.2,
       "ducats": 100,
-      "volume": 1584,
+      "volume": 1484,
       "vaulted": true
     },
     {
@@ -3225,9 +3225,9 @@
       "slug": "mirage_prime_blueprint",
       "zh_name": "Mirage Prime 蓝图",
       "en_name": "Mirage Prime Blueprint",
-      "plat_price": 29.9,
+      "plat_price": 30.1,
       "ducats": 100,
-      "volume": 665,
+      "volume": 498,
       "vaulted": true
     },
     {
@@ -3235,9 +3235,9 @@
       "slug": "mirage_prime_chassis_blueprint",
       "zh_name": "Mirage Prime 机体 蓝图",
       "en_name": "Mirage Prime Chassis Blueprint",
-      "plat_price": 10.5,
+      "plat_price": 8.9,
       "ducats": 15,
-      "volume": 757,
+      "volume": 539,
       "vaulted": true
     },
     {
@@ -3245,9 +3245,9 @@
       "slug": "mirage_prime_neuroptics_blueprint",
       "zh_name": "Mirage Prime 头部神经光元 蓝图",
       "en_name": "Mirage Prime Neuroptics Blueprint",
-      "plat_price": 5.2,
+      "plat_price": 5.1,
       "ducats": 15,
-      "volume": 457,
+      "volume": 547,
       "vaulted": true
     },
     {
@@ -3255,9 +3255,9 @@
       "slug": "mirage_prime_systems_blueprint",
       "zh_name": "Mirage Prime 系统 蓝图",
       "en_name": "Mirage Prime Systems Blueprint",
-      "plat_price": 14.3,
+      "plat_price": 13.4,
       "ducats": 45,
-      "volume": 624,
+      "volume": 550,
       "vaulted": true
     },
     {
@@ -3265,9 +3265,9 @@
       "slug": "nagantaka_prime_barrel",
       "zh_name": "噬蛇弩 Prime 枪管",
       "en_name": "Nagantaka Prime Barrel",
-      "plat_price": 9.0,
+      "plat_price": 9.3,
       "ducats": 15,
-      "volume": 219,
+      "volume": 204,
       "vaulted": true
     },
     {
@@ -3275,9 +3275,9 @@
       "slug": "nagantaka_prime_blueprint",
       "zh_name": "噬蛇弩 Prime 蓝图",
       "en_name": "Nagantaka Prime Blueprint",
-      "plat_price": 17.8,
+      "plat_price": 17.9,
       "ducats": 100,
-      "volume": 220,
+      "volume": 205,
       "vaulted": true
     },
     {
@@ -3287,7 +3287,7 @@
       "en_name": "Nagantaka Prime Receiver",
       "plat_price": 6.9,
       "ducats": 45,
-      "volume": 301,
+      "volume": 254,
       "vaulted": true
     },
     {
@@ -3297,7 +3297,7 @@
       "en_name": "Nagantaka Prime Stock",
       "plat_price": 8.6,
       "ducats": 45,
-      "volume": 248,
+      "volume": 209,
       "vaulted": true
     },
     {
@@ -3305,9 +3305,9 @@
       "slug": "nami_skyla_prime_blade",
       "zh_name": "海波斯库拉对剑 Prime 刀刃",
       "en_name": "Nami Skyla Prime Blade",
-      "plat_price": 33.3,
+      "plat_price": 31.5,
       "ducats": 65,
-      "volume": 226,
+      "volume": 233,
       "vaulted": true
     },
     {
@@ -3315,9 +3315,9 @@
       "slug": "nami_skyla_prime_blueprint",
       "zh_name": "海波斯库拉对剑 Prime 蓝图",
       "en_name": "Nami Skyla Prime Blueprint",
-      "plat_price": 9.2,
+      "plat_price": 9.3,
       "ducats": 15,
-      "volume": 172,
+      "volume": 162,
       "vaulted": true
     },
     {
@@ -3325,9 +3325,9 @@
       "slug": "nami_skyla_prime_handle",
       "zh_name": "海波斯库拉对剑 Prime 握柄",
       "en_name": "Nami Skyla Prime Handle",
-      "plat_price": 9.4,
+      "plat_price": 9.5,
       "ducats": 45,
-      "volume": 577,
+      "volume": 531,
       "vaulted": true
     },
     {
@@ -3335,9 +3335,9 @@
       "slug": "nautilus_prime_blueprint",
       "zh_name": "鹦鹉螺 Prime 蓝图",
       "en_name": "Nautilus Prime Blueprint",
-      "plat_price": 13.0,
+      "plat_price": 13.3,
       "ducats": 100,
-      "volume": 517,
+      "volume": 505,
       "vaulted": true
     },
     {
@@ -3345,9 +3345,9 @@
       "slug": "nautilus_prime_carapace",
       "zh_name": "鹦鹉螺 Prime 外壳",
       "en_name": "Nautilus Prime Carapace",
-      "plat_price": 8.1,
+      "plat_price": 8.2,
       "ducats": 15,
-      "volume": 580,
+      "volume": 568,
       "vaulted": true
     },
     {
@@ -3355,9 +3355,9 @@
       "slug": "nautilus_prime_cerebrum",
       "zh_name": "鹦鹉螺 Prime 头部",
       "en_name": "Nautilus Prime Cerebrum",
-      "plat_price": 25.3,
+      "plat_price": 24.5,
       "ducats": 100,
-      "volume": 443,
+      "volume": 455,
       "vaulted": true
     },
     {
@@ -3365,9 +3365,9 @@
       "slug": "nautilus_prime_systems",
       "zh_name": "鹦鹉螺 Prime 系统",
       "en_name": "Nautilus Prime Systems",
-      "plat_price": 4.7,
+      "plat_price": 4.6,
       "ducats": 45,
-      "volume": 962,
+      "volume": 808,
       "vaulted": true
     },
     {
@@ -3375,9 +3375,9 @@
       "slug": "nekros_prime_blueprint",
       "zh_name": "Nekros Prime 蓝图",
       "en_name": "Nekros Prime Blueprint",
-      "plat_price": 28.3,
+      "plat_price": 27.5,
       "ducats": 65,
-      "volume": 559,
+      "volume": 515,
       "vaulted": true
     },
     {
@@ -3385,9 +3385,9 @@
       "slug": "nekros_prime_chassis_blueprint",
       "zh_name": "Nekros Prime 机体 蓝图",
       "en_name": "Nekros Prime Chassis Blueprint",
-      "plat_price": 9.6,
+      "plat_price": 12.7,
       "ducats": 15,
-      "volume": 437,
+      "volume": 575,
       "vaulted": true
     },
     {
@@ -3395,9 +3395,9 @@
       "slug": "nekros_prime_neuroptics_blueprint",
       "zh_name": "Nekros Prime 头部神经光元 蓝图",
       "en_name": "Nekros Prime Neuroptics Blueprint",
-      "plat_price": 26.1,
+      "plat_price": 25.2,
       "ducats": 45,
-      "volume": 349,
+      "volume": 306,
       "vaulted": true
     },
     {
@@ -3407,7 +3407,7 @@
       "en_name": "Nekros Prime Systems Blueprint",
       "plat_price": 29.7,
       "ducats": 100,
-      "volume": 453,
+      "volume": 509,
       "vaulted": true
     },
     {
@@ -3417,7 +3417,7 @@
       "en_name": "Nezha Prime Blueprint",
       "plat_price": 9.0,
       "ducats": 45,
-      "volume": 560,
+      "volume": 382,
       "vaulted": true
     },
     {
@@ -3425,9 +3425,9 @@
       "slug": "nezha_prime_chassis_blueprint",
       "zh_name": "Nezha Prime 机体 蓝图",
       "en_name": "Nezha Prime Chassis Blueprint",
-      "plat_price": 32.5,
+      "plat_price": 32.0,
       "ducats": 100,
-      "volume": 334,
+      "volume": 374,
       "vaulted": true
     },
     {
@@ -3435,9 +3435,9 @@
       "slug": "nezha_prime_neuroptics_blueprint",
       "zh_name": "Nezha Prime 头部神经光元 蓝图",
       "en_name": "Nezha Prime Neuroptics Blueprint",
-      "plat_price": 28.0,
+      "plat_price": 26.3,
       "ducats": 100,
-      "volume": 446,
+      "volume": 569,
       "vaulted": true
     },
     {
@@ -3447,7 +3447,7 @@
       "en_name": "Nezha Prime Systems Blueprint",
       "plat_price": 5.2,
       "ducats": 15,
-      "volume": 367,
+      "volume": 350,
       "vaulted": true
     },
     {
@@ -3455,9 +3455,9 @@
       "slug": "nidus_prime_blueprint",
       "zh_name": "Nidus Prime 蓝图",
       "en_name": "Nidus Prime Blueprint",
-      "plat_price": 9.3,
+      "plat_price": 9.4,
       "ducats": 45,
-      "volume": 717,
+      "volume": 591,
       "vaulted": true
     },
     {
@@ -3465,9 +3465,9 @@
       "slug": "nidus_prime_chassis_blueprint",
       "zh_name": "Nidus Prime 机体 蓝图",
       "en_name": "Nidus Prime Chassis Blueprint",
-      "plat_price": 27.0,
+      "plat_price": 26.7,
       "ducats": 100,
-      "volume": 1133,
+      "volume": 900,
       "vaulted": true
     },
     {
@@ -3475,9 +3475,9 @@
       "slug": "nidus_prime_neuroptics_blueprint",
       "zh_name": "Nidus Prime 头部神经光元 蓝图",
       "en_name": "Nidus Prime Neuroptics Blueprint",
-      "plat_price": 14.1,
+      "plat_price": 15.1,
       "ducats": 65,
-      "volume": 901,
+      "volume": 733,
       "vaulted": true
     },
     {
@@ -3485,9 +3485,9 @@
       "slug": "nidus_prime_systems_blueprint",
       "zh_name": "Nidus Prime 系统 蓝图",
       "en_name": "Nidus Prime Systems Blueprint",
-      "plat_price": 12.5,
+      "plat_price": 13.0,
       "ducats": 15,
-      "volume": 501,
+      "volume": 545,
       "vaulted": true
     },
     {
@@ -3495,9 +3495,9 @@
       "slug": "nikana_prime_blade",
       "zh_name": "侍刃 Prime 刀刃",
       "en_name": "Nikana Prime Blade",
-      "plat_price": 9.8,
+      "plat_price": 10.0,
       "ducats": 65,
-      "volume": 366,
+      "volume": 295,
       "vaulted": true
     },
     {
@@ -3507,7 +3507,7 @@
       "en_name": "Nikana Prime Blueprint",
       "plat_price": 7.6,
       "ducats": 25,
-      "volume": 786,
+      "volume": 773,
       "vaulted": true
     },
     {
@@ -3515,9 +3515,9 @@
       "slug": "nikana_prime_hilt",
       "zh_name": "侍刃 Prime 握柄",
       "en_name": "Nikana Prime Hilt",
-      "plat_price": 31.9,
+      "plat_price": 31.8,
       "ducats": 100,
-      "volume": 378,
+      "volume": 336,
       "vaulted": true
     },
     {
@@ -3525,9 +3525,9 @@
       "slug": "ninkondi_prime_blueprint",
       "zh_name": "降灵追猎者 Prime 蓝图",
       "en_name": "Ninkondi Prime Blueprint",
-      "plat_price": 6.9,
+      "plat_price": 7.1,
       "ducats": 15,
-      "volume": 225,
+      "volume": 188,
       "vaulted": true
     },
     {
@@ -3537,7 +3537,7 @@
       "en_name": "Ninkondi Prime Chain",
       "plat_price": 5.1,
       "ducats": 45,
-      "volume": 286,
+      "volume": 268,
       "vaulted": true
     },
     {
@@ -3545,9 +3545,9 @@
       "slug": "ninkondi_prime_handle",
       "zh_name": "降灵追猎者 Prime 握柄",
       "en_name": "Ninkondi Prime Handle",
-      "plat_price": 30.5,
+      "plat_price": 30.1,
       "ducats": 100,
-      "volume": 242,
+      "volume": 225,
       "vaulted": true
     },
     {
@@ -3557,7 +3557,7 @@
       "en_name": "Nova Prime Blueprint",
       "plat_price": 14.0,
       "ducats": 45,
-      "volume": 543,
+      "volume": 590,
       "vaulted": true
     },
     {
@@ -3565,9 +3565,9 @@
       "slug": "nova_prime_chassis_blueprint",
       "zh_name": "Nova Prime 机体 蓝图",
       "en_name": "Nova Prime Chassis Blueprint",
-      "plat_price": 30.6,
+      "plat_price": 29.8,
       "ducats": 100,
-      "volume": 1122,
+      "volume": 798,
       "vaulted": true
     },
     {
@@ -3575,9 +3575,9 @@
       "slug": "nova_prime_neuroptics_blueprint",
       "zh_name": "Nova Prime 头部神经光元 蓝图",
       "en_name": "Nova Prime Neuroptics Blueprint",
-      "plat_price": 15.2,
+      "plat_price": 15.0,
       "ducats": 15,
-      "volume": 425,
+      "volume": 452,
       "vaulted": true
     },
     {
@@ -3585,9 +3585,9 @@
       "slug": "nova_prime_systems_blueprint",
       "zh_name": "Nova Prime 系统 蓝图",
       "en_name": "Nova Prime Systems Blueprint",
-      "plat_price": 13.0,
+      "plat_price": 13.2,
       "ducats": 15,
-      "volume": 356,
+      "volume": 393,
       "vaulted": true
     },
     {
@@ -3595,9 +3595,9 @@
       "slug": "nyx_prime_blueprint",
       "zh_name": "Nyx Prime 蓝图",
       "en_name": "Nyx Prime Blueprint",
-      "plat_price": 9.6,
+      "plat_price": 9.8,
       "ducats": 15,
-      "volume": 255,
+      "volume": 315,
       "vaulted": false
     },
     {
@@ -3607,7 +3607,7 @@
       "en_name": "Nyx Prime Chassis Blueprint",
       "plat_price": 9.5,
       "ducats": 65,
-      "volume": 1141,
+      "volume": 1196,
       "vaulted": false
     },
     {
@@ -3615,9 +3615,9 @@
       "slug": "nyx_prime_neuroptics_blueprint",
       "zh_name": "Nyx Prime 头部神经光元 蓝图",
       "en_name": "Nyx Prime Neuroptics Blueprint",
-      "plat_price": 30.4,
+      "plat_price": 31.4,
       "ducats": 100,
-      "volume": 1148,
+      "volume": 672,
       "vaulted": false
     },
     {
@@ -3625,9 +3625,9 @@
       "slug": "nyx_prime_systems_blueprint",
       "zh_name": "Nyx Prime 系统 蓝图",
       "en_name": "Nyx Prime Systems Blueprint",
-      "plat_price": 9.7,
+      "plat_price": 9.6,
       "ducats": 45,
-      "volume": 280,
+      "volume": 327,
       "vaulted": false
     },
     {
@@ -3635,9 +3635,9 @@
       "slug": "oberon_prime_blueprint",
       "zh_name": "Oberon Prime 蓝图",
       "en_name": "Oberon Prime Blueprint",
-      "plat_price": 9.7,
+      "plat_price": 9.6,
       "ducats": 45,
-      "volume": 301,
+      "volume": 278,
       "vaulted": true
     },
     {
@@ -3645,9 +3645,9 @@
       "slug": "oberon_prime_chassis_blueprint",
       "zh_name": "Oberon Prime 机体 蓝图",
       "en_name": "Oberon Prime Chassis Blueprint",
-      "plat_price": 14.6,
+      "plat_price": 15.0,
       "ducats": 15,
-      "volume": 357,
+      "volume": 387,
       "vaulted": true
     },
     {
@@ -3655,9 +3655,9 @@
       "slug": "oberon_prime_neuroptics_blueprint",
       "zh_name": "Oberon Prime 头部神经光元 蓝图",
       "en_name": "Oberon Prime Neuroptics Blueprint",
-      "plat_price": 39.7,
+      "plat_price": 40.3,
       "ducats": 100,
-      "volume": 306,
+      "volume": 243,
       "vaulted": true
     },
     {
@@ -3665,9 +3665,9 @@
       "slug": "oberon_prime_systems_blueprint",
       "zh_name": "Oberon Prime 系统 蓝图",
       "en_name": "Oberon Prime Systems Blueprint",
-      "plat_price": 19.7,
+      "plat_price": 19.5,
       "ducats": 65,
-      "volume": 1245,
+      "volume": 1346,
       "vaulted": true
     },
     {
@@ -3675,9 +3675,9 @@
       "slug": "octavia_prime_blueprint",
       "zh_name": "Octavia Prime 蓝图",
       "en_name": "Octavia Prime Blueprint",
-      "plat_price": 50.3,
+      "plat_price": 49.9,
       "ducats": 100,
-      "volume": 592,
+      "volume": 578,
       "vaulted": true
     },
     {
@@ -3685,9 +3685,9 @@
       "slug": "octavia_prime_chassis_blueprint",
       "zh_name": "Octavia Prime 机体 蓝图",
       "en_name": "Octavia Prime Chassis Blueprint",
-      "plat_price": 12.7,
+      "plat_price": 11.9,
       "ducats": 45,
-      "volume": 350,
+      "volume": 330,
       "vaulted": true
     },
     {
@@ -3695,9 +3695,9 @@
       "slug": "octavia_prime_neuroptics_blueprint",
       "zh_name": "Octavia Prime 头部神经光元 蓝图",
       "en_name": "Octavia Prime Neuroptics Blueprint",
-      "plat_price": 6.7,
+      "plat_price": 5.6,
       "ducats": 15,
-      "volume": 466,
+      "volume": 343,
       "vaulted": true
     },
     {
@@ -3705,9 +3705,9 @@
       "slug": "octavia_prime_systems_blueprint",
       "zh_name": "Octavia Prime 系统 蓝图",
       "en_name": "Octavia Prime Systems Blueprint",
-      "plat_price": 9.6,
+      "plat_price": 9.7,
       "ducats": 15,
-      "volume": 343,
+      "volume": 316,
       "vaulted": true
     },
     {
@@ -3715,9 +3715,9 @@
       "slug": "odonata_prime_blueprint",
       "zh_name": "陨蜓 Prime 蓝图",
       "en_name": "Odonata Prime Blueprint",
-      "plat_price": 9.0,
+      "plat_price": 8.9,
       "ducats": 45,
-      "volume": 411,
+      "volume": 463,
       "vaulted": true
     },
     {
@@ -3727,7 +3727,7 @@
       "en_name": "Odonata Prime Harness Blueprint",
       "plat_price": 9.6,
       "ducats": 15,
-      "volume": 205,
+      "volume": 210,
       "vaulted": true
     },
     {
@@ -3737,7 +3737,7 @@
       "en_name": "Odonata Prime Systems Blueprint",
       "plat_price": 9.5,
       "ducats": 15,
-      "volume": 315,
+      "volume": 295,
       "vaulted": true
     },
     {
@@ -3747,7 +3747,7 @@
       "en_name": "Odonata Prime Wings Blueprint",
       "plat_price": 20.8,
       "ducats": 65,
-      "volume": 272,
+      "volume": 251,
       "vaulted": true
     },
     {
@@ -3757,7 +3757,7 @@
       "en_name": "Okina Prime Blade",
       "plat_price": 8.7,
       "ducats": 15,
-      "volume": 617,
+      "volume": 657,
       "vaulted": true
     },
     {
@@ -3765,9 +3765,9 @@
       "slug": "okina_prime_blueprint",
       "zh_name": "翁 Prime 蓝图",
       "en_name": "Okina Prime Blueprint",
-      "plat_price": 17.3,
+      "plat_price": 16.5,
       "ducats": 100,
-      "volume": 435,
+      "volume": 390,
       "vaulted": true
     },
     {
@@ -3775,9 +3775,9 @@
       "slug": "okina_prime_handle",
       "zh_name": "翁 Prime 握柄",
       "en_name": "Okina Prime Handle",
-      "plat_price": 8.2,
+      "plat_price": 8.0,
       "ducats": 45,
-      "volume": 624,
+      "volume": 515,
       "vaulted": true
     },
     {
@@ -3785,9 +3785,9 @@
       "slug": "orthos_prime_blade",
       "zh_name": "欧特鲁斯 Prime 刀刃",
       "en_name": "Orthos Prime Blade",
-      "plat_price": 4.7,
+      "plat_price": 4.6,
       "ducats": 45,
-      "volume": 252,
+      "volume": 272,
       "vaulted": false
     },
     {
@@ -3795,9 +3795,9 @@
       "slug": "orthos_prime_blueprint",
       "zh_name": "欧特鲁斯 Prime 蓝图",
       "en_name": "Orthos Prime Blueprint",
-      "plat_price": 3.8,
+      "plat_price": 3.7,
       "ducats": 45,
-      "volume": 273,
+      "volume": 247,
       "vaulted": false
     },
     {
@@ -3807,7 +3807,7 @@
       "en_name": "Orthos Prime Handle",
       "plat_price": 2.7,
       "ducats": 15,
-      "volume": 311,
+      "volume": 316,
       "vaulted": false
     },
     {
@@ -3815,9 +3815,9 @@
       "slug": "pandero_prime_barrel",
       "zh_name": "手鼓 Prime 枪管",
       "en_name": "Pandero Prime Barrel",
-      "plat_price": 7.4,
+      "plat_price": 7.1,
       "ducats": 45,
-      "volume": 311,
+      "volume": 317,
       "vaulted": true
     },
     {
@@ -3827,7 +3827,7 @@
       "en_name": "Pandero Prime Blueprint",
       "plat_price": 8.4,
       "ducats": 15,
-      "volume": 196,
+      "volume": 183,
       "vaulted": true
     },
     {
@@ -3835,9 +3835,9 @@
       "slug": "pandero_prime_receiver",
       "zh_name": "手鼓 Prime 枪机",
       "en_name": "Pandero Prime Receiver",
-      "plat_price": 29.4,
+      "plat_price": 30.0,
       "ducats": 100,
-      "volume": 180,
+      "volume": 192,
       "vaulted": true
     },
     {
@@ -3847,7 +3847,7 @@
       "en_name": "Pangolin Prime Blade",
       "plat_price": 8.6,
       "ducats": 45,
-      "volume": 285,
+      "volume": 273,
       "vaulted": true
     },
     {
@@ -3855,9 +3855,9 @@
       "slug": "pangolin_prime_blueprint",
       "zh_name": "鲮鲤剑 Prime 蓝图",
       "en_name": "Pangolin Prime Blueprint",
-      "plat_price": 15.0,
+      "plat_price": 15.3,
       "ducats": 100,
-      "volume": 168,
+      "volume": 169,
       "vaulted": true
     },
     {
@@ -3865,9 +3865,9 @@
       "slug": "pangolin_prime_handle",
       "zh_name": "鲮鲤剑 Prime 握柄",
       "en_name": "Pangolin Prime Handle",
-      "plat_price": 8.0,
+      "plat_price": 7.9,
       "ducats": 15,
-      "volume": 206,
+      "volume": 198,
       "vaulted": true
     },
     {
@@ -3875,9 +3875,9 @@
       "slug": "panthera_prime_barrel",
       "zh_name": "猎豹 Prime 枪管",
       "en_name": "Panthera Prime Barrel",
-      "plat_price": 28.4,
+      "plat_price": 28.9,
       "ducats": 100,
-      "volume": 199,
+      "volume": 197,
       "vaulted": true
     },
     {
@@ -3885,9 +3885,9 @@
       "slug": "panthera_prime_blueprint",
       "zh_name": "猎豹 Prime 蓝图",
       "en_name": "Panthera Prime Blueprint",
-      "plat_price": 7.1,
+      "plat_price": 7.2,
       "ducats": 15,
-      "volume": 171,
+      "volume": 157,
       "vaulted": true
     },
     {
@@ -3895,9 +3895,9 @@
       "slug": "panthera_prime_receiver",
       "zh_name": "猎豹 Prime 枪机",
       "en_name": "Panthera Prime Receiver",
-      "plat_price": 20.1,
+      "plat_price": 20.2,
       "ducats": 100,
-      "volume": 306,
+      "volume": 271,
       "vaulted": true
     },
     {
@@ -3907,7 +3907,7 @@
       "en_name": "Panthera Prime Stock",
       "plat_price": 9.4,
       "ducats": 45,
-      "volume": 231,
+      "volume": 293,
       "vaulted": true
     },
     {
@@ -3915,9 +3915,9 @@
       "slug": "paris_prime_blueprint",
       "zh_name": "帕里斯 Prime 蓝图",
       "en_name": "Paris Prime Blueprint",
-      "plat_price": 3.8,
+      "plat_price": 3.6,
       "ducats": 15,
-      "volume": 204,
+      "volume": 202,
       "vaulted": false
     },
     {
@@ -3925,9 +3925,9 @@
       "slug": "paris_prime_grip",
       "zh_name": "帕里斯 Prime 弓身",
       "en_name": "Paris Prime Grip",
-      "plat_price": 3.6,
+      "plat_price": 3.9,
       "ducats": 45,
-      "volume": 285,
+      "volume": 1293,
       "vaulted": false
     },
     {
@@ -3935,9 +3935,9 @@
       "slug": "paris_prime_lower_limb",
       "zh_name": "帕里斯 Prime 下弓臂",
       "en_name": "Paris Prime Lower Limb",
-      "plat_price": 2.3,
+      "plat_price": 2.4,
       "ducats": 15,
-      "volume": 229,
+      "volume": 230,
       "vaulted": false
     },
     {
@@ -3945,9 +3945,9 @@
       "slug": "paris_prime_string",
       "zh_name": "帕里斯 Prime 弓弦",
       "en_name": "Paris Prime String",
-      "plat_price": 3.9,
+      "plat_price": 3.6,
       "ducats": 15,
-      "volume": 231,
+      "volume": 232,
       "vaulted": false
     },
     {
@@ -3957,7 +3957,7 @@
       "en_name": "Paris Prime Upper Limb",
       "plat_price": 3.4,
       "ducats": 25,
-      "volume": 276,
+      "volume": 283,
       "vaulted": false
     },
     {
@@ -3965,9 +3965,9 @@
       "slug": "perigale_prime_barrel",
       "zh_name": "月面狂风 Prime 枪管",
       "en_name": "Perigale Prime Barrel",
-      "plat_price": 18.0,
+      "plat_price": 17.4,
       "ducats": 100,
-      "volume": 296,
+      "volume": 302,
       "vaulted": false
     },
     {
@@ -3975,9 +3975,9 @@
       "slug": "perigale_prime_blueprint",
       "zh_name": "月面狂风 Prime 蓝图",
       "en_name": "Perigale Prime Blueprint",
-      "plat_price": 2.9,
+      "plat_price": 2.3,
       "ducats": 15,
-      "volume": 282,
+      "volume": 207,
       "vaulted": false
     },
     {
@@ -3985,9 +3985,9 @@
       "slug": "perigale_prime_receiver",
       "zh_name": "月面狂风 Prime 枪机",
       "en_name": "Perigale Prime Receiver",
-      "plat_price": 4.8,
+      "plat_price": 4.5,
       "ducats": 45,
-      "volume": 346,
+      "volume": 270,
       "vaulted": false
     },
     {
@@ -3997,7 +3997,7 @@
       "en_name": "Perigale Prime Stock",
       "plat_price": 4.8,
       "ducats": 15,
-      "volume": 254,
+      "volume": 284,
       "vaulted": false
     },
     {
@@ -4005,9 +4005,9 @@
       "slug": "phantasma_prime_barrel",
       "zh_name": "幻离子 Prime 枪管",
       "en_name": "Phantasma Prime Barrel",
-      "plat_price": 27.3,
+      "plat_price": 26.8,
       "ducats": 100,
-      "volume": 393,
+      "volume": 363,
       "vaulted": true
     },
     {
@@ -4015,9 +4015,9 @@
       "slug": "phantasma_prime_blueprint",
       "zh_name": "幻离子 Prime 蓝图",
       "en_name": "Phantasma Prime Blueprint",
-      "plat_price": 5.4,
+      "plat_price": 5.5,
       "ducats": 45,
-      "volume": 337,
+      "volume": 324,
       "vaulted": true
     },
     {
@@ -4027,7 +4027,7 @@
       "en_name": "Phantasma Prime Receiver",
       "plat_price": 7.4,
       "ducats": 15,
-      "volume": 335,
+      "volume": 325,
       "vaulted": true
     },
     {
@@ -4035,9 +4035,9 @@
       "slug": "phantasma_prime_stock",
       "zh_name": "幻离子 Prime 枪托",
       "en_name": "Phantasma Prime Stock",
-      "plat_price": 25.1,
+      "plat_price": 25.5,
       "ducats": 65,
-      "volume": 291,
+      "volume": 314,
       "vaulted": true
     },
     {
@@ -4045,9 +4045,9 @@
       "slug": "protea_prime_blueprint",
       "zh_name": "Protea Prime 蓝图",
       "en_name": "Protea Prime Blueprint",
-      "plat_price": 4.3,
+      "plat_price": 4.2,
       "ducats": 15,
-      "volume": 530,
+      "volume": 519,
       "vaulted": true
     },
     {
@@ -4055,9 +4055,9 @@
       "slug": "protea_prime_chassis_blueprint",
       "zh_name": "Protea Prime 机体 蓝图",
       "en_name": "Protea Prime Chassis Blueprint",
-      "plat_price": 17.2,
+      "plat_price": 17.1,
       "ducats": 100,
-      "volume": 602,
+      "volume": 594,
       "vaulted": true
     },
     {
@@ -4065,9 +4065,9 @@
       "slug": "protea_prime_neuroptics_blueprint",
       "zh_name": "Protea Prime 头部神经光元 蓝图",
       "en_name": "Protea Prime Neuroptics Blueprint",
-      "plat_price": 4.7,
+      "plat_price": 4.5,
       "ducats": 45,
-      "volume": 714,
+      "volume": 550,
       "vaulted": true
     },
     {
@@ -4075,9 +4075,9 @@
       "slug": "protea_prime_systems_blueprint",
       "zh_name": "Protea Prime 系统 蓝图",
       "en_name": "Protea Prime Systems Blueprint",
-      "plat_price": 14.3,
+      "plat_price": 14.7,
       "ducats": 100,
-      "volume": 1055,
+      "volume": 1240,
       "vaulted": true
     },
     {
@@ -4087,7 +4087,7 @@
       "en_name": "Pyrana Prime Barrel",
       "plat_price": 7.5,
       "ducats": 15,
-      "volume": 213,
+      "volume": 200,
       "vaulted": true
     },
     {
@@ -4095,9 +4095,9 @@
       "slug": "pyrana_prime_blueprint",
       "zh_name": "食人鱼 Prime 蓝图",
       "en_name": "Pyrana Prime Blueprint",
-      "plat_price": 41.2,
+      "plat_price": 41.9,
       "ducats": 100,
-      "volume": 147,
+      "volume": 153,
       "vaulted": true
     },
     {
@@ -4107,7 +4107,7 @@
       "en_name": "Pyrana Prime Receiver",
       "plat_price": 8.8,
       "ducats": 45,
-      "volume": 324,
+      "volume": 327,
       "vaulted": true
     },
     {
@@ -4115,9 +4115,9 @@
       "slug": "quassus_prime_blade",
       "zh_name": "威震武扇 Prime 刀刃",
       "en_name": "Quassus Prime Blade",
-      "plat_price": 11.9,
+      "plat_price": 12.9,
       "ducats": 100,
-      "volume": 268,
+      "volume": 275,
       "vaulted": true
     },
     {
@@ -4125,9 +4125,9 @@
       "slug": "quassus_prime_blueprint",
       "zh_name": "威震武扇 Prime 蓝图",
       "en_name": "Quassus Prime Blueprint",
-      "plat_price": 4.3,
+      "plat_price": 4.0,
       "ducats": 45,
-      "volume": 410,
+      "volume": 332,
       "vaulted": true
     },
     {
@@ -4137,7 +4137,7 @@
       "en_name": "Quassus Prime Handle",
       "plat_price": 4.8,
       "ducats": 15,
-      "volume": 205,
+      "volume": 202,
       "vaulted": true
     },
     {
@@ -4145,9 +4145,9 @@
       "slug": "reaper_prime_blade",
       "zh_name": "收割者 Prime 刀刃",
       "en_name": "Reaper Prime Blade",
-      "plat_price": 9.7,
+      "plat_price": 11.2,
       "ducats": 45,
-      "volume": 178,
+      "volume": 285,
       "vaulted": true
     },
     {
@@ -4157,7 +4157,7 @@
       "en_name": "Reaper Prime Blueprint",
       "plat_price": 9.6,
       "ducats": 15,
-      "volume": 158,
+      "volume": 146,
       "vaulted": true
     },
     {
@@ -4165,9 +4165,9 @@
       "slug": "reaper_prime_handle",
       "zh_name": "收割者 Prime 握柄",
       "en_name": "Reaper Prime Handle",
-      "plat_price": 14.8,
+      "plat_price": 14.1,
       "ducats": 15,
-      "volume": 345,
+      "volume": 250,
       "vaulted": true
     },
     {
@@ -4175,9 +4175,9 @@
       "slug": "redeemer_prime_blade",
       "zh_name": "救赎者 Prime 刀刃",
       "en_name": "Redeemer Prime Blade",
-      "plat_price": 7.1,
+      "plat_price": 7.0,
       "ducats": 15,
-      "volume": 283,
+      "volume": 288,
       "vaulted": true
     },
     {
@@ -4187,7 +4187,7 @@
       "en_name": "Redeemer Prime Blueprint",
       "plat_price": 5.1,
       "ducats": 45,
-      "volume": 167,
+      "volume": 201,
       "vaulted": true
     },
     {
@@ -4195,9 +4195,9 @@
       "slug": "redeemer_prime_handle",
       "zh_name": "救赎者 Prime 握柄",
       "en_name": "Redeemer Prime Handle",
-      "plat_price": 40.6,
+      "plat_price": 41.2,
       "ducats": 100,
-      "volume": 192,
+      "volume": 198,
       "vaulted": true
     },
     {
@@ -4205,9 +4205,9 @@
       "slug": "revenant_prime_blueprint",
       "zh_name": "Revenant Prime 蓝图",
       "en_name": "Revenant Prime Blueprint",
-      "plat_price": 27.6,
+      "plat_price": 30.0,
       "ducats": 100,
-      "volume": 466,
+      "volume": 633,
       "vaulted": true
     },
     {
@@ -4215,9 +4215,9 @@
       "slug": "revenant_prime_chassis_blueprint",
       "zh_name": "Revenant Prime 机体 蓝图",
       "en_name": "Revenant Prime Chassis Blueprint",
-      "plat_price": 7.9,
+      "plat_price": 8.1,
       "ducats": 15,
-      "volume": 694,
+      "volume": 638,
       "vaulted": true
     },
     {
@@ -4227,7 +4227,7 @@
       "en_name": "Revenant Prime Neuroptics Blueprint",
       "plat_price": 8.4,
       "ducats": 45,
-      "volume": 775,
+      "volume": 724,
       "vaulted": true
     },
     {
@@ -4235,9 +4235,9 @@
       "slug": "revenant_prime_systems_blueprint",
       "zh_name": "Revenant Prime 系统 蓝图",
       "en_name": "Revenant Prime Systems Blueprint",
-      "plat_price": 9.7,
+      "plat_price": 9.8,
       "ducats": 45,
-      "volume": 473,
+      "volume": 419,
       "vaulted": true
     },
     {
@@ -4245,9 +4245,9 @@
       "slug": "rhino_prime_blueprint",
       "zh_name": "Rhino Prime 蓝图",
       "en_name": "Rhino Prime Blueprint",
-      "plat_price": 20.7,
+      "plat_price": 20.4,
       "ducats": 100,
-      "volume": 712,
+      "volume": 662,
       "vaulted": true
     },
     {
@@ -4255,9 +4255,9 @@
       "slug": "rhino_prime_chassis_blueprint",
       "zh_name": "Rhino Prime 机体 蓝图",
       "en_name": "Rhino Prime Chassis Blueprint",
-      "plat_price": 9.4,
+      "plat_price": 9.5,
       "ducats": 65,
-      "volume": 649,
+      "volume": 597,
       "vaulted": true
     },
     {
@@ -4267,7 +4267,7 @@
       "en_name": "Rhino Prime Neuroptics Blueprint",
       "plat_price": 15.2,
       "ducats": 45,
-      "volume": 352,
+      "volume": 316,
       "vaulted": true
     },
     {
@@ -4275,9 +4275,9 @@
       "slug": "rhino_prime_systems_blueprint",
       "zh_name": "Rhino Prime 系统 蓝图",
       "en_name": "Rhino Prime Systems Blueprint",
-      "plat_price": 9.2,
+      "plat_price": 8.9,
       "ducats": 15,
-      "volume": 478,
+      "volume": 521,
       "vaulted": true
     },
     {
@@ -4285,9 +4285,9 @@
       "slug": "rubico_prime_barrel",
       "zh_name": "绝路 Prime 枪管",
       "en_name": "Rubico Prime Barrel",
-      "plat_price": 8.8,
+      "plat_price": 8.1,
       "ducats": 25,
-      "volume": 277,
+      "volume": 268,
       "vaulted": true
     },
     {
@@ -4295,9 +4295,9 @@
       "slug": "rubico_prime_blueprint",
       "zh_name": "绝路 Prime 蓝图",
       "en_name": "Rubico Prime Blueprint",
-      "plat_price": 23.0,
+      "plat_price": 22.5,
       "ducats": 100,
-      "volume": 190,
+      "volume": 193,
       "vaulted": true
     },
     {
@@ -4305,9 +4305,9 @@
       "slug": "rubico_prime_receiver",
       "zh_name": "绝路 Prime 枪机",
       "en_name": "Rubico Prime Receiver",
-      "plat_price": 5.1,
+      "plat_price": 5.2,
       "ducats": 15,
-      "volume": 244,
+      "volume": 257,
       "vaulted": true
     },
     {
@@ -4315,9 +4315,9 @@
       "slug": "rubico_prime_stock",
       "zh_name": "绝路 Prime 枪托",
       "en_name": "Rubico Prime Stock",
-      "plat_price": 9.2,
+      "plat_price": 8.9,
       "ducats": 45,
-      "volume": 359,
+      "volume": 356,
       "vaulted": true
     },
     {
@@ -4325,9 +4325,9 @@
       "slug": "sarofang_prime_blade",
       "zh_name": "沙罗之牙 Prime 刀刃",
       "en_name": "Sarofang Prime Blade",
-      "plat_price": 9.6,
+      "plat_price": 9.4,
       "ducats": 100,
-      "volume": 273,
+      "volume": 246,
       "vaulted": false
     },
     {
@@ -4335,9 +4335,9 @@
       "slug": "sarofang_prime_blueprint",
       "zh_name": "沙罗之牙 Prime 蓝图",
       "en_name": "Sarofang Prime Blueprint",
-      "plat_price": 4.1,
+      "plat_price": 4.2,
       "ducats": 45,
-      "volume": 222,
+      "volume": 227,
       "vaulted": false
     },
     {
@@ -4345,9 +4345,9 @@
       "slug": "sarofang_prime_handle",
       "zh_name": "沙罗之牙 Prime 握柄",
       "en_name": "Sarofang Prime Handle",
-      "plat_price": 3.9,
+      "plat_price": 4.0,
       "ducats": 15,
-      "volume": 246,
+      "volume": 213,
       "vaulted": false
     },
     {
@@ -4355,9 +4355,9 @@
       "slug": "saryn_prime_blueprint",
       "zh_name": "Saryn Prime 蓝图",
       "en_name": "Saryn Prime Blueprint",
-      "plat_price": 11.4,
+      "plat_price": 9.3,
       "ducats": 65,
-      "volume": 1858,
+      "volume": 1224,
       "vaulted": true
     },
     {
@@ -4365,9 +4365,9 @@
       "slug": "saryn_prime_chassis_blueprint",
       "zh_name": "Saryn Prime 机体 蓝图",
       "en_name": "Saryn Prime Chassis Blueprint",
-      "plat_price": 26.9,
+      "plat_price": 30.2,
       "ducats": 100,
-      "volume": 533,
+      "volume": 506,
       "vaulted": true
     },
     {
@@ -4375,9 +4375,9 @@
       "slug": "saryn_prime_neuroptics_blueprint",
       "zh_name": "Saryn Prime 头部神经光元 蓝图",
       "en_name": "Saryn Prime Neuroptics Blueprint",
-      "plat_price": 9.7,
+      "plat_price": 9.8,
       "ducats": 45,
-      "volume": 886,
+      "volume": 861,
       "vaulted": true
     },
     {
@@ -4385,9 +4385,9 @@
       "slug": "saryn_prime_systems_blueprint",
       "zh_name": "Saryn Prime 系统 蓝图",
       "en_name": "Saryn Prime Systems Blueprint",
-      "plat_price": 12.7,
+      "plat_price": 13.2,
       "ducats": 15,
-      "volume": 866,
+      "volume": 583,
       "vaulted": true
     },
     {
@@ -4395,9 +4395,9 @@
       "slug": "scindo_prime_blade",
       "zh_name": "分裂斩斧 Prime 刀刃",
       "en_name": "Scindo Prime Blade",
-      "plat_price": 18.0,
+      "plat_price": 17.8,
       "ducats": 100,
-      "volume": 372,
+      "volume": 336,
       "vaulted": false
     },
     {
@@ -4405,9 +4405,9 @@
       "slug": "scindo_prime_blueprint",
       "zh_name": "分裂斩斧 Prime 蓝图",
       "en_name": "Scindo Prime Blueprint",
-      "plat_price": 6.7,
+      "plat_price": 6.6,
       "ducats": 45,
-      "volume": 189,
+      "volume": 180,
       "vaulted": false
     },
     {
@@ -4415,9 +4415,9 @@
       "slug": "scindo_prime_handle",
       "zh_name": "分裂斩斧 Prime 握柄",
       "en_name": "Scindo Prime Handle",
-      "plat_price": 9.4,
+      "plat_price": 9.5,
       "ducats": 25,
-      "volume": 201,
+      "volume": 229,
       "vaulted": false
     },
     {
@@ -4427,7 +4427,7 @@
       "en_name": "Scourge Prime Barrel",
       "plat_price": 39.0,
       "ducats": 100,
-      "volume": 240,
+      "volume": 232,
       "vaulted": true
     },
     {
@@ -4437,7 +4437,7 @@
       "en_name": "Scourge Prime Blade",
       "plat_price": 5.2,
       "ducats": 15,
-      "volume": 172,
+      "volume": 178,
       "vaulted": true
     },
     {
@@ -4445,9 +4445,9 @@
       "slug": "scourge_prime_blueprint",
       "zh_name": "祸根 Prime 蓝图",
       "en_name": "Scourge Prime Blueprint",
-      "plat_price": 21.3,
+      "plat_price": 21.6,
       "ducats": 100,
-      "volume": 160,
+      "volume": 197,
       "vaulted": true
     },
     {
@@ -4455,9 +4455,9 @@
       "slug": "scourge_prime_handle",
       "zh_name": "祸根 Prime 握柄",
       "en_name": "Scourge Prime Handle",
-      "plat_price": 8.0,
+      "plat_price": 8.2,
       "ducats": 45,
-      "volume": 313,
+      "volume": 264,
       "vaulted": true
     },
     {
@@ -4465,9 +4465,9 @@
       "slug": "sevagoth_prime_blueprint",
       "zh_name": "Sevagoth Prime 蓝图",
       "en_name": "Sevagoth Prime Blueprint",
-      "plat_price": 7.0,
+      "plat_price": 5.8,
       "ducats": 45,
-      "volume": 494,
+      "volume": 369,
       "vaulted": true
     },
     {
@@ -4475,9 +4475,9 @@
       "slug": "sevagoth_prime_chassis_blueprint",
       "zh_name": "Sevagoth Prime 机体 蓝图",
       "en_name": "Sevagoth Prime Chassis Blueprint",
-      "plat_price": 30.7,
+      "plat_price": 30.3,
       "ducats": 100,
-      "volume": 868,
+      "volume": 811,
       "vaulted": true
     },
     {
@@ -4485,9 +4485,9 @@
       "slug": "sevagoth_prime_neuroptics_blueprint",
       "zh_name": "Sevagoth Prime 头部神经光元 蓝图",
       "en_name": "Sevagoth Prime Neuroptics Blueprint",
-      "plat_price": 3.8,
+      "plat_price": 4.0,
       "ducats": 15,
-      "volume": 623,
+      "volume": 768,
       "vaulted": true
     },
     {
@@ -4495,9 +4495,9 @@
       "slug": "sevagoth_prime_systems_blueprint",
       "zh_name": "Sevagoth Prime 系统 蓝图",
       "en_name": "Sevagoth Prime Systems Blueprint",
-      "plat_price": 4.6,
+      "plat_price": 4.4,
       "ducats": 15,
-      "volume": 383,
+      "volume": 347,
       "vaulted": true
     },
     {
@@ -4505,9 +4505,9 @@
       "slug": "shade_prime_blueprint",
       "zh_name": "阴影 Prime 蓝图",
       "en_name": "Shade Prime Blueprint",
-      "plat_price": 7.1,
+      "plat_price": 7.0,
       "ducats": 45,
-      "volume": 496,
+      "volume": 402,
       "vaulted": true
     },
     {
@@ -4515,9 +4515,9 @@
       "slug": "shade_prime_carapace",
       "zh_name": "阴影 Prime 外壳",
       "en_name": "Shade Prime Carapace",
-      "plat_price": 32.3,
+      "plat_price": 31.2,
       "ducats": 100,
-      "volume": 345,
+      "volume": 314,
       "vaulted": true
     },
     {
@@ -4527,7 +4527,7 @@
       "en_name": "Shade Prime Cerebrum",
       "plat_price": 7.6,
       "ducats": 15,
-      "volume": 351,
+      "volume": 288,
       "vaulted": true
     },
     {
@@ -4535,9 +4535,9 @@
       "slug": "shade_prime_systems",
       "zh_name": "阴影 Prime 系统",
       "en_name": "Shade Prime Systems",
-      "plat_price": 5.3,
+      "plat_price": 5.1,
       "ducats": 45,
-      "volume": 371,
+      "volume": 300,
       "vaulted": true
     },
     {
@@ -4545,9 +4545,9 @@
       "slug": "sicarus_prime_barrel",
       "zh_name": "暗杀者 Prime 枪管",
       "en_name": "Sicarus Prime Barrel",
-      "plat_price": 12.0,
+      "plat_price": 13.0,
       "ducats": 15,
-      "volume": 361,
+      "volume": 405,
       "vaulted": true
     },
     {
@@ -4555,9 +4555,9 @@
       "slug": "sicarus_prime_blueprint",
       "zh_name": "暗杀者 Prime 蓝图",
       "en_name": "Sicarus Prime Blueprint",
-      "plat_price": 9.4,
+      "plat_price": 9.5,
       "ducats": 15,
-      "volume": 318,
+      "volume": 363,
       "vaulted": true
     },
     {
@@ -4565,9 +4565,9 @@
       "slug": "sicarus_prime_receiver",
       "zh_name": "暗杀者 Prime 枪机",
       "en_name": "Sicarus Prime Receiver",
-      "plat_price": 43.0,
+      "plat_price": 43.7,
       "ducats": 100,
-      "volume": 268,
+      "volume": 247,
       "vaulted": true
     },
     {
@@ -4575,9 +4575,9 @@
       "slug": "silva_and_aegis_prime_blade",
       "zh_name": "席瓦 & 神盾 Prime 刀刃",
       "en_name": "Silva & Aegis Prime Blade",
-      "plat_price": 8.8,
+      "plat_price": 8.9,
       "ducats": 45,
-      "volume": 227,
+      "volume": 200,
       "vaulted": true
     },
     {
@@ -4585,9 +4585,9 @@
       "slug": "silva_and_aegis_prime_blueprint",
       "zh_name": "席瓦 & 神盾 Prime 蓝图",
       "en_name": "Silva & Aegis Prime Blueprint",
-      "plat_price": 9.5,
+      "plat_price": 9.3,
       "ducats": 45,
-      "volume": 136,
+      "volume": 144,
       "vaulted": true
     },
     {
@@ -4595,9 +4595,9 @@
       "slug": "silva_and_aegis_prime_guard",
       "zh_name": "席瓦 & 神盾 Prime 护手",
       "en_name": "Silva & Aegis Prime Guard",
-      "plat_price": 25.0,
+      "plat_price": 25.2,
       "ducats": 100,
-      "volume": 181,
+      "volume": 173,
       "vaulted": true
     },
     {
@@ -4607,7 +4607,7 @@
       "en_name": "Silva & Aegis Prime Hilt",
       "plat_price": 8.0,
       "ducats": 15,
-      "volume": 259,
+      "volume": 242,
       "vaulted": true
     },
     {
@@ -4615,9 +4615,9 @@
       "slug": "soma_prime_barrel",
       "zh_name": "月神 Prime 枪管",
       "en_name": "Soma Prime Barrel",
-      "plat_price": 13.1,
+      "plat_price": 13.0,
       "ducats": 15,
-      "volume": 299,
+      "volume": 316,
       "vaulted": true
     },
     {
@@ -4625,9 +4625,9 @@
       "slug": "soma_prime_blueprint",
       "zh_name": "月神 Prime 蓝图",
       "en_name": "Soma Prime Blueprint",
-      "plat_price": 7.7,
+      "plat_price": 7.6,
       "ducats": 15,
-      "volume": 363,
+      "volume": 350,
       "vaulted": true
     },
     {
@@ -4635,9 +4635,9 @@
       "slug": "soma_prime_receiver",
       "zh_name": "月神 Prime 枪机",
       "en_name": "Soma Prime Receiver",
-      "plat_price": 12.2,
+      "plat_price": 12.4,
       "ducats": 45,
-      "volume": 460,
+      "volume": 427,
       "vaulted": true
     },
     {
@@ -4645,9 +4645,9 @@
       "slug": "soma_prime_stock",
       "zh_name": "月神 Prime 枪托",
       "en_name": "Soma Prime Stock",
-      "plat_price": 25.8,
+      "plat_price": 25.3,
       "ducats": 100,
-      "volume": 299,
+      "volume": 311,
       "vaulted": true
     },
     {
@@ -4655,9 +4655,9 @@
       "slug": "spira_prime_blade",
       "zh_name": "旋刃飞刀 Prime 刀刃",
       "en_name": "Spira Prime Blade",
-      "plat_price": 15.1,
+      "plat_price": 15.8,
       "ducats": 65,
-      "volume": 750,
+      "volume": 692,
       "vaulted": true
     },
     {
@@ -4665,9 +4665,9 @@
       "slug": "spira_prime_blueprint",
       "zh_name": "旋刃飞刀 Prime 蓝图",
       "en_name": "Spira Prime Blueprint",
-      "plat_price": 6.1,
+      "plat_price": 7.7,
       "ducats": 15,
-      "volume": 372,
+      "volume": 585,
       "vaulted": true
     },
     {
@@ -4675,9 +4675,9 @@
       "slug": "spira_prime_pouch",
       "zh_name": "旋刃飞刀 Prime 镖袋",
       "en_name": "Spira Prime Pouch",
-      "plat_price": 30.8,
+      "plat_price": 38.1,
       "ducats": 100,
-      "volume": 229,
+      "volume": 294,
       "vaulted": true
     },
     {
@@ -4685,9 +4685,9 @@
       "slug": "steflos_prime_barrel",
       "zh_name": "石晶之花 Prime 枪管",
       "en_name": "Steflos Prime Barrel",
-      "plat_price": 19.6,
+      "plat_price": 19.4,
       "ducats": 100,
-      "volume": 234,
+      "volume": 226,
       "vaulted": false
     },
     {
@@ -4695,9 +4695,9 @@
       "slug": "steflos_prime_blueprint",
       "zh_name": "石晶之花 Prime 蓝图",
       "en_name": "Steflos Prime Blueprint",
-      "plat_price": 5.5,
+      "plat_price": 5.2,
       "ducats": 45,
-      "volume": 316,
+      "volume": 353,
       "vaulted": false
     },
     {
@@ -4707,7 +4707,7 @@
       "en_name": "Steflos Prime Receiver",
       "plat_price": 4.8,
       "ducats": 15,
-      "volume": 200,
+      "volume": 217,
       "vaulted": false
     },
     {
@@ -4715,9 +4715,9 @@
       "slug": "steflos_prime_stock",
       "zh_name": "石晶之花 Prime 枪托",
       "en_name": "Steflos Prime Stock",
-      "plat_price": 6.8,
+      "plat_price": 6.7,
       "ducats": 45,
-      "volume": 348,
+      "volume": 357,
       "vaulted": false
     },
     {
@@ -4725,9 +4725,9 @@
       "slug": "stradavar_prime_barrel",
       "zh_name": "斯特拉迪瓦 Prime 枪管",
       "en_name": "Stradavar Prime Barrel",
-      "plat_price": 5.0,
+      "plat_price": 4.9,
       "ducats": 45,
-      "volume": 293,
+      "volume": 211,
       "vaulted": true
     },
     {
@@ -4735,9 +4735,9 @@
       "slug": "stradavar_prime_blueprint",
       "zh_name": "斯特拉迪瓦 Prime 蓝图",
       "en_name": "Stradavar Prime Blueprint",
-      "plat_price": 15.9,
+      "plat_price": 16.2,
       "ducats": 100,
-      "volume": 158,
+      "volume": 159,
       "vaulted": true
     },
     {
@@ -4745,9 +4745,9 @@
       "slug": "stradavar_prime_receiver",
       "zh_name": "斯特拉迪瓦 Prime 枪机",
       "en_name": "Stradavar Prime Receiver",
-      "plat_price": 7.4,
+      "plat_price": 7.5,
       "ducats": 15,
-      "volume": 267,
+      "volume": 249,
       "vaulted": true
     },
     {
@@ -4755,9 +4755,9 @@
       "slug": "stradavar_prime_stock",
       "zh_name": "斯特拉迪瓦 Prime 枪托",
       "en_name": "Stradavar Prime Stock",
-      "plat_price": 9.6,
+      "plat_price": 9.5,
       "ducats": 15,
-      "volume": 180,
+      "volume": 148,
       "vaulted": true
     },
     {
@@ -4765,9 +4765,9 @@
       "slug": "strun_prime_barrel",
       "zh_name": "斯特朗 Prime 枪管",
       "en_name": "Strun Prime Barrel",
-      "plat_price": 9.0,
+      "plat_price": 8.8,
       "ducats": 45,
-      "volume": 856,
+      "volume": 835,
       "vaulted": true
     },
     {
@@ -4775,9 +4775,9 @@
       "slug": "strun_prime_blueprint",
       "zh_name": "斯特朗 Prime 蓝图",
       "en_name": "Strun Prime Blueprint",
-      "plat_price": 19.9,
+      "plat_price": 19.5,
       "ducats": 100,
-      "volume": 575,
+      "volume": 524,
       "vaulted": true
     },
     {
@@ -4787,7 +4787,7 @@
       "en_name": "Strun Prime Receiver",
       "plat_price": 9.4,
       "ducats": 15,
-      "volume": 345,
+      "volume": 369,
       "vaulted": true
     },
     {
@@ -4795,9 +4795,9 @@
       "slug": "strun_prime_stock",
       "zh_name": "斯特朗 Prime 枪托",
       "en_name": "Strun Prime Stock",
-      "plat_price": 12.4,
+      "plat_price": 12.2,
       "ducats": 45,
-      "volume": 513,
+      "volume": 449,
       "vaulted": true
     },
     {
@@ -4805,9 +4805,9 @@
       "slug": "styanax_prime_blueprint",
       "zh_name": "Styanax Prime 蓝图",
       "en_name": "Styanax Prime Blueprint",
-      "plat_price": 5.0,
+      "plat_price": 5.1,
       "ducats": 15,
-      "volume": 393,
+      "volume": 332,
       "vaulted": false
     },
     {
@@ -4815,9 +4815,9 @@
       "slug": "styanax_prime_chassis_blueprint",
       "zh_name": "Styanax Prime 机体 蓝图",
       "en_name": "Styanax Prime Chassis Blueprint",
-      "plat_price": 4.9,
+      "plat_price": 5.6,
       "ducats": 45,
-      "volume": 395,
+      "volume": 522,
       "vaulted": false
     },
     {
@@ -4825,9 +4825,9 @@
       "slug": "styanax_prime_neuroptics_blueprint",
       "zh_name": "Styanax Prime 头部神经光元 蓝图",
       "en_name": "Styanax Prime Neuroptics Blueprint",
-      "plat_price": 13.4,
+      "plat_price": 13.7,
       "ducats": 100,
-      "volume": 354,
+      "volume": 391,
       "vaulted": false
     },
     {
@@ -4837,7 +4837,7 @@
       "en_name": "Styanax Prime Systems Blueprint",
       "plat_price": 6.1,
       "ducats": 45,
-      "volume": 462,
+      "volume": 425,
       "vaulted": false
     },
     {
@@ -4845,9 +4845,9 @@
       "slug": "sybaris_prime_barrel",
       "zh_name": "席芭莉丝 Prime 枪管",
       "en_name": "Sybaris Prime Barrel",
-      "plat_price": 40.6,
+      "plat_price": 40.9,
       "ducats": 100,
-      "volume": 210,
+      "volume": 219,
       "vaulted": true
     },
     {
@@ -4857,7 +4857,7 @@
       "en_name": "Sybaris Prime Blueprint",
       "plat_price": 8.1,
       "ducats": 15,
-      "volume": 244,
+      "volume": 228,
       "vaulted": true
     },
     {
@@ -4865,9 +4865,9 @@
       "slug": "sybaris_prime_receiver",
       "zh_name": "席芭莉丝 Prime 枪机",
       "en_name": "Sybaris Prime Receiver",
-      "plat_price": 9.2,
+      "plat_price": 9.5,
       "ducats": 45,
-      "volume": 225,
+      "volume": 280,
       "vaulted": true
     },
     {
@@ -4875,9 +4875,9 @@
       "slug": "sybaris_prime_stock",
       "zh_name": "席芭莉丝 Prime 枪托",
       "en_name": "Sybaris Prime Stock",
-      "plat_price": 12.2,
+      "plat_price": 12.3,
       "ducats": 15,
-      "volume": 234,
+      "volume": 238,
       "vaulted": true
     },
     {
@@ -4885,9 +4885,9 @@
       "slug": "tatsu_prime_blade",
       "zh_name": "龙辰 Prime 刀刃",
       "en_name": "Tatsu Prime Blade",
-      "plat_price": 6.7,
+      "plat_price": 6.5,
       "ducats": 45,
-      "volume": 306,
+      "volume": 286,
       "vaulted": true
     },
     {
@@ -4895,9 +4895,9 @@
       "slug": "tatsu_prime_blueprint",
       "zh_name": "龙辰 Prime 蓝图",
       "en_name": "Tatsu Prime Blueprint",
-      "plat_price": 4.8,
+      "plat_price": 4.7,
       "ducats": 15,
-      "volume": 211,
+      "volume": 197,
       "vaulted": true
     },
     {
@@ -4905,9 +4905,9 @@
       "slug": "tatsu_prime_handle",
       "zh_name": "龙辰 Prime 握柄",
       "en_name": "Tatsu Prime Handle",
-      "plat_price": 24.4,
+      "plat_price": 25.2,
       "ducats": 100,
-      "volume": 209,
+      "volume": 217,
       "vaulted": true
     },
     {
@@ -4915,9 +4915,9 @@
       "slug": "tekko_prime_blade",
       "zh_name": "铁钩手甲 Prime 刀刃",
       "en_name": "Tekko Prime Blade",
-      "plat_price": 27.4,
+      "plat_price": 26.4,
       "ducats": 100,
-      "volume": 158,
+      "volume": 178,
       "vaulted": true
     },
     {
@@ -4927,7 +4927,7 @@
       "en_name": "Tekko Prime Blueprint",
       "plat_price": 4.9,
       "ducats": 45,
-      "volume": 298,
+      "volume": 175,
       "vaulted": true
     },
     {
@@ -4935,9 +4935,9 @@
       "slug": "tekko_prime_gauntlet",
       "zh_name": "铁钩手甲 Prime 拳套",
       "en_name": "Tekko Prime Gauntlet",
-      "plat_price": 9.8,
+      "plat_price": 9.9,
       "ducats": 15,
-      "volume": 211,
+      "volume": 224,
       "vaulted": true
     },
     {
@@ -4945,9 +4945,9 @@
       "slug": "tenora_prime_barrel",
       "zh_name": "双簧管 Prime 枪管",
       "en_name": "Tenora Prime Barrel",
-      "plat_price": 19.1,
+      "plat_price": 19.7,
       "ducats": 100,
-      "volume": 207,
+      "volume": 202,
       "vaulted": true
     },
     {
@@ -4955,9 +4955,9 @@
       "slug": "tenora_prime_blueprint",
       "zh_name": "双簧管 Prime 蓝图",
       "en_name": "Tenora Prime Blueprint",
-      "plat_price": 6.5,
+      "plat_price": 6.7,
       "ducats": 15,
-      "volume": 207,
+      "volume": 190,
       "vaulted": true
     },
     {
@@ -4965,9 +4965,9 @@
       "slug": "tenora_prime_receiver",
       "zh_name": "双簧管 Prime 枪机",
       "en_name": "Tenora Prime Receiver",
-      "plat_price": 32.3,
+      "plat_price": 31.1,
       "ducats": 100,
-      "volume": 189,
+      "volume": 236,
       "vaulted": true
     },
     {
@@ -4975,9 +4975,9 @@
       "slug": "tenora_prime_stock",
       "zh_name": "双簧管 Prime 枪托",
       "en_name": "Tenora Prime Stock",
-      "plat_price": 11.2,
+      "plat_price": 9.8,
       "ducats": 45,
-      "volume": 177,
+      "volume": 124,
       "vaulted": true
     },
     {
@@ -4985,9 +4985,9 @@
       "slug": "tiberon_prime_barrel",
       "zh_name": "狂鲨 Prime 枪管",
       "en_name": "Tiberon Prime Barrel",
-      "plat_price": 15.3,
+      "plat_price": 14.8,
       "ducats": 65,
-      "volume": 258,
+      "volume": 182,
       "vaulted": true
     },
     {
@@ -4995,7 +4995,7 @@
       "slug": "tiberon_prime_blueprint",
       "zh_name": "狂鲨 Prime 蓝图",
       "en_name": "Tiberon Prime Blueprint",
-      "plat_price": 7.3,
+      "plat_price": 7.2,
       "ducats": 25,
       "volume": 179,
       "vaulted": true
@@ -5007,7 +5007,7 @@
       "en_name": "Tiberon Prime Receiver",
       "plat_price": 9.3,
       "ducats": 15,
-      "volume": 210,
+      "volume": 178,
       "vaulted": true
     },
     {
@@ -5015,9 +5015,9 @@
       "slug": "tiberon_prime_stock",
       "zh_name": "狂鲨 Prime 枪托",
       "en_name": "Tiberon Prime Stock",
-      "plat_price": 31.9,
+      "plat_price": 32.3,
       "ducats": 100,
-      "volume": 184,
+      "volume": 190,
       "vaulted": true
     },
     {
@@ -5025,9 +5025,9 @@
       "slug": "tigris_prime_barrel",
       "zh_name": "猛虎 Prime 枪管",
       "en_name": "Tigris Prime Barrel",
-      "plat_price": 7.9,
+      "plat_price": 7.8,
       "ducats": 45,
-      "volume": 321,
+      "volume": 291,
       "vaulted": true
     },
     {
@@ -5035,9 +5035,9 @@
       "slug": "tigris_prime_blueprint",
       "zh_name": "猛虎 Prime 蓝图",
       "en_name": "Tigris Prime Blueprint",
-      "plat_price": 29.0,
+      "plat_price": 28.9,
       "ducats": 100,
-      "volume": 236,
+      "volume": 227,
       "vaulted": true
     },
     {
@@ -5045,9 +5045,9 @@
       "slug": "tigris_prime_receiver",
       "zh_name": "猛虎 Prime 枪机",
       "en_name": "Tigris Prime Receiver",
-      "plat_price": 9.5,
+      "plat_price": 10.0,
       "ducats": 45,
-      "volume": 177,
+      "volume": 197,
       "vaulted": true
     },
     {
@@ -5057,7 +5057,7 @@
       "en_name": "Tigris Prime Stock",
       "plat_price": 8.2,
       "ducats": 15,
-      "volume": 275,
+      "volume": 242,
       "vaulted": true
     },
     {
@@ -5067,7 +5067,7 @@
       "en_name": "Tipedo Prime Blueprint",
       "plat_price": 6.5,
       "ducats": 15,
-      "volume": 298,
+      "volume": 249,
       "vaulted": true
     },
     {
@@ -5075,9 +5075,9 @@
       "slug": "tipedo_prime_handle",
       "zh_name": "提佩多 Prime 握柄",
       "en_name": "Tipedo Prime Handle",
-      "plat_price": 42.5,
+      "plat_price": 43.4,
       "ducats": 100,
-      "volume": 196,
+      "volume": 179,
       "vaulted": true
     },
     {
@@ -5085,9 +5085,9 @@
       "slug": "tipedo_prime_ornament",
       "zh_name": "提佩多 Prime 饰物",
       "en_name": "Tipedo Prime Ornament",
-      "plat_price": 15.1,
+      "plat_price": 14.8,
       "ducats": 45,
-      "volume": 315,
+      "volume": 379,
       "vaulted": true
     },
     {
@@ -5095,9 +5095,9 @@
       "slug": "titania_prime_blueprint",
       "zh_name": "Titania Prime 蓝图",
       "en_name": "Titania Prime Blueprint",
-      "plat_price": 13.1,
+      "plat_price": 12.7,
       "ducats": 45,
-      "volume": 641,
+      "volume": 629,
       "vaulted": true
     },
     {
@@ -5105,9 +5105,9 @@
       "slug": "titania_prime_chassis_blueprint",
       "zh_name": "Titania Prime 机体 蓝图",
       "en_name": "Titania Prime Chassis Blueprint",
-      "plat_price": 9.6,
+      "plat_price": 9.5,
       "ducats": 15,
-      "volume": 460,
+      "volume": 450,
       "vaulted": true
     },
     {
@@ -5115,9 +5115,9 @@
       "slug": "titania_prime_neuroptics_blueprint",
       "zh_name": "Titania Prime 头部神经光元 蓝图",
       "en_name": "Titania Prime Neuroptics Blueprint",
-      "plat_price": 9.5,
+      "plat_price": 9.4,
       "ducats": 45,
-      "volume": 635,
+      "volume": 483,
       "vaulted": true
     },
     {
@@ -5125,9 +5125,9 @@
       "slug": "titania_prime_systems_blueprint",
       "zh_name": "Titania Prime 系统 蓝图",
       "en_name": "Titania Prime Systems Blueprint",
-      "plat_price": 37.7,
+      "plat_price": 37.1,
       "ducats": 100,
-      "volume": 1065,
+      "volume": 1013,
       "vaulted": true
     },
     {
@@ -5137,7 +5137,7 @@
       "en_name": "Trinity Prime Blueprint",
       "plat_price": 15.9,
       "ducats": 45,
-      "volume": 288,
+      "volume": 272,
       "vaulted": true
     },
     {
@@ -5145,9 +5145,9 @@
       "slug": "trinity_prime_chassis_blueprint",
       "zh_name": "Trinity Prime 机体 蓝图",
       "en_name": "Trinity Prime Chassis Blueprint",
-      "plat_price": 9.8,
+      "plat_price": 9.9,
       "ducats": 45,
-      "volume": 360,
+      "volume": 330,
       "vaulted": true
     },
     {
@@ -5157,7 +5157,7 @@
       "en_name": "Trinity Prime Neuroptics Blueprint",
       "plat_price": 11.7,
       "ducats": 25,
-      "volume": 328,
+      "volume": 336,
       "vaulted": true
     },
     {
@@ -5165,9 +5165,9 @@
       "slug": "trinity_prime_systems_blueprint",
       "zh_name": "Trinity Prime 系统 蓝图",
       "en_name": "Trinity Prime Systems Blueprint",
-      "plat_price": 9.7,
+      "plat_price": 9.8,
       "ducats": 15,
-      "volume": 523,
+      "volume": 550,
       "vaulted": true
     },
     {
@@ -5175,9 +5175,9 @@
       "slug": "trumna_prime_barrel",
       "zh_name": "灭杀者 Prime 枪管",
       "en_name": "Trumna Prime Barrel",
-      "plat_price": 9.9,
+      "plat_price": 9.8,
       "ducats": 100,
-      "volume": 243,
+      "volume": 229,
       "vaulted": true
     },
     {
@@ -5187,7 +5187,7 @@
       "en_name": "Trumna Prime Blueprint",
       "plat_price": 3.0,
       "ducats": 15,
-      "volume": 248,
+      "volume": 216,
       "vaulted": true
     },
     {
@@ -5195,9 +5195,9 @@
       "slug": "trumna_prime_receiver",
       "zh_name": "灭杀者 Prime 枪机",
       "en_name": "Trumna Prime Receiver",
-      "plat_price": 16.2,
+      "plat_price": 16.1,
       "ducats": 100,
-      "volume": 307,
+      "volume": 324,
       "vaulted": true
     },
     {
@@ -5205,9 +5205,9 @@
       "slug": "trumna_prime_stock",
       "zh_name": "灭杀者 Prime 枪托",
       "en_name": "Trumna Prime Stock",
-      "plat_price": 5.1,
+      "plat_price": 5.0,
       "ducats": 45,
-      "volume": 221,
+      "volume": 259,
       "vaulted": true
     },
     {
@@ -5217,7 +5217,7 @@
       "en_name": "Vadarya Prime Barrel",
       "plat_price": 3.8,
       "ducats": 45,
-      "volume": 295,
+      "volume": 309,
       "vaulted": false
     },
     {
@@ -5225,9 +5225,9 @@
       "slug": "vadarya_prime_blueprint",
       "zh_name": "瓦德雅 Prime 蓝图",
       "en_name": "Vadarya Prime Blueprint",
-      "plat_price": 9.4,
+      "plat_price": 9.5,
       "ducats": 100,
-      "volume": 277,
+      "volume": 237,
       "vaulted": false
     },
     {
@@ -5235,9 +5235,9 @@
       "slug": "vadarya_prime_receiver",
       "zh_name": "瓦德雅 Prime 枪机",
       "en_name": "Vadarya Prime Receiver",
-      "plat_price": 3.6,
+      "plat_price": 3.7,
       "ducats": 45,
-      "volume": 596,
+      "volume": 592,
       "vaulted": false
     },
     {
@@ -5247,7 +5247,7 @@
       "en_name": "Vadarya Prime Stock",
       "plat_price": 4.2,
       "ducats": 15,
-      "volume": 215,
+      "volume": 240,
       "vaulted": false
     },
     {
@@ -5255,9 +5255,9 @@
       "slug": "valkyr_prime_blueprint",
       "zh_name": "Valkyr Prime 蓝图",
       "en_name": "Valkyr Prime Blueprint",
-      "plat_price": 7.2,
+      "plat_price": 7.5,
       "ducats": 15,
-      "volume": 438,
+      "volume": 354,
       "vaulted": false
     },
     {
@@ -5265,9 +5265,9 @@
       "slug": "valkyr_prime_chassis_blueprint",
       "zh_name": "Valkyr Prime 机体 蓝图",
       "en_name": "Valkyr Prime Chassis Blueprint",
-      "plat_price": 38.4,
+      "plat_price": 39.0,
       "ducats": 100,
-      "volume": 597,
+      "volume": 567,
       "vaulted": false
     },
     {
@@ -5275,9 +5275,9 @@
       "slug": "valkyr_prime_neuroptics_blueprint",
       "zh_name": "Valkyr Prime 头部神经光元 蓝图",
       "en_name": "Valkyr Prime Neuroptics Blueprint",
-      "plat_price": 12.1,
+      "plat_price": 12.0,
       "ducats": 45,
-      "volume": 517,
+      "volume": 489,
       "vaulted": false
     },
     {
@@ -5285,9 +5285,9 @@
       "slug": "valkyr_prime_systems_blueprint",
       "zh_name": "Valkyr Prime 系统 蓝图",
       "en_name": "Valkyr Prime Systems Blueprint",
-      "plat_price": 16.3,
+      "plat_price": 16.5,
       "ducats": 65,
-      "volume": 971,
+      "volume": 987,
       "vaulted": false
     },
     {
@@ -5295,9 +5295,9 @@
       "slug": "vasto_prime_barrel",
       "zh_name": "瓦斯托 Prime 枪管",
       "en_name": "Vasto Prime Barrel",
-      "plat_price": 12.6,
+      "plat_price": 12.0,
       "ducats": 15,
-      "volume": 342,
+      "volume": 242,
       "vaulted": true
     },
     {
@@ -5305,9 +5305,9 @@
       "slug": "vasto_prime_blueprint",
       "zh_name": "瓦斯托 Prime 蓝图",
       "en_name": "Vasto Prime Blueprint",
-      "plat_price": 8.2,
+      "plat_price": 8.5,
       "ducats": 45,
-      "volume": 266,
+      "volume": 251,
       "vaulted": true
     },
     {
@@ -5317,7 +5317,7 @@
       "en_name": "Vasto Prime Receiver",
       "plat_price": 9.6,
       "ducats": 15,
-      "volume": 318,
+      "volume": 304,
       "vaulted": true
     },
     {
@@ -5325,9 +5325,9 @@
       "slug": "vauban_prime_blueprint",
       "zh_name": "Vauban Prime 蓝图",
       "en_name": "Vauban Prime Blueprint",
-      "plat_price": 19.1,
+      "plat_price": 19.0,
       "ducats": 65,
-      "volume": 625,
+      "volume": 540,
       "vaulted": true
     },
     {
@@ -5335,9 +5335,9 @@
       "slug": "vauban_prime_chassis_blueprint",
       "zh_name": "Vauban Prime 机体 蓝图",
       "en_name": "Vauban Prime Chassis Blueprint",
-      "plat_price": 23.9,
+      "plat_price": 24.3,
       "ducats": 25,
-      "volume": 385,
+      "volume": 414,
       "vaulted": true
     },
     {
@@ -5347,7 +5347,7 @@
       "en_name": "Vauban Prime Neuroptics Blueprint",
       "plat_price": 33.5,
       "ducats": 100,
-      "volume": 346,
+      "volume": 356,
       "vaulted": true
     },
     {
@@ -5355,9 +5355,9 @@
       "slug": "vauban_prime_systems_blueprint",
       "zh_name": "Vauban Prime 系统 蓝图",
       "en_name": "Vauban Prime Systems Blueprint",
-      "plat_price": 42.0,
+      "plat_price": 40.5,
       "ducats": 100,
-      "volume": 369,
+      "volume": 299,
       "vaulted": true
     },
     {
@@ -5365,9 +5365,9 @@
       "slug": "vectis_prime_barrel",
       "zh_name": "守望者 Prime 枪管",
       "en_name": "Vectis Prime Barrel",
-      "plat_price": 25.6,
+      "plat_price": 26.2,
       "ducats": 15,
-      "volume": 362,
+      "volume": 350,
       "vaulted": true
     },
     {
@@ -5375,9 +5375,9 @@
       "slug": "vectis_prime_blueprint",
       "zh_name": "守望者 Prime 蓝图",
       "en_name": "Vectis Prime Blueprint",
-      "plat_price": 10.0,
+      "plat_price": 9.8,
       "ducats": 45,
-      "volume": 200,
+      "volume": 208,
       "vaulted": true
     },
     {
@@ -5385,9 +5385,9 @@
       "slug": "vectis_prime_receiver",
       "zh_name": "守望者 Prime 枪机",
       "en_name": "Vectis Prime Receiver",
-      "plat_price": 59.5,
+      "plat_price": 59.0,
       "ducats": 100,
-      "volume": 275,
+      "volume": 280,
       "vaulted": true
     },
     {
@@ -5395,9 +5395,9 @@
       "slug": "vectis_prime_stock",
       "zh_name": "守望者 Prime 枪托",
       "en_name": "Vectis Prime Stock",
-      "plat_price": 32.0,
+      "plat_price": 31.9,
       "ducats": 65,
-      "volume": 312,
+      "volume": 330,
       "vaulted": true
     },
     {
@@ -5405,9 +5405,9 @@
       "slug": "velox_prime_barrel",
       "zh_name": "逐电 Prime 枪管",
       "en_name": "Velox Prime Barrel",
-      "plat_price": 12.0,
+      "plat_price": 11.9,
       "ducats": 100,
-      "volume": 295,
+      "volume": 271,
       "vaulted": true
     },
     {
@@ -5415,9 +5415,9 @@
       "slug": "velox_prime_blueprint",
       "zh_name": "逐电 Prime 蓝图",
       "en_name": "Velox Prime Blueprint",
-      "plat_price": 4.5,
+      "plat_price": 4.3,
       "ducats": 45,
-      "volume": 308,
+      "volume": 311,
       "vaulted": true
     },
     {
@@ -5425,9 +5425,9 @@
       "slug": "velox_prime_receiver",
       "zh_name": "逐电 Prime 枪机",
       "en_name": "Velox Prime Receiver",
-      "plat_price": 6.2,
+      "plat_price": 5.6,
       "ducats": 15,
-      "volume": 193,
+      "volume": 166,
       "vaulted": true
     },
     {
@@ -5437,7 +5437,7 @@
       "en_name": "Venato Prime Blade",
       "plat_price": 9.6,
       "ducats": 100,
-      "volume": 272,
+      "volume": 269,
       "vaulted": false
     },
     {
@@ -5445,9 +5445,9 @@
       "slug": "venato_prime_blueprint",
       "zh_name": "脉纹 Prime 蓝图",
       "en_name": "Venato Prime Blueprint",
-      "plat_price": 4.1,
+      "plat_price": 3.9,
       "ducats": 45,
-      "volume": 324,
+      "volume": 314,
       "vaulted": false
     },
     {
@@ -5455,9 +5455,9 @@
       "slug": "venato_prime_handle",
       "zh_name": "脉纹 Prime 握柄",
       "en_name": "Venato Prime Handle",
-      "plat_price": 3.9,
+      "plat_price": 3.8,
       "ducats": 15,
-      "volume": 291,
+      "volume": 281,
       "vaulted": false
     },
     {
@@ -5465,9 +5465,9 @@
       "slug": "venka_prime_blades",
       "zh_name": "凯旋之爪 Prime 爪刃",
       "en_name": "Venka Prime Blades",
-      "plat_price": 8.7,
+      "plat_price": 8.6,
       "ducats": 15,
-      "volume": 290,
+      "volume": 267,
       "vaulted": false
     },
     {
@@ -5475,9 +5475,9 @@
       "slug": "venka_prime_blueprint",
       "zh_name": "凯旋之爪 Prime 蓝图",
       "en_name": "Venka Prime Blueprint",
-      "plat_price": 6.9,
+      "plat_price": 6.6,
       "ducats": 45,
-      "volume": 336,
+      "volume": 302,
       "vaulted": false
     },
     {
@@ -5485,9 +5485,9 @@
       "slug": "venka_prime_gauntlet",
       "zh_name": "凯旋之爪 Prime 手套",
       "en_name": "Venka Prime Gauntlet",
-      "plat_price": 26.2,
+      "plat_price": 27.2,
       "ducats": 100,
-      "volume": 415,
+      "volume": 407,
       "vaulted": false
     },
     {
@@ -5497,7 +5497,7 @@
       "en_name": "Volnus Prime Blueprint",
       "plat_price": 4.7,
       "ducats": 15,
-      "volume": 189,
+      "volume": 179,
       "vaulted": true
     },
     {
@@ -5505,9 +5505,9 @@
       "slug": "volnus_prime_handle",
       "zh_name": "创伤 Prime 握柄",
       "en_name": "Volnus Prime Handle",
-      "plat_price": 28.2,
+      "plat_price": 28.0,
       "ducats": 100,
-      "volume": 343,
+      "volume": 339,
       "vaulted": true
     },
     {
@@ -5517,7 +5517,7 @@
       "en_name": "Volnus Prime Head",
       "plat_price": 8.1,
       "ducats": 45,
-      "volume": 242,
+      "volume": 251,
       "vaulted": true
     },
     {
@@ -5525,9 +5525,9 @@
       "slug": "volt_prime_blueprint",
       "zh_name": "Volt Prime 蓝图",
       "en_name": "Volt Prime Blueprint",
-      "plat_price": 12.3,
+      "plat_price": 13.0,
       "ducats": 25,
-      "volume": 937,
+      "volume": 1133,
       "vaulted": true
     },
     {
@@ -5535,9 +5535,9 @@
       "slug": "volt_prime_chassis_blueprint",
       "zh_name": "Volt Prime 机体 蓝图",
       "en_name": "Volt Prime Chassis Blueprint",
-      "plat_price": 9.7,
+      "plat_price": 9.6,
       "ducats": 45,
-      "volume": 748,
+      "volume": 695,
       "vaulted": true
     },
     {
@@ -5545,9 +5545,9 @@
       "slug": "volt_prime_neuroptics_blueprint",
       "zh_name": "Volt Prime 头部神经光元 蓝图",
       "en_name": "Volt Prime Neuroptics Blueprint",
-      "plat_price": 23.1,
+      "plat_price": 23.7,
       "ducats": 65,
-      "volume": 615,
+      "volume": 616,
       "vaulted": true
     },
     {
@@ -5555,9 +5555,9 @@
       "slug": "volt_prime_systems_blueprint",
       "zh_name": "Volt Prime 系统 蓝图",
       "en_name": "Volt Prime Systems Blueprint",
-      "plat_price": 11.2,
+      "plat_price": 9.5,
       "ducats": 45,
-      "volume": 1018,
+      "volume": 639,
       "vaulted": true
     },
     {
@@ -5565,9 +5565,9 @@
       "slug": "voruna_prime_blueprint",
       "zh_name": "Voruna Prime 蓝图",
       "en_name": "Voruna Prime Blueprint",
-      "plat_price": 23.1,
+      "plat_price": 24.2,
       "ducats": 100,
-      "volume": 401,
+      "volume": 430,
       "vaulted": false
     },
     {
@@ -5575,9 +5575,9 @@
       "slug": "voruna_prime_chassis_blueprint",
       "zh_name": "Voruna Prime 机体 蓝图",
       "en_name": "Voruna Prime Chassis Blueprint",
-      "plat_price": 7.4,
+      "plat_price": 7.3,
       "ducats": 45,
-      "volume": 598,
+      "volume": 505,
       "vaulted": false
     },
     {
@@ -5587,7 +5587,7 @@
       "en_name": "Voruna Prime Neuroptics Blueprint",
       "plat_price": 3.8,
       "ducats": 45,
-      "volume": 746,
+      "volume": 775,
       "vaulted": false
     },
     {
@@ -5597,7 +5597,7 @@
       "en_name": "Voruna Prime Systems Blueprint",
       "plat_price": 9.4,
       "ducats": 100,
-      "volume": 384,
+      "volume": 426,
       "vaulted": false
     },
     {
@@ -5605,9 +5605,9 @@
       "slug": "wisp_prime_blueprint",
       "zh_name": "Wisp Prime 蓝图",
       "en_name": "Wisp Prime Blueprint",
-      "plat_price": 36.8,
+      "plat_price": 36.0,
       "ducats": 100,
-      "volume": 567,
+      "volume": 564,
       "vaulted": true
     },
     {
@@ -5615,9 +5615,9 @@
       "slug": "wisp_prime_chassis_blueprint",
       "zh_name": "Wisp Prime 机体 蓝图",
       "en_name": "Wisp Prime Chassis Blueprint",
-      "plat_price": 19.6,
+      "plat_price": 19.5,
       "ducats": 65,
-      "volume": 1475,
+      "volume": 1072,
       "vaulted": true
     },
     {
@@ -5625,9 +5625,9 @@
       "slug": "wisp_prime_neuroptics_blueprint",
       "zh_name": "Wisp Prime 头部神经光元 蓝图",
       "en_name": "Wisp Prime Neuroptics Blueprint",
-      "plat_price": 7.6,
+      "plat_price": 5.9,
       "ducats": 45,
-      "volume": 970,
+      "volume": 651,
       "vaulted": true
     },
     {
@@ -5637,7 +5637,7 @@
       "en_name": "Wisp Prime Systems Blueprint",
       "plat_price": 7.5,
       "ducats": 15,
-      "volume": 561,
+      "volume": 517,
       "vaulted": true
     },
     {
@@ -5645,9 +5645,9 @@
       "slug": "wukong_prime_blueprint",
       "zh_name": "Wukong Prime 蓝图",
       "en_name": "Wukong Prime Blueprint",
-      "plat_price": 30.9,
+      "plat_price": 31.1,
       "ducats": 100,
-      "volume": 1324,
+      "volume": 1079,
       "vaulted": true
     },
     {
@@ -5657,7 +5657,7 @@
       "en_name": "Wukong Prime Chassis Blueprint",
       "plat_price": 10.1,
       "ducats": 45,
-      "volume": 311,
+      "volume": 299,
       "vaulted": true
     },
     {
@@ -5665,9 +5665,9 @@
       "slug": "wukong_prime_neuroptics_blueprint",
       "zh_name": "Wukong Prime 头部神经光元 蓝图",
       "en_name": "Wukong Prime Neuroptics Blueprint",
-      "plat_price": 8.6,
+      "plat_price": 8.9,
       "ducats": 15,
-      "volume": 604,
+      "volume": 487,
       "vaulted": true
     },
     {
@@ -5675,9 +5675,9 @@
       "slug": "wukong_prime_systems_blueprint",
       "zh_name": "Wukong Prime 系统 蓝图",
       "en_name": "Wukong Prime Systems Blueprint",
-      "plat_price": 16.8,
+      "plat_price": 17.7,
       "ducats": 45,
-      "volume": 384,
+      "volume": 386,
       "vaulted": true
     },
     {
@@ -5685,9 +5685,9 @@
       "slug": "wyrm_prime_blueprint",
       "zh_name": "蛟龙 Prime 蓝图",
       "en_name": "Wyrm Prime Blueprint",
-      "plat_price": 15.6,
+      "plat_price": 14.9,
       "ducats": 15,
-      "volume": 334,
+      "volume": 444,
       "vaulted": true
     },
     {
@@ -5697,7 +5697,7 @@
       "en_name": "Wyrm Prime Carapace",
       "plat_price": 14.3,
       "ducats": 15,
-      "volume": 1101,
+      "volume": 1103,
       "vaulted": true
     },
     {
@@ -5705,9 +5705,9 @@
       "slug": "wyrm_prime_cerebrum",
       "zh_name": "蛟龙 Prime 头部",
       "en_name": "Wyrm Prime Cerebrum",
-      "plat_price": 20.7,
+      "plat_price": 19.8,
       "ducats": 15,
-      "volume": 459,
+      "volume": 444,
       "vaulted": true
     },
     {
@@ -5715,9 +5715,9 @@
       "slug": "wyrm_prime_systems",
       "zh_name": "蛟龙 Prime 系统",
       "en_name": "Wyrm Prime Systems",
-      "plat_price": 35.2,
+      "plat_price": 36.2,
       "ducats": 45,
-      "volume": 497,
+      "volume": 605,
       "vaulted": true
     },
     {
@@ -5725,9 +5725,9 @@
       "slug": "xaku_prime_blueprint",
       "zh_name": "Xaku Prime 蓝图",
       "en_name": "Xaku Prime Blueprint",
-      "plat_price": 15.8,
+      "plat_price": 15.5,
       "ducats": 100,
-      "volume": 439,
+      "volume": 404,
       "vaulted": true
     },
     {
@@ -5735,9 +5735,9 @@
       "slug": "xaku_prime_chassis_blueprint",
       "zh_name": "Xaku Prime 机体 蓝图",
       "en_name": "Xaku Prime Chassis Blueprint",
-      "plat_price": 5.5,
+      "plat_price": 5.4,
       "ducats": 45,
-      "volume": 398,
+      "volume": 417,
       "vaulted": true
     },
     {
@@ -5745,9 +5745,9 @@
       "slug": "xaku_prime_neuroptics_blueprint",
       "zh_name": "Xaku Prime 头部神经光元 蓝图",
       "en_name": "Xaku Prime Neuroptics Blueprint",
-      "plat_price": 4.6,
+      "plat_price": 4.7,
       "ducats": 15,
-      "volume": 385,
+      "volume": 434,
       "vaulted": true
     },
     {
@@ -5755,9 +5755,9 @@
       "slug": "xaku_prime_systems_blueprint",
       "zh_name": "Xaku Prime 系统 蓝图",
       "en_name": "Xaku Prime Systems Blueprint",
-      "plat_price": 5.1,
+      "plat_price": 5.2,
       "ducats": 45,
-      "volume": 377,
+      "volume": 359,
       "vaulted": true
     },
     {
@@ -5765,9 +5765,9 @@
       "slug": "yareli_prime_blueprint",
       "zh_name": "Yareli Prime 蓝图",
       "en_name": "Yareli Prime Blueprint",
-      "plat_price": 3.8,
+      "plat_price": 3.6,
       "ducats": 45,
-      "volume": 566,
+      "volume": 567,
       "vaulted": false
     },
     {
@@ -5775,9 +5775,9 @@
       "slug": "yareli_prime_chassis_blueprint",
       "zh_name": "Yareli Prime 机体 蓝图",
       "en_name": "Yareli Prime Chassis Blueprint",
-      "plat_price": 3.3,
+      "plat_price": 3.1,
       "ducats": 15,
-      "volume": 456,
+      "volume": 1427,
       "vaulted": false
     },
     {
@@ -5785,9 +5785,9 @@
       "slug": "yareli_prime_neuroptics_blueprint",
       "zh_name": "Yareli Prime 头部神经光元 蓝图",
       "en_name": "Yareli Prime Neuroptics Blueprint",
-      "plat_price": 9.9,
+      "plat_price": 9.8,
       "ducats": 100,
-      "volume": 339,
+      "volume": 360,
       "vaulted": false
     },
     {
@@ -5795,9 +5795,9 @@
       "slug": "yareli_prime_systems_blueprint",
       "zh_name": "Yareli Prime 系统 蓝图",
       "en_name": "Yareli Prime Systems Blueprint",
-      "plat_price": 13.5,
+      "plat_price": 13.3,
       "ducats": 100,
-      "volume": 378,
+      "volume": 335,
       "vaulted": false
     },
     {
@@ -5805,9 +5805,9 @@
       "slug": "zakti_prime_barrel",
       "zh_name": "毒芽 Prime 枪管",
       "en_name": "Zakti Prime Barrel",
-      "plat_price": 6.9,
+      "plat_price": 6.0,
       "ducats": 45,
-      "volume": 239,
+      "volume": 191,
       "vaulted": true
     },
     {
@@ -5815,9 +5815,9 @@
       "slug": "zakti_prime_blueprint",
       "zh_name": "毒芽 Prime 蓝图",
       "en_name": "Zakti Prime Blueprint",
-      "plat_price": 29.0,
+      "plat_price": 29.5,
       "ducats": 100,
-      "volume": 125,
+      "volume": 115,
       "vaulted": true
     },
     {
@@ -5825,9 +5825,9 @@
       "slug": "zakti_prime_receiver",
       "zh_name": "毒芽 Prime 枪机",
       "en_name": "Zakti Prime Receiver",
-      "plat_price": 8.1,
+      "plat_price": 9.2,
       "ducats": 15,
-      "volume": 155,
+      "volume": 207,
       "vaulted": true
     },
     {
@@ -5837,7 +5837,7 @@
       "en_name": "Zephyr Prime Blueprint",
       "plat_price": 19.1,
       "ducats": 65,
-      "volume": 364,
+      "volume": 354,
       "vaulted": true
     },
     {
@@ -5845,9 +5845,9 @@
       "slug": "zephyr_prime_chassis_blueprint",
       "zh_name": "Zephyr Prime 机体 蓝图",
       "en_name": "Zephyr Prime Chassis Blueprint",
-      "plat_price": 8.2,
+      "plat_price": 8.3,
       "ducats": 25,
-      "volume": 444,
+      "volume": 429,
       "vaulted": true
     },
     {
@@ -5855,9 +5855,9 @@
       "slug": "zephyr_prime_neuroptics_blueprint",
       "zh_name": "Zephyr Prime 头部神经光元 蓝图",
       "en_name": "Zephyr Prime Neuroptics Blueprint",
-      "plat_price": 8.1,
+      "plat_price": 8.2,
       "ducats": 15,
-      "volume": 404,
+      "volume": 405,
       "vaulted": true
     },
     {
@@ -5865,9 +5865,9 @@
       "slug": "zephyr_prime_systems_blueprint",
       "zh_name": "Zephyr Prime 系统 蓝图",
       "en_name": "Zephyr Prime Systems Blueprint",
-      "plat_price": 42.2,
+      "plat_price": 43.0,
       "ducats": 100,
-      "volume": 277,
+      "volume": 293,
       "vaulted": true
     },
     {
@@ -5875,9 +5875,9 @@
       "slug": "zhuge_prime_barrel",
       "zh_name": "诸葛连弩 Prime 枪管",
       "en_name": "Zhuge Prime Barrel",
-      "plat_price": 19.7,
+      "plat_price": 19.6,
       "ducats": 100,
-      "volume": 275,
+      "volume": 273,
       "vaulted": true
     },
     {
@@ -5887,7 +5887,7 @@
       "en_name": "Zhuge Prime Blueprint",
       "plat_price": 8.3,
       "ducats": 45,
-      "volume": 275,
+      "volume": 255,
       "vaulted": true
     },
     {
@@ -5895,9 +5895,9 @@
       "slug": "zhuge_prime_grip",
       "zh_name": "诸葛连弩 Prime 弓身",
       "en_name": "Zhuge Prime Grip",
-      "plat_price": 7.6,
+      "plat_price": 7.5,
       "ducats": 15,
-      "volume": 265,
+      "volume": 211,
       "vaulted": true
     },
     {
@@ -5907,7 +5907,7 @@
       "en_name": "Zhuge Prime Receiver",
       "plat_price": 8.1,
       "ducats": 45,
-      "volume": 719,
+      "volume": 661,
       "vaulted": true
     },
     {
@@ -5915,9 +5915,9 @@
       "slug": "zhuge_prime_string",
       "zh_name": "诸葛连弩 Prime 弓弦",
       "en_name": "Zhuge Prime String",
-      "plat_price": 9.7,
+      "plat_price": 9.8,
       "ducats": 15,
-      "volume": 182,
+      "volume": 164,
       "vaulted": true
     },
     {
@@ -5925,9 +5925,9 @@
       "slug": "zylok_prime_barrel",
       "zh_name": "席尔火枪 Prime 枪管",
       "en_name": "Zylok Prime Barrel",
-      "plat_price": 6.9,
+      "plat_price": 7.0,
       "ducats": 15,
-      "volume": 191,
+      "volume": 211,
       "vaulted": true
     },
     {
@@ -5935,9 +5935,9 @@
       "slug": "zylok_prime_blueprint",
       "zh_name": "席尔火枪 Prime 蓝图",
       "en_name": "Zylok Prime Blueprint",
-      "plat_price": 14.3,
+      "plat_price": 14.6,
       "ducats": 100,
-      "volume": 192,
+      "volume": 213,
       "vaulted": true
     },
     {
@@ -5945,9 +5945,9 @@
       "slug": "zylok_prime_receiver",
       "zh_name": "席尔火枪 Prime 枪机",
       "en_name": "Zylok Prime Receiver",
-      "plat_price": 4.8,
+      "plat_price": 4.6,
       "ducats": 45,
-      "volume": 227,
+      "volume": 214,
       "vaulted": true
     }
   ]

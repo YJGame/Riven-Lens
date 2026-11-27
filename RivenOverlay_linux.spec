@@ -46,6 +46,7 @@ hidden_imports = (
         "yaml",
         "src.wayland_support",
         "src.user_manual_dialog",
+        "src.favorite_stats_dialog",
     ]
 )
 

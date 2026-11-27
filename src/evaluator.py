@@ -43,11 +43,107 @@ DEFAULT_DISPOSITION = FIXED_GLOBAL_DISPOSITION
 HYBRID_MISSING_RANGE_NOTICE_ZH = "新融合词条（暂缺官方基础值区间）"
 
 RECOMMENDATION_SOURCE_CN: Dict[str, str] = {
+    "user_custom": "自选词条",
     "builtin": "内置推荐",
     "wm": "WM 校准",
     "inferred": "面板推导",
     "special_rule": "灵化特化",
 }
+
+# Stats that can NEVER roll as a negative curse in Warframe Rivens
+POSITIVE_ONLY_RIVEN_STATS: set[str] = set(POSITIVE_ONLY_COMPOUND_ELEMENTS) | {
+    "火焰伤害",
+    "冰冻伤害",
+    "电击伤害",
+    "毒素伤害",
+    "穿透",
+    "弹药效率",
+    "收起武器时弹匣每秒自动装填",
+    "初始连击",
+    "额外连击几率",
+    "重击效率",
+    "重击准备速度",
+    "弱点伤害",
+    "弱点暴击几率",
+}
+
+# Intuitive display ordering for the visual pure-selection stat picker
+_PREFERRED_POS_ORDER: Tuple[str, ...] = (
+    "暴击几率",
+    "暴击伤害",
+    "多重射击",
+    "伤害",
+    "射速",
+    "攻击速度",
+    "攻击范围",
+    "毒素伤害",
+    "火焰伤害",
+    "冰冻伤害",
+    "电击伤害",
+    "病毒伤害",
+    "腐蚀伤害",
+    "辐射伤害",
+    "磁力伤害",
+    "毒气伤害",
+    "爆炸伤害",
+    "触发几率",
+    "异常状态伤害",
+    "触发时间",
+    "初始连击",
+    "重击效率",
+    "重击准备速度",
+    "在重击时的近战伤害",
+    "震地攻击伤害",
+    "连击持续时间",
+    "额外连击几率",
+    "穿透",
+    "装填速度",
+    "弹匣容量",
+    "投射物速度",
+    "弱点伤害",
+    "弱点暴击几率",
+    "切割伤害",
+    "穿刺伤害",
+    "冲击伤害",
+    "对 Grineer 伤害",
+    "对 Corpus 伤害",
+    "对 Infested 伤害",
+    "对奥罗金伤害",
+    "对炽蛇军伤害",
+    "对科腐者伤害",
+)
+
+_PREFERRED_NEG_ORDER: Tuple[str, ...] = (
+    "变焦",
+    "武器后坐力",
+    "冲击伤害",
+    "穿刺伤害",
+    "切割伤害",
+    "弹药最大值",
+    "弹匣容量",
+    "装填速度",
+    "投射物速度",
+    "处决伤害",
+    "滑行攻击暴击几率",
+    "招架角度",
+    "连击持续时间",
+    "触发时间",
+    "暴击几率",
+    "暴击伤害",
+    "对 Infested 伤害",
+    "对 Corpus 伤害",
+    "对 Grineer 伤害",
+    "对奥罗金伤害",
+    "对炽蛇军伤害",
+    "对科腐者伤害",
+    "触发几率",
+    "异常状态伤害",
+    "射速",
+    "攻击速度",
+    "攻击范围",
+    "伤害",
+    "多重射击",
+)
 
 # Max-rank (Rank 8 = 9x Rank 0) Riven stat baselines at Disposition = 1.0
 # Verified to 0.1% against Warframe official tables (`3+1`, `3+0`, `2+1`, `2+0` at Dispo 1.20).
@@ -334,9 +430,140 @@ class DualComparisonResult:
     roll_pct_delta: Optional[float]  # right - left
     headline: str
     detail: str
+    dps_delta_pct: Optional[float] = None  # estimated Steel Path practical DPS delta: (right / left - 1) * 100
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
+
+
+_SINGLE_ELEMENT_STATS = frozenset({"火焰伤害", "冰冻伤害", "电击伤害", "毒素伤害"})
+_IPS_PHYSICAL_STATS = frozenset({"冲击伤害", "穿刺伤害", "切割伤害"})
+_FACTION_MAJOR_STATS = frozenset({"对 Grineer 伤害", "对 Corpus 伤害", "对奥罗金伤害", "对炽蛇军伤害", "对科腐者伤害"})
+_FACTION_MINOR_STATS = frozenset({"对 Infested 伤害"})
+
+
+def estimate_riven_dps_multiplier(ev: RivenEvaluation) -> Optional[float]:
+    """Estimate practical Steel Path DPS multiplier (Riven inserted as 8th mod on a standard build).
+
+    Uses realistic Steel Path baseline buckets (Merciless/CO damage dilution, Galvanized Multishot,
+    Blood Rush/Crit Delay, Vital Sense/Organ Shatter, dual elements, and fire-rate/attack-speed)
+    plus Zariman Non-Crit Devouring Attrition (`2000%` non-crit proc) when applicable.
+    Returns relative DPS vs an empty 8th slot (`1.0` = no change), or `None` if no stats exist.
+    """
+    if not ev.stat_evaluations:
+        return None
+
+    is_melee = ev.weapon_class == "melee"
+    is_non_crit_devour = ev.matched_archetype_id == "non_crit_devour"
+
+    w_cc = float(ev.weapon_crit_chance) if (ev.weapon_crit_chance is not None and ev.weapon_crit_chance > 0) else (0.24 if is_melee else 0.22)
+    w_cd = float(ev.weapon_crit_mult) if (ev.weapon_crit_mult is not None and ev.weapon_crit_mult > 1.0) else (2.2 if is_melee else 2.0)
+    w_sc = float(ev.weapon_status_chance) if (ev.weapon_status_chance is not None and ev.weapon_status_chance > 0) else 0.20
+
+    # Baseline Steel Path multiplier buckets before inserting the Riven
+    if is_melee:
+        base_dmg = 3.40    # 1.0 + Condition Overload (~3 statuses)
+        base_ms = 1.00
+        base_cc_mod = 4.40 # Blood Rush at 12x combo
+        base_cd_mod = 1.10 # Organ Shatter / Galvanized Steel
+        base_elem = 2.20   # 1.0 + 120% elemental
+        base_fr = 1.55     # Berserker Fury / Quickening
+    else:
+        base_dmg = 4.60    # 1.0 + Primary/Secondary Merciless/Deadhead (+360%)
+        base_ms = 3.30     # 1.0 + Galvanized Chamber/Diffusion (+230%)
+        base_cc_mod = 0.0 if is_non_crit_devour else 2.00
+        base_cd_mod = 0.0 if is_non_crit_devour else 1.20
+        base_elem = 2.20   # 1.0 + 120% dual elemental
+        base_fr = 1.60     # 1.0 + 60% fire-rate mod/arcane
+
+    def _expected_crit(cc_mod: float, cd_mod: float) -> float:
+        eff_cc = max(0.0, w_cc * (1.0 + cc_mod))
+        eff_cd = max(1.0, w_cd * (1.0 + cd_mod))
+        if is_non_crit_devour:
+            # 50% chance on non-crit for +2000% (21x) -> average 11.0x on non-crit hits
+            p_crit = min(1.0, eff_cc)
+            return (1.0 - p_crit) * 11.0 + p_crit * eff_cd
+        return 1.0 + eff_cc * (eff_cd - 1.0)
+
+    baseline_dps = base_dmg * base_ms * base_elem * base_fr * _expected_crit(base_cc_mod, base_cd_mod)
+    if baseline_dps <= 0:
+        return None
+
+    dmg = base_dmg
+    ms = base_ms
+    cc_mod = base_cc_mod
+    cd_mod = base_cd_mod
+    elem = base_elem
+    fr = base_fr
+    faction_mult = 1.0
+    utility_mult = 1.0
+
+    for se in ev.stat_evaluations:
+        name = se.stat_name
+        if se.sign == "x":
+            delta = float(se.value) - 1.0
+        else:
+            delta = (-abs(float(se.value)) if se.is_negative else abs(float(se.value))) / 100.0
+
+        if name == "伤害":
+            dmg += delta
+        elif name == "多重射击" and not is_melee:
+            ms += delta
+        elif name in ("射速", "攻击速度"):
+            fr += delta
+        elif name == "暴击几率":
+            cc_mod += delta
+        elif name == "暴击伤害":
+            cd_mod += delta
+        elif name in _SINGLE_ELEMENT_STATS:
+            elem += delta
+        elif name in POSITIVE_ONLY_COMPOUND_ELEMENTS and not se.is_negative:
+            # Built-in compound element contributes elemental damage + frees a mod slot
+            elem += delta * 1.15
+        elif name in _IPS_PHYSICAL_STATS:
+            # IPS affects roughly ~1/3 of base damage and does not scale elemental mods
+            elem += delta * 0.28
+        elif name in _FACTION_MAJOR_STATS:
+            # Independent multiplier (strong double-dip on DOTs, weighted for single-faction coverage)
+            eff = max(-0.45, delta * 0.65)
+            faction_mult *= max(0.45, 1.0 + eff)
+        elif name in _FACTION_MINOR_STATS:
+            eff = max(-0.25, delta * 0.25)
+            faction_mult *= max(0.65, 1.0 + eff)
+        elif name == "异常状态伤害":
+            sc_share = 0.42 if w_sc >= 0.25 else 0.26
+            utility_mult *= max(0.65, 1.0 + delta * sc_share)
+        elif name == "触发几率":
+            sc_weight = 0.24 if (w_sc >= 0.20 or ev.matched_archetype_id in ("incarnon_status_to_crit", "melee_influence", "incarnon_beam_status")) else 0.12
+            utility_mult *= max(0.75, 1.0 + delta * sc_weight)
+        elif name == "弱点伤害":
+            utility_mult *= max(0.75, 1.0 + delta * 0.30)
+        elif name == "弱点暴击几率":
+            cc_mod += delta * 0.45
+        elif name == "攻击范围" and is_melee:
+            # Flat meter delta (`se.value` is meters, not %)
+            meters = -abs(float(se.value)) if se.is_negative else abs(float(se.value))
+            utility_mult *= max(0.72, 1.0 + meters * 0.065)
+        elif name == "穿透" and not is_melee:
+            meters = -abs(float(se.value)) if se.is_negative else abs(float(se.value))
+            utility_mult *= max(0.85, 1.0 + min(3.0, meters) * 0.04)
+        elif name in ("装填速度", "弹匣容量") and not is_melee:
+            utility_mult *= max(0.78, 1.0 + delta * 0.14)
+        elif name in ("初始连击", "在重击时的近战伤害", "震地攻击伤害", "重击效率", "重击准备速度") and is_melee:
+            heavy_w = 0.28 if ev.matched_archetype_id in ("heavy_statstick", "heavy_slam") else 0.10
+            if name == "初始连击":
+                pts = -abs(float(se.value)) if se.is_negative else abs(float(se.value))
+                utility_mult *= max(0.80, 1.0 + (pts / 30.0) * heavy_w)
+            else:
+                utility_mult *= max(0.80, 1.0 + delta * heavy_w)
+
+    dmg = max(0.15, dmg)
+    ms = max(0.15, ms)
+    elem = max(0.35, elem)
+    fr = max(0.20, fr)
+
+    riven_dps = dmg * ms * elem * fr * _expected_crit(cc_mod, cd_mod) * faction_mult * utility_mult
+    return max(0.05, riven_dps / baseline_dps)
 
 
 def _compute_comparison_score(ev: RivenEvaluation) -> float:
@@ -370,7 +597,7 @@ def compare_riven_evaluations(
     left_eval: RivenEvaluation,
     right_eval: RivenEvaluation,
 ) -> DualComparisonResult:
-    """Compare [当前] (left) vs [新循环] (right) and highlight the stronger roll."""
+    """Compare [当前] (left) vs [新循环] (right) using roll quality, synergy, and practical DPS delta."""
     l_score = _compute_comparison_score(left_eval)
     r_score = _compute_comparison_score(right_eval)
 
@@ -378,7 +605,15 @@ def compare_riven_evaluations(
     if left_eval.overall_roll_pct is not None and right_eval.overall_roll_pct is not None:
         roll_delta = round(right_eval.overall_roll_pct - left_eval.overall_roll_pct, 1)
 
-    diff = r_score - l_score
+    dps_delta: Optional[float] = None
+    l_dps = estimate_riven_dps_multiplier(left_eval)
+    r_dps = estimate_riven_dps_multiplier(right_eval)
+    if l_dps is not None and r_dps is not None and l_dps > 0:
+        raw_dps_delta = (r_dps / l_dps - 1.0) * 100.0
+        dps_delta = round(max(-95.0, min(500.0, raw_dps_delta)), 1)
+
+    dps_bonus = max(-10.0, min(10.0, dps_delta * 0.22)) if dps_delta is not None else 0.0
+    diff = (r_score - l_score) + dps_bonus
     if diff >= 4.0:
         winner = "right"
         headline = "★ 推荐选择右侧 [新循环]"
@@ -392,6 +627,8 @@ def compare_riven_evaluations(
     parts: List[str] = [f"评级 {left_eval.overall_grade} → {right_eval.overall_grade}"]
     if roll_delta is not None:
         parts.append(f"均分 {roll_delta:+.1f}%")
+    if dps_delta is not None:
+        parts.append(f"实战DPS {dps_delta:+.1f}%")
 
     if winner == "right":
         highlights = [t for t in right_eval.tags if t not in ("三正一负", "二正一负", "无负词条", "伤筋负")]
@@ -411,6 +648,7 @@ def compare_riven_evaluations(
         roll_pct_delta=roll_delta,
         headline=headline,
         detail=" · ".join(parts),
+        dps_delta_pct=dps_delta,
     )
 
 
@@ -725,6 +963,9 @@ class RivenEvaluation:
     archetype_warning: str = ""
     archetype_warning_en: str = ""
     has_inverted_god_neg: bool = False
+    weapon_crit_chance: Optional[float] = None
+    weapon_crit_mult: Optional[float] = None
+    weapon_status_chance: Optional[float] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -785,8 +1026,80 @@ class RivenEvaluator:
         self.recommended_tiers: Dict[str, Dict[str, Any]] = {}
         self.special_rules: Dict[str, Dict[str, Any]] = {}
         self.special_rules_by_alias: Dict[str, str] = {}
+        self.user_favorite_stats: Dict[str, Dict[str, List[str]]] = {}
+        self.positive_only_stats: set[str] = set(POSITIVE_ONLY_RIVEN_STATS)
         self.auto_save_wm_to_local: bool = True
         self.reload_data()
+
+    def set_user_favorite_stats(
+        self,
+        favorites: Optional[Dict[str, Dict[str, List[str]]]],
+    ) -> None:
+        """Hot-update per-weapon user favorite stats (highest priority over builtin/WM/special rules)."""
+        cleaned: Dict[str, Dict[str, List[str]]] = {}
+        if isinstance(favorites, dict):
+            for raw_w, entry in favorites.items():
+                w_key = str(raw_w or "").strip()
+                if not w_key or not isinstance(entry, dict):
+                    continue
+                pos = list(dict.fromkeys(str(x).strip() for x in (entry.get("positives") or []) if str(x).strip()))
+                neg = list(dict.fromkeys(str(x).strip() for x in (entry.get("negatives") or []) if str(x).strip()))
+                if pos or neg:
+                    cleaned[w_key] = {"positives": pos, "negatives": neg}
+        self.user_favorite_stats = cleaned
+
+    def _lookup_user_favorite_stats(self, weapon_name: Optional[str]) -> Optional[Dict[str, List[str]]]:
+        """Match user favorite stats by exact weapon name, base-variant stripped, or compact form."""
+        if not weapon_name or not self.user_favorite_stats:
+            return None
+        w = weapon_name.strip()
+        if w in self.user_favorite_stats:
+            return self.user_favorite_stats[w]
+        for suf in (" Prime", " 破坏者", " 亡魂", " Umbra"):
+            if w.endswith(suf):
+                base = w[: -len(suf)].strip()
+                if base in self.user_favorite_stats:
+                    return self.user_favorite_stats[base]
+        compact = w.replace(" ", "").replace("·", "").lower()
+        for k, v in self.user_favorite_stats.items():
+            if k.replace(" ", "").replace("·", "").lower() == compact:
+                return v
+        return None
+
+    def list_weapons_for_picker(self) -> List[Dict[str, str]]:
+        """Return sorted list of all database weapons for the visual weapon selector."""
+        items: List[Dict[str, str]] = []
+        for zh_name, info in self.weapons.items():
+            clean_zh = (zh_name or "").strip()
+            if not clean_zh:
+                continue
+            items.append(
+                {
+                    "weapon_key": zh_name,
+                    "zh_name": clean_zh,
+                    "en_name": (info.get("en_name") or "").strip(),
+                    "weapon_class": (info.get("class") or "rifle").strip().lower(),
+                    "slug": (info.get("slug") or "").strip(),
+                }
+            )
+        items.sort(key=lambda x: (x["en_name"].lower() or x["zh_name"].lower(), x["zh_name"]))
+        return items
+
+    def get_available_stats_for_class(self, weapon_class: str) -> Tuple[List[str], List[str]]:
+        """Return `(legal_positive_stats, legal_negative_stats)` available for `weapon_class`."""
+        cls = (weapon_class or "rifle").strip().lower()
+        stat_table = self.base_stats.get(cls) or self.base_stats.get("rifle") or {}
+        all_stats = list(stat_table.keys())
+
+        pos_rank = {name: idx for idx, name in enumerate(_PREFERRED_POS_ORDER)}
+        neg_rank = {name: idx for idx, name in enumerate(_PREFERRED_NEG_ORDER)}
+
+        positives = sorted(all_stats, key=lambda s: (pos_rank.get(s, 999), s))
+        negatives = sorted(
+            [s for s in all_stats if s not in self.positive_only_stats],
+            key=lambda s: (neg_rank.get(s, 999), s),
+        )
+        return positives, negatives
 
     def reload_recommendations(self) -> None:
         """Hot-reload strictly local `data/recommended_tiers.json` (zero network requests)."""
@@ -870,14 +1183,19 @@ class RivenEvaluator:
                     base_vals = info.get("base_values", {})
                     if not zh_name or not isinstance(base_vals, dict):
                         continue
+                    is_pos_only = bool(info.get("positive_only", False))
                     for w_cls, val in base_vals.items():
                         if w_cls not in self.base_stats:
                             self.base_stats[w_cls] = {}
                         if zh_name == "射速/攻击速度":
                             stat_key = "攻击速度" if w_cls == "melee" else "射速"
                             self.base_stats[w_cls][stat_key] = float(val)
+                            if is_pos_only:
+                                self.positive_only_stats.add(stat_key)
                         else:
                             self.base_stats[w_cls][zh_name] = float(val)
+                            if is_pos_only:
+                                self.positive_only_stats.add(zh_name)
             except Exception:
                 pass
 
@@ -1572,11 +1890,18 @@ class RivenEvaluator:
             for s in riven.stats
         ]
 
-        # Resolve local recommendations (special_rule archetype > builtin/WM > WFCD inferred)
+        # Resolve local recommendations (user_custom > special_rule archetype > builtin/WM > WFCD inferred)
         base_rec_pos, base_rec_neg, base_rec_src, cached_wm_price = self.resolve_recommendations(
             final_weapon, w_class
         )
-        if selected_arch is not None:
+        user_fav = self._lookup_user_favorite_stats(final_weapon)
+        if user_fav is not None:
+            fav_pos = list(user_fav.get("positives") or [])
+            fav_neg = list(user_fav.get("negatives") or [])
+            rec_pos = fav_pos if fav_pos else base_rec_pos
+            rec_neg = fav_neg if fav_neg else base_rec_neg
+            rec_src = "user_custom"
+        elif selected_arch is not None:
             rec_pos = list(selected_arch.get("positives") or base_rec_pos)[:4]
             arch_negs = list(selected_arch.get("inverted_negatives") or []) + list(
                 selected_arch.get("negatives") or []
@@ -1706,7 +2031,8 @@ class RivenEvaluator:
         else:
             overall_grade = "?"
 
-        en_name = (self.weapons.get(final_weapon or "", {}).get("en_name") or "").strip()
+        w_meta = self.weapons.get(final_weapon or "", {})
+        en_name = (w_meta.get("en_name") or "").strip()
         if not en_name and riven.weapon_name and riven.weapon_name.isascii():
             en_name = riven.weapon_name
 
@@ -1738,6 +2064,9 @@ class RivenEvaluator:
             archetype_warning=arch_warn_zh,
             archetype_warning_en=arch_warn_en,
             has_inverted_god_neg=has_inverted_god_neg,
+            weapon_crit_chance=w_meta.get("crit_chance"),
+            weapon_crit_mult=w_meta.get("crit_mult"),
+            weapon_status_chance=w_meta.get("status_chance"),
         )
 
 

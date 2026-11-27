@@ -211,6 +211,8 @@ def _localize_comparison(
     parts = [I18N.t("compare_grade", lang, left=left_eval.overall_grade, right=right_eval.overall_grade)]
     if comp.roll_pct_delta is not None:
         parts.append(I18N.t("compare_delta", lang, delta=comp.roll_pct_delta))
+    if comp.dps_delta_pct is not None:
+        parts.append(I18N.t("compare_dps_delta", lang, delta=comp.dps_delta_pct))
 
     skip = ("三正一负", "二正一负", "无负词条", "伤筋负")
     if comp.winner == "right":

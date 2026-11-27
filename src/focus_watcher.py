@@ -25,6 +25,39 @@ ALLOWED_WINDOW_TITLE_KEYWORDS = (
     "calibrate",
 )
 
+# Strictly Warframe game client keywords (excludes our own tool panels & web browsers)
+WARFRAME_GAME_KEYWORDS = (
+    "warframe",
+    "星际战甲",
+)
+NON_GAME_TITLE_EXCLUSIONS = (
+    "裂罅透镜",
+    "riven lens",
+    "warframe 紫卡",
+    "warframe riven",
+    "warframe.market",
+    "warframe market",
+    "wfsim",
+    "wiki",
+    "chrome",
+    "edge",
+    "firefox",
+    "opera",
+    "brave",
+    "safari",
+    "bilibili",
+    "youtube",
+    "discord",
+    "vscode",
+    "visual studio",
+    "antigravity",
+    "powershell",
+    "cmd.exe",
+    "terminal",
+    "校准截图",
+    "calibrate",
+)
+
 
 def get_foreground_window_title() -> str:
     """Return the title of the currently focused OS window (Windows, macOS & Linux safe)."""
@@ -92,6 +125,22 @@ def get_foreground_window_title() -> str:
     except Exception:
         pass
     return ""
+
+
+def is_warframe_game_title(title: str) -> bool:
+    """Return True strictly when `title` is the Warframe game window itself (NOT our panels or browsers)."""
+    low = (title or "").strip().lower()
+    if not low:
+        return False
+    if any(ex in low for ex in NON_GAME_TITLE_EXCLUSIONS):
+        return False
+    if any(kw in low for kw in WARFRAME_GAME_KEYWORDS):
+        return True
+    if sys.platform == "darwin":
+        from src.macos_support import MACOS_WARFRAME_HOST_KEYWORDS
+
+        return any(kw in low for kw in MACOS_WARFRAME_HOST_KEYWORDS)
+    return False
 
 
 def is_overlay_allowed_for_title(title: str) -> bool:
@@ -201,3 +250,29 @@ class SmartFocusWatcher:
             self._hidden_by_focus = False
             return "restore"
         return "noop"
+
+    def evaluate_game_focus_for_standby(
+        self,
+        *,
+        is_active_mode: bool,
+        drag_unlocked: bool = False,
+        awaiting_game_focus: bool = False,
+    ) -> tuple[str, bool]:
+        """Check whether the user has left the Warframe game itself and should be switched to Standby.
+
+        Returns `(action, new_awaiting_game_focus)` where `action` is `'pause'` or `'noop'`.
+        Never triggers false pauses on locked-down compositors where focus cannot be queried.
+        """
+        if not is_active_mode or drag_unlocked or not self._is_supported():
+            return "noop", awaiting_game_focus
+
+        title = self._title_provider() or ""
+        self._last_title = title
+        in_game = is_warframe_game_title(title)
+
+        if in_game:
+            return "noop", False
+        if awaiting_game_focus:
+            # User just picked a mode from the Control Panel and hasn't returned to Warframe yet
+            return "noop", True
+        return "pause", False

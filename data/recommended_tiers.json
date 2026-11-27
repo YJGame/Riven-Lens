@@ -128,9 +128,16 @@
       "archetypes": [
         {
           "id": "incarnon_meta",
-          "name_zh": "灵化双暴多重流",
-          "name_en": "Incarnon Crit/MS Meta",
+          "name_zh": "灵化链式双暴流",
+          "name_en": "Incarnon Beam Crit/MS",
           "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "毒素伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害", "武器后坐力"]
+        },
+        {
+          "id": "incarnon_status_dot",
+          "name_zh": "灵化毒素/异常流",
+          "name_en": "Incarnon Status/DOT",
+          "positives": ["多重射击", "异常状态伤害", "毒素伤害", "火焰伤害", "射速"],
           "negatives": ["变焦", "冲击伤害", "穿刺伤害", "武器后坐力"]
         }
       ]
@@ -141,8 +148,8 @@
       "archetypes": [
         {
           "id": "incarnon_meta",
-          "name_zh": "灵化双暴多重流",
-          "name_en": "Incarnon Crit/MS Meta",
+          "name_zh": "灵化跳弹双暴流",
+          "name_en": "Incarnon Ricochet Crit",
           "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "毒素伤害"],
           "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
         }
@@ -154,8 +161,8 @@
       "archetypes": [
         {
           "id": "incarnon_meta",
-          "name_zh": "灵化双暴多重流",
-          "name_en": "Incarnon Crit/MS Meta",
+          "name_zh": "灵化高射速双暴流",
+          "name_en": "Incarnon Crit/FR Meta",
           "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "毒素伤害"],
           "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
         }
@@ -167,8 +174,8 @@
       "archetypes": [
         {
           "id": "incarnon_meta",
-          "name_zh": "灵化双暴多重流",
-          "name_en": "Incarnon Crit/MS Meta",
+          "name_zh": "灵化弹射双暴流",
+          "name_en": "Incarnon Bounce Crit",
           "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "毒素伤害"],
           "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
         }
@@ -180,23 +187,523 @@
       "archetypes": [
         {
           "id": "incarnon_meta",
+          "name_zh": "灵化高暴多重流",
+          "name_en": "Incarnon Crit/MS Meta",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "毒素伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        },
+        {
+          "id": "incarnon_status_blast",
+          "name_zh": "灵化高触发异常流",
+          "name_en": "Incarnon High-Status",
+          "positives": ["多重射击", "触发几率", "异常状态伤害", "火焰伤害", "毒素伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "野猪": {
+      "en_name": "Boar",
+      "aliases": ["野猪", "野猪 Prime", "Boar", "Boar Prime"],
+      "archetypes": [
+        {
+          "id": "incarnon_beam_status",
+          "name_zh": "灵化三联射线触发流",
+          "name_en": "Incarnon Tri-Beam Status",
+          "positives": ["多重射击", "触发几率", "暴击伤害", "射速", "异常状态伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害", "弹药最大值"]
+        },
+        {
+          "id": "incarnon_meta",
           "name_zh": "灵化双暴多重流",
+          "name_en": "Incarnon Crit/MS Meta",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "火焰伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "米特尔": {
+      "en_name": "Miter",
+      "aliases": ["米特尔", "Miter"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化弹射火球双暴流",
+          "name_en": "Incarnon Homing Crit",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "毒素伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "布莱顿": {
+      "en_name": "Braton",
+      "aliases": ["布莱顿", "布莱顿 Prime", "布莱顿 破坏者", "Braton", "Braton Prime", "Braton Vandal"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化爆炸双暴流",
+          "name_en": "Incarnon Crit/MS Meta",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "帕里斯": {
+      "en_name": "Paris",
+      "aliases": ["帕里斯", "帕里斯 Prime", "Paris", "Paris Prime"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化火焰光波双暴流",
+          "name_en": "Incarnon Heat Wave Crit",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "异常状态伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "恐惧": {
+      "en_name": "Dread",
+      "aliases": ["恐惧", "Dread"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化切割火焰双暴流",
+          "name_en": "Incarnon Slash/Heat Crit",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "异常状态伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "月神": {
+      "en_name": "Soma",
+      "aliases": ["月神", "月神 Prime", "Soma", "Soma Prime"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化多弹丸双暴流",
           "name_en": "Incarnon Crit/MS Meta",
           "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "毒素伤害"],
           "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
         }
       ]
     },
-    "雷克斯": {
-      "en_name": "Lex",
-      "aliases": ["雷克斯", "雷克斯 Prime", "盗贼", "Lex", "Lex Prime"],
+    "螺钉步枪": {
+      "en_name": "Boltor",
+      "aliases": ["螺钉步枪", "螺钉步枪 Prime", "终极 螺钉步枪", "Boltor", "Boltor Prime", "Telos Boltor"],
       "archetypes": [
         {
           "id": "incarnon_meta",
-          "name_zh": "灵化双暴多重流",
+          "name_zh": "灵化多弹丸双暴流",
           "name_en": "Incarnon Crit/MS Meta",
           "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "毒素伤害"],
           "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "席芭莉丝": {
+      "en_name": "Sybaris",
+      "aliases": ["席芭莉丝", "席芭莉丝 Prime", "Dex 席芭莉丝", "Sybaris", "Sybaris Prime", "Dex Sybaris"],
+      "archetypes": [
+        {
+          "id": "incarnon_blast_crit",
+          "name_zh": "灵化强制爆炸双暴流",
+          "name_en": "Incarnon Forced-Blast Crit",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "异常状态伤害", "射速"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "德拉": {
+      "en_name": "Dera",
+      "aliases": ["德拉", "德拉 破坏者", "Dera", "Dera Vandal"],
+      "archetypes": [
+        {
+          "id": "incarnon_status_to_crit",
+          "name_zh": "灵化触发转暴击流",
+          "name_en": "Incarnon Status-to-Crit",
+          "positives": ["触发几率", "暴击伤害", "多重射击", "射速", "暴击几率"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "蛇发女妖": {
+      "en_name": "Gorgon",
+      "aliases": ["蛇发女妖", "蛇发女妖 亡魂", "棱晶 蛇发女妖", "Gorgon", "Gorgon Wraith", "Prisma Gorgon"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化榴弹双暴流",
+          "name_en": "Incarnon Explosive Crit",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "火焰伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "雷克斯": {
+      "en_name": "Lex",
+      "aliases": ["雷克斯", "雷克斯 Prime", "Lex", "Lex Prime"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化光波双暴流",
+          "name_en": "Incarnon Plasma Wave Crit",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "毒素伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "盗贼": {
+      "en_name": "Furis",
+      "aliases": ["盗贼", "Dex 盗贼", "Furis", "Dex Furis"],
+      "archetypes": [
+        {
+          "id": "incarnon_heat_beam",
+          "name_zh": "灵化火焰射线融甲流",
+          "name_en": "Incarnon Heat Beam Melt",
+          "positives": ["多重射击", "暴击伤害", "暴击几率", "火焰伤害", "异常状态伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害", "武器后坐力"]
+        }
+      ]
+    },
+    "安格斯壮": {
+      "en_name": "Angstrum",
+      "aliases": ["安格斯壮", "棱晶 安格斯壮", "Angstrum", "Prisma Angstrum"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化弹射火球双暴流",
+          "name_en": "Incarnon Ricochet Fireball",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "火焰伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "暗杀者": {
+      "en_name": "Sicarus",
+      "aliases": ["暗杀者", "暗杀者 Prime", "Sicarus", "Sicarus Prime"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化跳弹双暴多重流",
+          "name_en": "Incarnon Ricochet Crit",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "毒素伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "原子矿融炮": {
+      "en_name": "Atomos",
+      "aliases": ["原子矿融炮", "Atomos"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化连锁火焰双暴流",
+          "name_en": "Incarnon Chain-Beam Crit",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "火焰伤害", "射速"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害", "武器后坐力"]
+        }
+      ]
+    },
+    "瓦斯托": {
+      "en_name": "Vasto",
+      "aliases": ["瓦斯托", "瓦斯托 Prime", "Vasto", "Vasto Prime"],
+      "archetypes": [
+        {
+          "id": "incarnon_burst_crit",
+          "name_zh": "灵化六连爆发双暴流",
+          "name_en": "Incarnon Burst Crit",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "伤害", "毒素伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "绝望": {
+      "en_name": "Despair",
+      "aliases": ["绝望", "Despair"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化引爆双暴流",
+          "name_en": "Incarnon Explosive Crit",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "火焰伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "苦无": {
+      "en_name": "Kunai",
+      "aliases": ["苦无", "MK1-苦无", "Kunai"],
+      "archetypes": [
+        {
+          "id": "incarnon_headshot",
+          "name_zh": "灵化自动爆头弱点流",
+          "name_en": "Incarnon Auto-Headshot",
+          "positives": ["暴击伤害", "多重射击", "弱点伤害", "暴击几率", "射速"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "席尔火枪": {
+      "en_name": "Zylok",
+      "aliases": ["席尔火枪", "席尔火枪 Prime", "Zylok", "Zylok Prime"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化蓄力火球双暴流",
+          "name_en": "Incarnon Heat Orb Crit",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "火焰伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "锡斯特": {
+      "en_name": "Cestra",
+      "aliases": ["锡斯特", "Cestra"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化连射递增双暴流",
+          "name_en": "Incarnon Ramp-Crit",
+          "positives": ["暴击伤害", "多重射击", "射速", "暴击几率", "毒素伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "咖玛腕甲枪": {
+      "en_name": "Gammacor",
+      "aliases": ["咖玛腕甲枪", "枢议 咖玛腕甲枪", "Gammacor", "Synoid Gammacor"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化聚怪冰爆流",
+          "name_en": "Incarnon Vortex Cold Crit",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "冰冻伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "野马": {
+      "en_name": "Bronco",
+      "aliases": ["野马", "野马 Prime", "Bronco", "Bronco Prime"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化跳弹多重双暴流",
+          "name_en": "Incarnon Ricochet Crit/MS",
+          "positives": ["多重射击", "暴击伤害", "暴击几率", "射速", "伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "拉托": {
+      "en_name": "Lato",
+      "aliases": ["拉托", "拉托 破坏者", "拉托 Prime", "Lato", "Lato Vandal", "Lato Prime"],
+      "archetypes": [
+        {
+          "id": "incarnon_meta",
+          "name_zh": "灵化跳弹双暴流",
+          "name_en": "Incarnon Ricochet Crit",
+          "positives": ["暴击伤害", "多重射击", "暴击几率", "射速", "毒素伤害"],
+          "negatives": ["变焦", "冲击伤害", "穿刺伤害"]
+        }
+      ]
+    },
+    "双雄": {
+      "en_name": "Praedos",
+      "aliases": ["双雄", "Praedos"],
+      "archetypes": [
+        {
+          "id": "melee_influence",
+          "name_zh": "灵化近战电击影响流",
+          "name_en": "Incarnon Melee Influence",
+          "positives": ["电击伤害", "攻击速度", "攻击范围", "暴击伤害", "异常状态伤害"],
+          "negatives": ["处决伤害", "滑行攻击暴击几率", "冲击伤害"]
+        },
+        {
+          "id": "incarnon_melee_crit",
+          "name_zh": "灵化轻击双暴范围流",
+          "name_en": "Incarnon Light Crit/Range",
+          "positives": ["暴击伤害", "攻击速度", "攻击范围", "暴击几率", "伤害"],
+          "negatives": ["处决伤害", "滑行攻击暴击几率", "冲击伤害"]
+        }
+      ]
+    },
+    "恶脓双斧": {
+      "en_name": "Dual Ichor",
+      "aliases": ["恶脓双斧", "Dual Ichor"],
+      "archetypes": [
+        {
+          "id": "melee_influence",
+          "name_zh": "灵化毒云电击影响流",
+          "name_en": "Incarnon Toxin-Cloud Influence",
+          "positives": ["电击伤害", "攻击速度", "攻击范围", "暴击伤害", "异常状态伤害"],
+          "negatives": ["处决伤害", "滑行攻击暴击几率", "冲击伤害", "穿刺伤害"]
+        },
+        {
+          "id": "incarnon_melee_crit",
+          "name_zh": "灵化双暴攻速范围流",
+          "name_en": "Incarnon Crit/AS/Range",
+          "positives": ["暴击伤害", "攻击速度", "攻击范围", "暴击几率", "毒素伤害"],
+          "negatives": ["处决伤害", "滑行攻击暴击几率", "冲击伤害"]
+        }
+      ]
+    },
+    "憎恨": {
+      "en_name": "Hate",
+      "aliases": ["憎恨", "Hate"],
+      "archetypes": [
+        {
+          "id": "melee_influence",
+          "name_zh": "灵化火焰波电击影响流",
+          "name_en": "Incarnon Heat-Wave Influence",
+          "positives": ["电击伤害", "暴击伤害", "攻击速度", "攻击范围", "异常状态伤害"],
+          "negatives": ["处决伤害", "滑行攻击暴击几率", "冲击伤害", "穿刺伤害"]
+        },
+        {
+          "id": "heavy_statstick",
+          "name_zh": "灵化重击火波爆发流",
+          "name_en": "Incarnon Heavy Wave",
+          "positives": ["暴击伤害", "暴击几率", "初始连击", "伤害", "重击准备速度"],
+          "negatives": ["处决伤害", "滑行攻击暴击几率", "冲击伤害"]
+        }
+      ]
+    },
+    "翁": {
+      "en_name": "Okina",
+      "aliases": ["翁", "翁 Prime", "Okina", "Okina Prime"],
+      "archetypes": [
+        {
+          "id": "melee_influence",
+          "name_zh": "灵化冰匕电击影响流",
+          "name_en": "Incarnon Dagger Influence",
+          "positives": ["电击伤害", "攻击速度", "攻击范围", "暴击伤害", "异常状态伤害"],
+          "negatives": ["处决伤害", "滑行攻击暴击几率", "冲击伤害"]
+        },
+        {
+          "id": "incarnon_melee_crit",
+          "name_zh": "灵化双暴攻速范围流",
+          "name_en": "Incarnon Crit/AS/Range",
+          "positives": ["暴击伤害", "攻击速度", "攻击范围", "暴击几率", "伤害"],
+          "negatives": ["处决伤害", "滑行攻击暴击几率", "冲击伤害"]
+        }
+      ]
+    },
+    "海波单剑": {
+      "en_name": "Nami Solo",
+      "aliases": ["海波单剑", "Nami Solo"],
+      "archetypes": [
+        {
+          "id": "melee_influence",
+          "name_zh": "灵化超大范围电击影响流",
+          "name_en": "Incarnon Wide-Range Influence",
+          "positives": ["电击伤害", "攻击范围", "攻击速度", "暴击伤害", "异常状态伤害"],
+          "negatives": ["处决伤害", "滑行攻击暴击几率", "冲击伤害", "穿刺伤害"]
+        },
+        {
+          "id": "incarnon_melee_crit",
+          "name_zh": "灵化轻击双暴范围流",
+          "name_en": "Incarnon Light Crit/Range",
+          "positives": ["暴击伤害", "攻击范围", "攻击速度", "暴击几率", "伤害"],
+          "negatives": ["处决伤害", "滑行攻击暴击几率", "冲击伤害"]
+        }
+      ]
+    },
+    "空刃": {
+      "en_name": "Skana",
+      "aliases": ["空刃", "棱晶 空刃", "空刃 Prime", "Skana", "Prisma Skana", "Skana Prime"],
+      "archetypes": [
+        {
+          "id": "melee_influence",
+          "name_zh": "灵化电击影响流",
+          "name_en": "Incarnon Melee Influence",
+          "positives": ["电击伤害", "攻击速度", "攻击范围", "暴击伤害", "异常状态伤害"],
+          "negatives": ["处决伤害", "滑行攻击暴击几率", "冲击伤害"]
+        },
+        {
+          "id": "incarnon_melee_crit",
+          "name_zh": "灵化双暴攻速范围流",
+          "name_en": "Incarnon Crit/AS/Range",
+          "positives": ["暴击伤害", "攻击速度", "攻击范围", "暴击几率", "伤害"],
+          "negatives": ["处决伤害", "滑行攻击暴击几率", "冲击伤害"]
+        }
+      ]
+    },
+    "玻之武杖": {
+      "en_name": "Bo",
+      "aliases": ["玻之武杖", "玻之武杖 Prime", "MK1-玻之武杖", "Bo", "Bo Prime"],
+      "archetypes": [
+        {
+          "id": "melee_influence",
+          "name_zh": "灵化长距电击影响流",
+          "name_en": "Incarnon Long-Reach Influence",
+          "positives": ["电击伤害", "攻击范围", "攻击速度", "暴击伤害", "异常状态伤害"],
+          "negatives": ["处决伤害", "滑行攻击暴击几率", "穿刺伤害"]
+        },
+        {
+          "id": "incarnon_melee_crit",
+          "name_zh": "灵化长距双暴流",
+          "name_en": "Incarnon Reach Crit",
+          "positives": ["暴击伤害", "攻击范围", "攻击速度", "暴击几率", "伤害"],
+          "negatives": ["处决伤害", "滑行攻击暴击几率", "穿刺伤害"]
+        }
+      ]
+    },
+    "西伯利亚冰锤": {
+      "en_name": "Sibear",
+      "aliases": ["西伯利亚冰锤", "Sibear"],
+      "archetypes": [
+        {
+          "id": "heavy_slam",
+          "name_zh": "灵化重击冰冻震地流",
+          "name_en": "Incarnon Heavy Slam",
+          "positives": ["暴击伤害", "暴击几率", "初始连击", "震地攻击伤害", "伤害"],
+          "negatives": ["处决伤害", "滑行攻击暴击几率", "穿刺伤害"],
+          "deprioritized_positives": ["攻击速度"]
+        }
+      ]
+    },
+    "认知 & 冲击": {
+      "en_name": "Ack & Brunt",
+      "aliases": ["认知 & 冲击", "认知&冲击", "Ack & Brunt"],
+      "archetypes": [
+        {
+          "id": "melee_influence",
+          "name_zh": "灵化剑气电击影响流",
+          "name_en": "Incarnon Projectile Influence",
+          "positives": ["电击伤害", "暴击伤害", "攻击速度", "攻击范围", "伤害"],
+          "negatives": ["处决伤害", "滑行攻击暴击几率", "穿刺伤害"]
+        },
+        {
+          "id": "heavy_statstick",
+          "name_zh": "灵化重击剑气爆发流",
+          "name_en": "Incarnon Heavy Projectile",
+          "positives": ["暴击伤害", "暴击几率", "初始连击", "伤害", "重击准备速度"],
+          "negatives": ["处决伤害", "滑行攻击暴击几率", "穿刺伤害"]
+        }
+      ]
+    },
+    "甲龙双拳": {
+      "en_name": "Ankyros",
+      "aliases": ["甲龙双拳", "甲龙双拳 Prime", "Ankyros", "Ankyros Prime"],
+      "archetypes": [
+        {
+          "id": "heavy_slam",
+          "name_zh": "灵化重击震地双暴流",
+          "name_en": "Incarnon Heavy/Slam Crit",
+          "positives": ["暴击伤害", "暴击几率", "伤害", "初始连击", "震地攻击伤害"],
+          "negatives": ["处决伤害", "滑行攻击暴击几率", "穿刺伤害"]
+        }
+      ]
+    },
+    "弗拉克斯": {
+      "en_name": "Furax",
+      "aliases": ["弗拉克斯", "弗拉克斯 亡魂", "MK1-弗拉克斯", "Furax", "Furax Wraith"],
+      "archetypes": [
+        {
+          "id": "heavy_slam",
+          "name_zh": "灵化重击震地双暴流",
+          "name_en": "Incarnon Heavy/Slam Crit",
+          "positives": ["暴击伤害", "暴击几率", "初始连击", "伤害", "震地攻击伤害"],
+          "negatives": ["处决伤害", "滑行攻击暴击几率", "穿刺伤害"]
         }
       ]
     }
