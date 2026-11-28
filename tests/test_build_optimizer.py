@@ -114,12 +114,11 @@ class TestBuildOptimizer(unittest.TestCase):
 
         # Test interactive dialog + WFSim export round-trip
         settings = UserSettings()
-        panel_std = RivenControlPanel(settings=settings, initial_ui_lang="zh_CN", wfsim_edition=False)
-        panel_wf = RivenControlPanel(settings=settings, initial_ui_lang="zh_CN", wfsim_edition=True)
+        panel = RivenControlPanel(settings=settings, initial_ui_lang="zh_CN")
         dlg = BuildOptimizerDialog(settings=settings, lang="zh_CN")
         try:
-            self.assertIsNone(panel_std._btn_build_optimizer)
-            self.assertIsNotNone(panel_wf._btn_build_optimizer)
+            self.assertIsNotNone(panel._btn_build_optimizer)
+            self.assertIsNotNone(panel._btn_open_wfsim)
 
             dlg.show_for_card(ev, r_ichor)
             self.assertEqual(len(dlg._slot_frames), 8)  # 7 mods + 1 Riven
@@ -153,8 +152,7 @@ class TestBuildOptimizer(unittest.TestCase):
             self.assertEqual(payload[4], opt_out.arcane_ids)
         finally:
             dlg.close()
-            panel_std.close()
-            panel_wf.close()
+            panel.close()
 
 
 if __name__ == "__main__":

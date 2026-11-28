@@ -143,7 +143,7 @@ class TrayManager(QObject):
         self._act_wm.triggered.connect(on_fetch_wm)
         self._menu.addAction(self._act_wm)
 
-        # Optional WFSim edition optimizer action (WFSim sending is strictly via panel)
+        # Local build optimizer quick entry (WFSim share-link export stays strictly inside panels)
         self._act_optimizer: Optional[QAction] = None
         if on_open_optimizer is not None:
             self._act_optimizer = QAction("", self._menu)

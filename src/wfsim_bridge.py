@@ -1,21 +1,22 @@
-"""WFSim (`https://wfsim.app`) external browser deep-link builder for 裂罅透镜 · WFSim 联动版.
+"""WFSim (`https://wfsim.app`) share-link (`?b=`) exporter for 裂罅透镜 (Riven Lens).
 
-Purely generates a standard outbound browser URL (`https://wfsim.app/weapons/<id>?b=<code>`)
-pre-populated with:
-  1. The scanned weapon ID
-  2. A curated baseline Steel Path build (7 standard mods + arcane) matching the weapon class
-     (plus a dedicated Non-Crit Devouring baseline for Zariman Incarnon weapons)
-  3. The exact scanned Riven card (shape `3+1`/`3`/`2+1`/`2`, Rank 8, mapped stat IDs,
-     and exact 0.900..1.100 roll factors) equipped in slot 8 (`"~0"`).
+Unofficial independent project compatible with WFSim v2 JSON share links (`0` / `1` prefix,
+plaintext IDs without depending on `share_order.yaml`). Opens `https://wfsim.app/weapons/<id>?b=<code>`
+in the user's browser only on explicit panel button click.
 
-Zero external code reused; uses only Python stdlib (`json`, `zlib`, `base64`).
+Defaults to Riven-only import (`include_baseline_build=False`) so players can run WFSim's
+own build optimizer and Riven gain analysis without hardcoded class mods interfering, while
+also supporting exporting a locally optimized build from `BuildOptimizerDialog`.
+
+Note: `?b=` is WFSim's internal share-link format rather than a frozen public API; future
+schema or weapon ID updates on WFSim may require updating the mappings in this module.
+Zero WFSim source code is reused; uses only Python stdlib (`json`, `zlib`, `base64`).
 """
 
 from __future__ import annotations
 
 import base64
 import json
-import os
 import re
 import zlib
 from dataclasses import dataclass, field
@@ -25,7 +26,45 @@ from src.evaluator import RivenEvaluation, StatEvaluation
 from src.riven_parser import RivenData
 
 WFSIM_ORIGIN = "https://wfsim.app"
-WFSIM_EDITION_ENV = "RIVEN_WFSIM_EDITION"
+
+# Modular Kitgun chamber bases -> WFSim splits them into `<base>_primary` and `<base>_secondary`
+_WFSIM_KITGUN_BASES = frozenset(
+    {
+        "tombfinger",
+        "catchmoon",
+        "gaze",
+        "rattleguts",
+        "sporelacer",
+        "vermisplicer",
+    }
+)
+
+# Modular Zaw strike bases -> valid default WFSim weapon YAML IDs (`_one_handed` / `_two_handed`)
+_WFSIM_ZAW_DEFAULT_IDS: Dict[str, str] = {
+    "balla": "balla_one_handed",
+    "cyath": "cyath_two_handed",
+    "dehtat": "dehtat_one_handed",
+    "dokrahm": "dokrahm_two_handed",
+    "kronsh": "kronsh_two_handed",
+    "mewan": "mewan_two_handed",
+    "ooltha": "ooltha_one_handed",
+    "plague_keewar": "plague_keewar_two_handed",
+    "plague_kripath": "plague_kripath_two_handed",
+    "rabvee": "rabvee_two_handed",
+    "sepfahn": "sepfahn_one_handed",
+}
+
+# Explicit slug/ID overrides where WFSim ID differs from Warframe.market / simple snake_case
+_WFSIM_WEAPON_ID_OVERRIDES: Dict[str, str] = {
+    "ack_brunt": "ack_and_brunt",
+    "cobra_crane": "cobra_and_crane",
+    "cobra_crane_prime": "cobra_and_crane_prime",
+    "silva_aegis": "silva_and_aegis",
+    "silva_aegis_prime": "silva_and_aegis_prime",
+    "dark_split_sword_(dual_swords)": "dark_split_sword",
+    "dark_split_sword_dual_swords": "dark_split_sword",
+    "vinquibus_melee": "vinquibus",
+}
 
 # Canonical Simplified Chinese stat name -> WFSim ranged stat ID (`rifle`/`shotgun`/`pistol`/`archgun`)
 _STAT_ZH_TO_WFSIM_RANGED: Dict[str, str] = {
@@ -219,13 +258,6 @@ BASELINE_BUILDS: Dict[str, Tuple[List[str], List[str], str]] = {
 }
 
 
-def is_wfsim_edition(cli_flag: bool = False) -> bool:
-    """Return True when running in the dedicated WFSim-linked edition."""
-    if cli_flag:
-        return True
-    return os.environ.get(WFSIM_EDITION_ENV, "").strip().lower() in ("1", "true", "yes", "on")
-
-
 def _b64url_encode(raw: bytes) -> str:
     return base64.urlsafe_b64encode(raw).decode("ascii").rstrip("=")
 
@@ -294,18 +326,45 @@ def compute_wfsim_roll_factor(se: StatEvaluation) -> float:
     return 1.000
 
 
-def resolve_wfsim_weapon_id(evaluation: RivenEvaluation, riven: Optional[RivenData] = None) -> str:
-    """Resolve canonical snake_case WFSim weapon ID (e.g. `torid`, `laetum`, `kuva_bramma`)."""
+def resolve_wfsim_weapon_id(
+    evaluation: RivenEvaluation,
+    riven: Optional[RivenData] = None,
+    *,
+    kitgun_slot: Optional[str] = None,
+) -> str:
+    """Resolve WFSim's exact weapon ID (handling Kitguns, Zaws, `&` names, and special slugs)."""
+    raw_id = ""
     slug = (evaluation.weapon_slug or "").strip().lower()
-    if slug:
-        return re.sub(r"[\s-]+", "_", slug)
     en = (evaluation.weapon_name_en or "").strip().lower()
-    if en:
-        return re.sub(r"[^a-z0-9]+", "_", en).strip("_")
-    raw = (riven.weapon_name if riven else evaluation.weapon_name) or ""
-    if raw and raw.isascii():
-        return re.sub(r"[^a-z0-9]+", "_", raw.strip().lower()).strip("_")
-    return ""
+    if slug:
+        raw_id = re.sub(r"[\s-]+", "_", slug)
+    elif en:
+        # Preserve `&` as `_and_` (e.g. "Silva & Aegis Prime" -> "silva_and_aegis_prime")
+        en_norm = en.replace("&", " and ")
+        raw_id = re.sub(r"[^a-z0-9]+", "_", en_norm).strip("_")
+    else:
+        raw = (riven.weapon_name if riven else evaluation.weapon_name) or ""
+        if raw and raw.isascii():
+            raw_norm = raw.strip().lower().replace("&", " and ")
+            raw_id = re.sub(r"[^a-z0-9]+", "_", raw_norm).strip("_")
+
+    if not raw_id:
+        return ""
+
+    if raw_id in _WFSIM_WEAPON_ID_OVERRIDES:
+        return _WFSIM_WEAPON_ID_OVERRIDES[raw_id]
+
+    if raw_id in _WFSIM_KITGUN_BASES:
+        slot = (kitgun_slot or "").strip().lower()
+        if slot not in ("primary", "secondary"):
+            cls = (evaluation.weapon_class or "").strip().lower()
+            slot = "primary" if cls in ("rifle", "shotgun") else "secondary"
+        return f"{raw_id}_{slot}"
+
+    if raw_id in _WFSIM_ZAW_DEFAULT_IDS:
+        return _WFSIM_ZAW_DEFAULT_IDS[raw_id]
+
+    return raw_id
 
 
 def _select_baseline_build(evaluation: RivenEvaluation) -> Tuple[List[str], List[str], str]:
@@ -334,14 +393,19 @@ def build_wfsim_url(
     evaluation: RivenEvaluation,
     riven: Optional[RivenData] = None,
     *,
-    include_baseline_build: bool = True,
+    include_baseline_build: bool = False,
     custom_mods: Optional[Sequence[str]] = None,
     custom_arcanes: Optional[Sequence[str]] = None,
     custom_build_label: Optional[str] = None,
+    kitgun_slot: Optional[str] = None,
     origin: str = WFSIM_ORIGIN,
 ) -> WFSimLinkResult:
-    """Build a ready-to-open `https://wfsim.app/weapons/<id>?b=<code>` URL with Riven + build."""
-    weapon_id = resolve_wfsim_weapon_id(evaluation, riven)
+    """Build a WFSim v2 JSON (`0`/`1` prefix) share URL `https://wfsim.app/weapons/<id>?b=<code>`.
+
+    Defaults to Riven-only import (`include_baseline_build=False`) so WFSim's in-site
+    optimizer & Riven gain analysis work cleanly without hardcoded class mods.
+    """
+    weapon_id = resolve_wfsim_weapon_id(evaluation, riven, kitgun_slot=kitgun_slot)
     if not weapon_id:
         return WFSimLinkResult(
             ok=False,
@@ -398,7 +462,7 @@ def build_wfsim_url(
     else:
         slots9 = [["~0"] if bonuses else 0, 0, 0, 0, 0, 0, 0, 0, 0]
         arcanes = []
-        build_label = "仅紫卡"
+        build_label = "仅导入紫卡"
 
     riven_title = (
         f"{evaluation.weapon_name_en or weapon_id} Riven"

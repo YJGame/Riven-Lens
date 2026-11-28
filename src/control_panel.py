@@ -211,13 +211,11 @@ class RivenControlPanel(QWidget):
         self,
         settings: UserSettings,
         initial_ui_lang: str = "zh_CN",
-        wfsim_edition: bool = False,
         parent: Optional[QWidget] = None,
     ) -> None:
         super().__init__(parent)
         self._ui_lang = initial_ui_lang
         self._settings = settings
-        self._wfsim_edition = bool(wfsim_edition)
         self._monitoring = False
         self._current_mode = MODE_PAUSED
         self._wm_busy = False
@@ -651,29 +649,25 @@ class RivenControlPanel(QWidget):
         wm_link_row.addStretch(1)
         data_lay.addLayout(wm_link_row)
 
-        self._btn_open_wfsim: Optional[QPushButton] = None
-        self._btn_build_optimizer: Optional[QPushButton] = None
-        self._lbl_wfsim_status: Optional[QLabel] = None
-        if self._wfsim_edition:
-            wfsim_row = QHBoxLayout()
-            wfsim_row.setSpacing(8)
-            self._btn_build_optimizer = QPushButton("")
-            self._btn_build_optimizer.setObjectName("AccentBtn")
-            self._btn_build_optimizer.clicked.connect(self.open_build_optimizer_requested.emit)
-            wfsim_row.addWidget(self._btn_build_optimizer)
+        wfsim_row = QHBoxLayout()
+        wfsim_row.setSpacing(8)
+        self._btn_build_optimizer = QPushButton("")
+        self._btn_build_optimizer.setObjectName("AccentBtn")
+        self._btn_build_optimizer.clicked.connect(self.open_build_optimizer_requested.emit)
+        wfsim_row.addWidget(self._btn_build_optimizer)
 
-            self._btn_open_wfsim = QPushButton("")
-            self._btn_open_wfsim.setObjectName("AccentBtn")
-            self._btn_open_wfsim.clicked.connect(self.open_wfsim_requested.emit)
-            wfsim_row.addWidget(self._btn_open_wfsim)
-            wfsim_row.addStretch(1)
-            data_lay.addLayout(wfsim_row)
+        self._btn_open_wfsim = QPushButton("")
+        self._btn_open_wfsim.setObjectName("SecondaryBtn")
+        self._btn_open_wfsim.clicked.connect(self.open_wfsim_requested.emit)
+        wfsim_row.addWidget(self._btn_open_wfsim)
+        wfsim_row.addStretch(1)
+        data_lay.addLayout(wfsim_row)
 
-            self._lbl_wfsim_status = QLabel("")
-            self._lbl_wfsim_status.setWordWrap(True)
-            self._lbl_wfsim_status.setStyleSheet("color: #6EE7B7; font-size: 12px; font-weight: normal;")
-            self._lbl_wfsim_status.hide()
-            data_lay.addWidget(self._lbl_wfsim_status)
+        self._lbl_wfsim_status = QLabel("")
+        self._lbl_wfsim_status.setWordWrap(True)
+        self._lbl_wfsim_status.setStyleSheet("color: #6EE7B7; font-size: 12px; font-weight: normal;")
+        self._lbl_wfsim_status.hide()
+        data_lay.addWidget(self._lbl_wfsim_status)
 
         self._sep_data = QFrame()
         self._sep_data.setFrameShape(QFrame.Shape.HLine)
@@ -1201,10 +1195,8 @@ class RivenControlPanel(QWidget):
         if lang not in SUPPORTED_LANGS:
             lang = "en_US"
         self._ui_lang = lang
-        title_key = "panel.wfsim_edition_title" if self._wfsim_edition else "panel.window_title"
-        hdr_key = "panel.wfsim_edition_title" if self._wfsim_edition else "panel.header_title"
-        self.setWindowTitle(I18N.t(title_key, lang))
-        self._header_title.setText(I18N.t(hdr_key, lang))
+        self.setWindowTitle(I18N.t("panel.window_title", lang))
+        self._header_title.setText(I18N.t("panel.header_title", lang))
         self._update_header_status()
 
         self._grp_hotkeys.setTitle(I18N.t("panel.sec_hotkeys", lang))
@@ -1222,10 +1214,9 @@ class RivenControlPanel(QWidget):
         self._btn_fetch_wm.setText(I18N.t("panel.wm_fetch_btn", lang))
         self._btn_open_wm_browser.setText(I18N.t("panel.wm_open_browser_btn", lang))
         self.refresh_favorite_stats_count()
-        if self._btn_build_optimizer is not None:
-            self._btn_build_optimizer.setText(I18N.t("panel.opt_open_btn", lang))
-        if self._btn_open_wfsim is not None:
-            self._btn_open_wfsim.setText(I18N.t("panel.wfsim_open_btn", lang))
+        self._btn_build_optimizer.setText(I18N.t("panel.opt_open_btn", lang))
+        self._btn_open_wfsim.setText(I18N.t("panel.wfsim_open_btn", lang))
+        self._btn_open_wfsim.setToolTip(I18N.t("panel.wfsim_open_tooltip", lang))
         self._btn_update_db.setText(I18N.t("panel.db_update_btn", lang))
         self.refresh_db_timestamp()
 

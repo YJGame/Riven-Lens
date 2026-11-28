@@ -1,4 +1,4 @@
-"""Pure-Python Riven-Aware Build Optimizer for 裂罅透镜 · WFSim 联动版.
+"""Pure-Python Riven-Aware Local Build Optimizer for 裂罅透镜 (Riven Lens).
 
 Given an OCR-scanned & evaluated Riven Mod (fixed in slot 8), searches the
 weapon class's curated mod + arcane pool using greedy lookahead + coordinate

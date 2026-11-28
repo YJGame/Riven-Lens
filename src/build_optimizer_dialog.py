@@ -1,9 +1,9 @@
-"""Themed Riven-Aware Local Build Optimizer dialog for 裂罅透镜 · WFSim 联动版.
+"""Themed Riven-Aware Local Build Optimizer dialog for 裂罅透镜 (Riven Lens).
 
 Displays the optimal 7 Mods + Arcane complementing the currently scanned Riven
 (computed locally in <30ms), supports 1-click scenario switching (`Steel Path Grineer`,
 `General All-Factions`, `Boss Direct DPS`) and a `No Faction/Bane Mods` toggle, and
-exports the exact optimized build + scanned Riven directly to `https://wfsim.app`.
+can open the resulting build in WFSim (`https://wfsim.app`) via share link.
 """
 
 from __future__ import annotations

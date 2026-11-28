@@ -161,11 +161,6 @@ def build_arg_parser() -> argparse.ArgumentParser:
         choices=["toggle", "wm", "hide", "open_panel", "lock", "export", "quit"],
         help="Linux/Wayland/macOS 快捷键 IPC 触发器：向已运行的裂罅透镜发送动作指令（toggle/wm/hide/open_panel/lock/export/quit）",
     )
-    parser.add_argument(
-        "--wfsim-edition",
-        action="store_true",
-        help="以「WFSim 联动版」模式启动（在设置面板与本地配装优化器中启用一键跳转 wfsim.app 自动带入紫卡数值与配卡）",
-    )
 
     parser.add_argument(
         "--preset",
@@ -498,7 +493,7 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
     from src.build_optimizer_dialog import BuildOptimizerDialog
     from src.favorite_stats_dialog import FavoriteStatsDialog
     from src.user_manual_dialog import UserManualDialog
-    from src.wfsim_bridge import build_wfsim_url, is_wfsim_edition
+    from src.wfsim_bridge import build_wfsim_url
     from src.wayland_support import (
         WaylandIPCServer,
         detect_wayland_capture_backend,
@@ -665,11 +660,9 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
         auto_collapse_seconds=0,
         theme_colors=settings.theme_colors,
     )
-    wfsim_edition = is_wfsim_edition(bool(getattr(args, "wfsim_edition", False)))
     control_panel = RivenControlPanel(
         settings=settings,
         initial_ui_lang=initial_ui_lang,
-        wfsim_edition=wfsim_edition,
     )
     user_manual_dialog = UserManualDialog(settings=settings, lang=initial_ui_lang)
     capturer = ScreenCapturer(monitor_index=args.monitor)
@@ -684,11 +677,7 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
         settings=settings,
         lang=initial_ui_lang,
     )
-    build_optimizer_dialog = (
-        BuildOptimizerDialog(settings=settings, lang=initial_ui_lang)
-        if wfsim_edition
-        else None
-    )
+    build_optimizer_dialog = BuildOptimizerDialog(settings=settings, lang=initial_ui_lang)
 
     # Silent 7-day auto-sync in background (never blocks startup; falls back to local cache on error)
     def _on_bg_data_synced(sync_res: dict) -> None:
@@ -1827,7 +1816,7 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
         )
 
     def handle_open_wfsim(source: str) -> None:
-        """Build a WFSim deep-link with the current scanned Riven + baseline build and open in browser."""
+        """Build a Riven-only WFSim v2 share link and open `https://wfsim.app` in browser."""
         _pause_mode_on_leaving_game(f"WFSimOpened:{source}")
         ui_lang = state["active_lang"]
         if not state["last_cards"]:
@@ -1836,7 +1825,7 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
             window.show_toast(msg, duration_ms=2200)
             return
         target_card = state["last_cards"][-1]
-        res = build_wfsim_url(target_card.evaluation, target_card.riven, include_baseline_build=True)
+        res = build_wfsim_url(target_card.evaluation, target_card.riven, include_baseline_build=False)
         if not res.ok:
             control_panel.set_wfsim_feedback(f"⚠ {res.error}", is_error=True)
             window.show_toast(res.error, duration_ms=2400)
@@ -2005,11 +1994,9 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
     control_panel.export_card_requested.connect(lambda: handle_export_card("ControlPanel"))
     control_panel.user_manual_requested.connect(open_user_manual)
     control_panel.favorite_stats_requested.connect(open_favorite_stats_dialog)
-    if wfsim_edition:
-        control_panel.open_wfsim_requested.connect(lambda: handle_open_wfsim("ControlPanel"))
-        control_panel.open_build_optimizer_requested.connect(lambda: handle_open_build_optimizer("ControlPanel"))
-        if build_optimizer_dialog is not None:
-            build_optimizer_dialog.send_optimized_to_wfsim.connect(handle_send_optimized_to_wfsim)
+    control_panel.open_wfsim_requested.connect(lambda: handle_open_wfsim("ControlPanel"))
+    control_panel.open_build_optimizer_requested.connect(lambda: handle_open_build_optimizer("ControlPanel"))
+    build_optimizer_dialog.send_optimized_to_wfsim.connect(handle_send_optimized_to_wfsim)
     favorite_stats_dialog.favorites_saved.connect(handle_favorites_saved)
     control_panel.theme_changed.connect(handle_theme_changed)
     control_panel.panel_geometry_changed.connect(handle_panel_geometry_changed)
@@ -2023,7 +2010,7 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
         on_quit=lambda: handle_quit("SystemTray"),
         on_select_mode=lambda m: set_work_mode(m, source="SystemTray"),
         on_toggle_lock=lambda: handle_toggle_hotkey_lock("SystemTray"),
-        on_open_optimizer=(lambda: handle_open_build_optimizer("SystemTray")) if wfsim_edition else None,
+        on_open_optimizer=lambda: handle_open_build_optimizer("SystemTray"),
         initial_ui_lang=initial_ui_lang,
         toggle_hotkey=settings.hotkey_toggle_monitor,
         wm_hotkey=settings.hotkey_fetch_wm,
