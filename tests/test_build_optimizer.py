@@ -14,7 +14,10 @@ from PyQt6.QtWidgets import QApplication
 from src.build_optimizer import (
     ARCHETYPE_HEAVY_ATTACK,
     ARCHETYPE_HEAVY_SLAM,
+    ARCHETYPE_INCARNON_META,
     ARCHETYPE_MELEE_INFLUENCE,
+    ARCHETYPE_NON_CRIT,
+    ARCHETYPE_STANDARD,
     MOD_POOLS,
     ARCANE_POOLS,
     SCENARIO_BOSS_DIRECT,
@@ -25,8 +28,13 @@ from src.build_optimizer import (
     evaluate_custom_build_for_riven,
     format_mod_stats,
     get_arcane_pool,
+    get_available_archetypes_for_weapon,
+    get_default_progenitor_element,
     get_exilus_pool,
     get_mod_pool,
+    get_weapon_variants,
+    is_incarnon_weapon,
+    is_progenitor_weapon,
     is_mod_compatible_with_weapon,
     match_mod_search,
     optimize_build_for_riven,
@@ -426,7 +434,8 @@ class TestBuildOptimizer(unittest.TestCase):
         self.assertEqual(len(gas_res.stat_summary.element_breakdown), 1)
         el_zh, _el_en, el_dmg, el_pct = gas_res.stat_summary.element_breakdown[0]
         self.assertEqual(el_zh, "毒气")
-        self.assertAlmostEqual(el_pct, 180.0, places=1)
+        # 90% Toxin + 90% Heat mods + 37.5% innate 60% Toxin Progenitor Valence share (0.6 / 1.6) = 217.5%
+        self.assertAlmostEqual(el_pct, 217.5, places=1)
         self.assertGreater(el_dmg, 100.0)
         self.assertGreater(gas_res.stat_summary.eff_multishot, 3.0)
         self.assertGreater(gas_res.stat_summary.eff_fire_rate, 0.5)
@@ -523,6 +532,102 @@ class TestBuildOptimizer(unittest.TestCase):
             code = urllib.parse.parse_qs(urllib.parse.urlparse(wf_link.url).query)["b"][0]
             payload = decode_wfsim_share_code(code)
             self.assertEqual(payload[3][8], ["primed_rifle_ammo_mutation"])
+        finally:
+            dlg.close()
+            self.app.processEvents()
+
+    def test_tysis_ocr_recovery_variant_preference_strict_archetypes_and_progenitor_valence(self) -> None:
+        # 1. OCR misread "²沫者 Lexi-satidra" MUST recover to 啐沫者 (Tysis, Pistol)!
+        r_tysis = self.parser.parse(
+            [
+                "²沫者 Lexi-satidra",
+                "+3.2 穿透",
+                "+135% 多重射击",
+                "+76.8% 射速",
+                "-87% 触发几率",
+                "段位 10 O 70",
+            ]
+        )
+        ev_t = self.evaluator.evaluate(r_tysis)
+        self.assertEqual(ev_t.weapon_name, "啐沫者")
+        self.assertEqual(ev_t.weapon_name_en, "Tysis")
+        self.assertEqual(ev_t.weapon_class, "pistol")
+
+        # 2. Strict per-weapon archetype filtering: Kuva Bramma has NO Incarnon!
+        self.assertFalse(is_incarnon_weapon("kuva_bramma", "Kuva Bramma"))
+        self.assertTrue(is_incarnon_weapon("torid", "Torid"))
+        self.assertTrue(is_incarnon_weapon("burston_prime", "Burston Prime"))
+        self.assertTrue(is_incarnon_weapon("strun_wraith", "Strun Wraith"))
+
+        bramma_archs = get_available_archetypes_for_weapon("rifle", weapon_slug="kuva_bramma", weapon_name_en="Kuva Bramma", crit_chance=0.35, status_chance=0.21)
+        self.assertNotIn(ARCHETYPE_INCARNON_META, bramma_archs)
+        self.assertNotIn(ARCHETYPE_NON_CRIT, bramma_archs)
+        self.assertEqual(bramma_archs, [ARCHETYPE_STANDARD])
+
+        torid_archs = get_available_archetypes_for_weapon("rifle", weapon_slug="torid", weapon_name_en="Torid")
+        self.assertIn(ARCHETYPE_INCARNON_META, torid_archs)
+        self.assertNotIn(ARCHETYPE_NON_CRIT, torid_archs)
+
+        laetum_archs = get_available_archetypes_for_weapon("pistol", weapon_slug="laetum", weapon_name_en="Laetum")
+        self.assertIn(ARCHETYPE_NON_CRIT, laetum_archs)
+        self.assertIn(ARCHETYPE_INCARNON_META, laetum_archs)
+
+        # 3. Variant auto-preference & Progenitor Valence (default 60% + hot meta element)
+        tysis_vars = get_weapon_variants("tysis", "Tysis", "pistol")
+        self.assertGreaterEqual(len(tysis_vars), 2)
+        self.assertEqual(tysis_vars[0].slug, "coda_tysis")  # 终幕·啐沫者 preferred over base 啐沫者!
+
+        glaive_vars = get_weapon_variants("glaive", "Glaive", "melee")
+        self.assertEqual(glaive_vars[0].slug, "glaive_prime")
+
+        hek_vars = get_weapon_variants("hek", "Hek", "shotgun")
+        self.assertEqual(hek_vars[0].slug, "kuva_hek")
+
+        self.assertTrue(is_progenitor_weapon("kuva_bramma"))
+        self.assertTrue(is_progenitor_weapon("coda_tysis"))
+        self.assertTrue(is_progenitor_weapon("tenet_arca_plasmor"))
+        self.assertFalse(is_progenitor_weapon("torid"))
+        self.assertEqual(get_default_progenitor_element("kuva_bramma"), "toxin")
+        self.assertEqual(get_default_progenitor_element("coda_tysis"), "magnetic")
+
+        # 4. Dialog auto-selects 终幕·啐沫者, shows Variant + 60% Magnetic Valence, hides Incarnon, exports to WFSim!
+        settings = UserSettings()
+        dlg = BuildOptimizerDialog(settings=settings, lang="zh_CN")
+        try:
+            dlg.show_for_card(ev_t, r_tysis)
+            self.assertEqual(dlg._current_eval.weapon_slug, "coda_tysis")
+            self.assertFalse(dlg._cmb_variant.isHidden())
+            self.assertFalse(dlg._cmb_valence_elem.isHidden())
+            self.assertEqual(dlg._spin_valence_pct.value(), 60)
+            self.assertEqual(dlg._valence_element, "magnetic")
+
+            arch_items = [dlg._cmb_archetype.itemData(i) for i in range(dlg._cmb_archetype.count())]
+            self.assertNotIn(ARCHETYPE_INCARNON_META, arch_items)
+            self.assertNotIn(ARCHETYPE_NON_CRIT, arch_items)
+
+            # User switches valence to 45% Heat -> live recalculates & exports to WFSim payload[10]!
+            dlg.set_valence("heat", 45)
+            self.assertEqual(dlg._last_result.valence_element, "heat")
+            self.assertAlmostEqual(dlg._last_result.valence_bonus, 0.45, places=3)
+            wf_link = build_wfsim_url(
+                dlg._current_eval,
+                r_tysis,
+                custom_mods=dlg._last_result.mod_ids,
+                custom_arcanes=dlg._last_result.arcane_ids,
+                valence_element=dlg._last_result.valence_element,
+                valence_bonus=dlg._last_result.valence_bonus,
+            )
+            self.assertTrue(wf_link.ok)
+            self.assertEqual(wf_link.weapon_id, "coda_tysis")
+            code = urllib.parse.parse_qs(urllib.parse.urlparse(wf_link.url).query)["b"][0]
+            payload = decode_wfsim_share_code(code)
+            self.assertEqual(payload[10], ["heat", 0.45])
+
+            # Switching variant back to base Tysis (啐沫者) hides Progenitor Valence!
+            dlg.set_selected_variant("tysis")
+            self.assertEqual(dlg._current_eval.weapon_slug, "tysis")
+            self.assertTrue(dlg._cmb_valence_elem.isHidden())
+            self.assertIsNone(dlg._last_result.valence_element)
         finally:
             dlg.close()
             self.app.processEvents()

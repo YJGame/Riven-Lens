@@ -161,6 +161,8 @@
     "opt_exilus_none_opt": "（空槽）",
     "opt_search_exilus_ph": "搜索第9格特殊功能 Mod...",
     "opt_archetype_label": "流派：",
+    "opt_variant_label": "武器变种：",
+    "opt_valence_label": "效价加成：",
     "opt_empty_slot": "（空槽）",
     "opt_search_mod_ph": "输入Mod名 / 腐蚀 / 病毒 / 暴击...",
     "opt_search_arcane_ph": "输入赋能名称或效果搜索...",

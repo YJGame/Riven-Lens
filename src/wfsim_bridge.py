@@ -399,6 +399,8 @@ def build_wfsim_url(
     custom_exilus: Optional[str] = None,
     custom_build_label: Optional[str] = None,
     kitgun_slot: Optional[str] = None,
+    valence_element: Optional[str] = None,
+    valence_bonus: Optional[float] = None,
     origin: str = WFSIM_ORIGIN,
 ) -> WFSimLinkResult:
     """Build a WFSim v2 JSON (`0`/`1` prefix) share URL `https://wfsim.app/weapons/<id>?b=<code>`.
@@ -478,17 +480,22 @@ def build_wfsim_url(
         else []
     )
 
-    payload = [
+    payload: List[object] = [
         2,              # schema version
         weapon_id,      # WFSim weapon id
         "Riven Lens",   # build preset label
-        slots9,         # 9 slots (7 baseline mods + "~0" Riven + empty Exilus)
+        slots9,         # 9 slots (7 baseline mods + "~0" Riven + optional Exilus)
         list(arcanes),  # baseline arcane
         [],             # evolutions (let WFSim defaults apply)
         rivens_field,   # custom Riven carrying exact stat IDs & roll factors
         0,              # scenario (untouched)
         0,              # measurement (untouched)
     ]
+    val_el = (valence_element or "").strip().lower()
+    if val_el and valence_bonus is not None and float(valence_bonus) > 0:
+        clamped_vb = round(max(0.25, min(0.60, float(valence_bonus))), 3)
+        payload.append(0)                    # [9] mode (default)
+        payload.append([val_el, clamped_vb]) # [10] progenitor valence [element, bonus]
 
     code = encode_wfsim_share_code(payload)
     base = (origin or WFSIM_ORIGIN).rstrip("/")

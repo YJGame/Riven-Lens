@@ -1448,6 +1448,33 @@ class RivenEvaluator:
             entry = self.weapons[matched_name]
             return matched_name, entry["class"], float(entry["disposition"]), "database"
 
+        # Single-rare-CJK-character OCR garble recovery (e.g. "²沫者" / "2沫者" -> "啐沫者")
+        cjk_frag = "".join(ch for ch in cleaned if "\u4e00" <= ch <= "\u9fff")
+        if len(cjk_frag) >= 2:
+            # 1) Unique single-missing-char suffix/substring match among CJK weapon names
+            cand_plus1 = [
+                nm for nm in self.weapons
+                if len(nm) == len(cjk_frag) + 1
+                and all("\u4e00" <= c <= "\u9fff" for c in nm)
+                and (nm.endswith(cjk_frag) or nm.startswith(cjk_frag))
+            ]
+            if len(cand_plus1) == 1:
+                matched_name = cand_plus1[0]
+                entry = self.weapons[matched_name]
+                return matched_name, entry["class"], float(entry["disposition"]), "database"
+            # 2) Same-length 3+ CJK char name with at most 1 misread character (unique match)
+            if len(cleaned) >= 3:
+                cand_sub1 = [
+                    nm for nm in self.weapons
+                    if len(nm) == len(cleaned)
+                    and all("\u4e00" <= c <= "\u9fff" for c in nm)
+                    and sum(1 for a, b in zip(cleaned, nm) if a == b and "\u4e00" <= a <= "\u9fff") >= len(nm) - 1
+                ]
+                if len(cand_sub1) == 1:
+                    matched_name = cand_sub1[0]
+                    entry = self.weapons[matched_name]
+                    return matched_name, entry["class"], float(entry["disposition"]), "database"
+
         close_en = difflib.get_close_matches(low_clean, list(self.weapons_by_en.keys()), n=1, cutoff=0.78)
         if close_en:
             zh_key = self.weapons_by_en[close_en[0]]

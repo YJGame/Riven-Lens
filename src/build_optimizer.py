@@ -36,9 +36,10 @@ SCENARIO_KEYS: Tuple[str, ...] = (
     SCENARIO_BOSS_DIRECT,
 )
 
-# Hot Meta Build Archetypes (auto-pulled from weapon Incarnon / recommended_tiers / Riven traits, or user-selectable)
+# Hot Meta Build Archetypes (strictly filtered per weapon — inapplicable archetypes never shown!)
 ARCHETYPE_AUTO = "auto"
 ARCHETYPE_STANDARD = "standard_crit"
+ARCHETYPE_STATUS_DOT = "status_dot"
 ARCHETYPE_INCARNON_META = "incarnon_meta"
 ARCHETYPE_NON_CRIT = "non_crit_devour"
 ARCHETYPE_MELEE_INFLUENCE = "melee_influence"
@@ -48,6 +49,7 @@ ARCHETYPE_HEAVY_SLAM = "heavy_slam"
 ARCHETYPE_LABELS_ZH: Dict[str, str] = {
     ARCHETYPE_AUTO: "自动热门流派",
     ARCHETYPE_STANDARD: "常规双暴直伤",
+    ARCHETYPE_STATUS_DOT: "触发异常直伤流",
     ARCHETYPE_INCARNON_META: "灵化热门流派",
     ARCHETYPE_NON_CRIT: "灵化非暴吞噬流",
     ARCHETYPE_MELEE_INFLUENCE: "近战侵染清图流",
@@ -57,11 +59,97 @@ ARCHETYPE_LABELS_ZH: Dict[str, str] = {
 ARCHETYPE_LABELS_EN: Dict[str, str] = {
     ARCHETYPE_AUTO: "Auto Meta",
     ARCHETYPE_STANDARD: "Standard Crit",
+    ARCHETYPE_STATUS_DOT: "Status / DoT Meta",
     ARCHETYPE_INCARNON_META: "Incarnon Meta",
     ARCHETYPE_NON_CRIT: "Non-Crit Devouring",
     ARCHETYPE_MELEE_INFLUENCE: "Melee Influence AoE",
     ARCHETYPE_HEAVY_ATTACK: "Heavy Attack",
     ARCHETYPE_HEAVY_SLAM: "Heavy Slam",
+}
+
+# Progenitor Valence (效价加成) for Kuva (赤毒) / Tenet (信条) / Coda (终幕) adversary weapons
+PROGENITOR_ELEMENTS: Tuple[str, ...] = (
+    "toxin",
+    "heat",
+    "cold",
+    "electricity",
+    "magnetic",
+    "radiation",
+    "impact",
+)
+PROGENITOR_LABELS_ZH: Dict[str, str] = {
+    "toxin": "毒素",
+    "heat": "火焰",
+    "cold": "冰冻",
+    "electricity": "电击",
+    "magnetic": "磁力",
+    "radiation": "辐射",
+    "impact": "冲击",
+}
+PROGENITOR_LABELS_EN: Dict[str, str] = {
+    "toxin": "Toxin",
+    "heat": "Heat",
+    "cold": "Cold",
+    "electricity": "Electricity",
+    "magnetic": "Magnetic",
+    "radiation": "Radiation",
+    "impact": "Impact",
+}
+
+# Hot meta Progenitor Valence element defaults for Kuva / Tenet / Coda weapons
+_META_PROGENITOR_DEFAULTS: Dict[str, str] = {
+    # Kuva Primary / Secondary / Melee / Arch-Gun
+    "kuva_bramma": "toxin",
+    "kuva_zarr": "toxin",
+    "kuva_tonkor": "toxin",
+    "kuva_hek": "toxin",
+    "kuva_sobek": "toxin",
+    "kuva_kohm": "heat",
+    "kuva_ogris": "heat",
+    "kuva_chakkhurr": "toxin",
+    "kuva_hind": "toxin",
+    "kuva_karak": "toxin",
+    "kuva_quartakk": "toxin",
+    "kuva_drakgoon": "toxin",
+    "kuva_nukor": "magnetic",
+    "kuva_brakk": "heat",
+    "kuva_kraken": "toxin",
+    "kuva_seer": "magnetic",
+    "kuva_twin_stubbas": "heat",
+    "kuva_shildeg": "electricity",
+    "kuva_ghoulsaw": "electricity",
+    "kuva_grattler": "toxin",
+    "kuva_ayanga": "toxin",
+    # Tenet Primary / Secondary / Melee
+    "tenet_arca_plasmor": "magnetic",
+    "tenet_envoy": "toxin",
+    "tenet_glaxion": "magnetic",
+    "tenet_flux_rifle": "heat",
+    "tenet_ferrox": "toxin",
+    "tenet_tetra": "toxin",
+    "tenet_cycron": "magnetic",
+    "tenet_detron": "magnetic",
+    "tenet_plinx": "toxin",
+    "tenet_diplos": "toxin",
+    "tenet_spirex": "heat",
+    "tenet_agendus": "electricity",
+    "tenet_exec": "electricity",
+    "tenet_grigori": "electricity",
+    "tenet_livia": "electricity",
+    # Coda Primary / Secondary / Melee
+    "coda_bassocyst": "magnetic",
+    "coda_bubonico": "magnetic",
+    "coda_hema": "heat",
+    "coda_sporothrix": "heat",
+    "coda_synapse": "heat",
+    "coda_catabolyst": "magnetic",
+    "coda_tysis": "magnetic",
+    "coda_pox": "heat",
+    "coda_pathocyst": "electricity",
+    "coda_mire": "electricity",
+    "coda_hirudo": "electricity",
+    "coda_caustacyst": "electricity",
+    "coda_motovore": "impact",
 }
 
 _HEAVY_META_WEAPONS = frozenset(
@@ -71,22 +159,31 @@ _HEAVY_META_WEAPONS = frozenset(
         "edun", "pennant", "quassus", "quassus_prime", "harmony", "hate", "reaper_prime",
     }
 )
+_GLAIVE_SLUGS = frozenset(
+    {"glaive", "glaive_prime", "xoris", "falcor", "cerata", "orvius", "pathocyst", "coda_pathocyst", "kestrel", "halikar", "halikar_wraith"}
+)
 _SLAM_META_WEAPONS = frozenset(
     {
         "sampotes", "arca_titron", "magistar", "sancti_magistar", "fragor_prime", "wolf_sledge", "exec", "tenet_exec",
     }
 )
-_INCARNON_GUN_SLUGS = frozenset(
+# Only these 3 Zariman weapons have the +2000% Non-Crit Devouring/Overwhelming Attrition evolution!
+_ZARIMAN_NON_CRIT_FAMILIES = frozenset({"phenmor", "laetum", "felarx"})
+# Authoritative complete list of ALL Incarnon weapons in Warframe (45 Circuit Genesis + Zariman/Sanctum originals)
+_ALL_INCARNON_FAMILIES = frozenset(
     {
-        "torid", "burston", "burston_prime", "braton", "braton_prime", "latron", "latron_prime",
-        "strun", "strun_prime", "boar", "boar_prime", "soma", "soma_prime", "boltor", "boltor_prime",
-        "paris", "paris_prime", "dread", "miter", "gorgon", "dera", "sybaris", "sybaris_prime",
-        "lex", "lex_prime", "furis", "dual_toxocyst", "atomos", "angstrum", "sicarus", "sicarus_prime",
-        "vasto", "vasto_prime", "bronco", "bronco_prime", "kunai", "despair", "zylok", "gammacor", "cestra",
-        "phenmor", "felarx", "laetum", "onorix", "okina", "dual_ichor", "hate", "ceramic_dagger",
-        "magistar", "nami_solo", "sibear", "prisma_ohma", "innodem", "praedos", "thalys",
+        # Original Incarnon weapons
+        "phenmor", "laetum", "felarx", "innodem", "praedos", "onos", "ruvox", "thalys",
+        # All 45 Circuit Incarnon Genesis weapon families (verified against WFCD Misc.json)
+        "ack_and_brunt", "ack_brunt", "angstrum", "anku", "atomos", "ballistica", "bo", "boar",
+        "boltor", "braton", "bronco", "burston", "ceramic_dagger", "cestra", "dera", "despair",
+        "destreza", "dread", "dual_ichor", "dual_toxocyst", "furax", "furis", "gammacor", "gorgon",
+        "hate", "kunai", "lato", "latron", "lex", "magistar", "miter", "nami_solo", "obex",
+        "okina", "paris", "sibear", "sicarus", "skana", "soma", "strun", "stug", "sybaris",
+        "torid", "vasto", "vectis", "zylok",
     }
 )
+_INCARNON_GUN_SLUGS = _ALL_INCARNON_FAMILIES
 _HEAVY_CORE_MOD_IDS = frozenset(
     {
         "killing_blow", "amalgam_organ_shatter", "sacrificial_steel", "galvanized_reflex",
@@ -391,6 +488,8 @@ class BuildOptimizationResult:
     active_archetype_id: str = ARCHETYPE_STANDARD
     active_archetype_zh: str = ""
     active_archetype_en: str = ""
+    valence_element: Optional[str] = None
+    valence_bonus: float = 0.0
 
     @property
     def mod_ids(self) -> List[str]:
@@ -668,39 +767,295 @@ def get_exilus_pool(
     return [m for m in full if m.is_exilus]
 
 
-def get_available_archetypes_for_class(weapon_class: str) -> List[str]:
-    """Return ordered archetype keys selectable for `weapon_class`."""
+@dataclass(frozen=True)
+class WeaponVariantInfo:
+    """One selectable weapon variant inside a Riven-sharing weapon family."""
+
+    slug: str
+    name_zh: str
+    name_en: str
+    weapon_class: str
+    crit_chance: Optional[float] = None
+    crit_mult: Optional[float] = None
+    status_chance: Optional[float] = None
+    tier_rank: int = 2
+    is_adversary: bool = False
+
+
+_VARIANT_FAMILY_CACHE: Optional[Tuple[Dict[str, List[WeaponVariantInfo]], Dict[str, str]]] = None
+
+_VARIANT_SUFFIXES = ("_prime", "_wraith", "_vandal", "_umbra")
+_VARIANT_PREFIXES_ALL = (
+    "kuva_", "tenet_", "coda_", "prisma_", "mk1_", "vaykor_", "rakta_",
+    "sancti_", "secura_", "synoid_", "telos_", "carmine_", "mara_", "dex_",
+)
+# Non-adversary prefixes that CAN still equip Incarnon Genesis adapters
+_INCARNON_ELIGIBLE_PREFIXES = (
+    "prisma_", "mk1_", "vaykor_", "rakta_", "sancti_", "secura_", "synoid_", "telos_", "carmine_", "mara_", "dex_",
+)
+
+
+def is_progenitor_weapon(weapon_slug: str = "", weapon_name_en: str = "") -> bool:
+    """Return True if weapon is a Kuva (赤毒), Tenet (信条), or Coda (终幕) Progenitor Valence weapon."""
+    wkey = _norm_weapon_key(weapon_slug, weapon_name_en)
+    return wkey.startswith(("kuva_", "tenet_", "coda_"))
+
+
+def get_default_progenitor_element(
+    weapon_slug: str = "",
+    weapon_name_en: str = "",
+    weapon_class: str = "rifle",
+) -> str:
+    """Return the hottest meta Progenitor Valence element for a Kuva/Tenet/Coda weapon."""
+    wkey = _norm_weapon_key(weapon_slug, weapon_name_en)
+    if wkey in _META_PROGENITOR_DEFAULTS:
+        return _META_PROGENITOR_DEFAULTS[wkey]
     cls = (weapon_class or "rifle").strip().lower()
     if cls == "melee":
-        return [
-            ARCHETYPE_AUTO,
-            ARCHETYPE_MELEE_INFLUENCE,
-            ARCHETYPE_HEAVY_ATTACK,
-            ARCHETYPE_HEAVY_SLAM,
-            ARCHETYPE_STANDARD,
-        ]
+        return "electricity"
+    if cls == "pistol":
+        return "magnetic"
+    return "toxin"
+
+
+def _base_family_key(slug: str, *, allow_adversary: bool = True) -> str:
+    s = _norm_weapon_key(slug)
+    if not s:
+        return ""
+    # Preserve distinct non-sharing families (Mutalist Cernos/Quanta, Dragon Nikana, Dex Dakra/Furis/Sybaris? Wait: Dex Sybaris shares Sybaris!)
+    if s in ("mutalist_cernos", "mutalist_quanta", "dragon_nikana", "dex_dakra"):
+        return s
+    for suf in _VARIANT_SUFFIXES:
+        if s.endswith(suf) and len(s) > len(suf):
+            s = s[: -len(suf)]
+            break
+    prefixes = _VARIANT_PREFIXES_ALL if allow_adversary else _INCARNON_ELIGIBLE_PREFIXES
+    for pre in prefixes:
+        if s.startswith(pre) and len(s) > len(pre):
+            s = s[len(pre) :]
+            break
+    return s.strip("_")
+
+
+def is_incarnon_weapon(weapon_slug: str = "", weapon_name_en: str = "") -> bool:
+    """Return True ONLY if this exact weapon/variant actually has an Incarnon / Incarnon Genesis form."""
+    wkey = _norm_weapon_key(weapon_slug, weapon_name_en)
+    if not wkey or is_progenitor_weapon(wkey):
+        return False
+    if wkey in _ALL_INCARNON_FAMILIES:
+        return True
+    fam = _base_family_key(wkey, allow_adversary=False)
+    return fam in _ALL_INCARNON_FAMILIES
+
+
+def is_zariman_non_crit_weapon(weapon_slug: str = "", weapon_name_en: str = "") -> bool:
+    """Return True ONLY for Phenmor / Laetum / Felarx (+2000% Non-Crit Devouring Attrition)."""
+    wkey = _norm_weapon_key(weapon_slug, weapon_name_en)
+    return wkey in _ZARIMAN_NON_CRIT_FAMILIES
+
+
+def _variant_tier_rank(slug: str) -> int:
+    s = _norm_weapon_key(slug)
+    if s.endswith("_prime") or s.startswith(("kuva_", "tenet_", "coda_")) or s.endswith("_umbra"):
+        return 4
+    if s.endswith(("_wraith", "_vandal")) or s.startswith(
+        ("prisma_", "vaykor_", "rakta_", "sancti_", "secura_", "synoid_", "telos_", "carmine_", "mara_", "dex_")
+    ):
+        return 3
+    if s.startswith("mk1_"):
+        return 1
+    return 2
+
+
+def _resolve_weapons_riven_path() -> Optional[Path]:
+    candidates: List[Path] = []
+    if getattr(sys, "frozen", False):
+        exe_dir = Path(sys.executable).resolve().parent
+        candidates.append(exe_dir / "data" / "weapons_riven.json")
+        candidates.append(exe_dir / "_internal" / "data" / "weapons_riven.json")
+        meipass = getattr(sys, "_MEIPASS", None)
+        if meipass:
+            candidates.append(Path(meipass) / "data" / "weapons_riven.json")
+    candidates.append(Path(__file__).resolve().parent.parent / "data" / "weapons_riven.json")
+    for p in candidates:
+        if p.is_file():
+            return p
+    return None
+
+
+def _load_variant_families() -> Tuple[Dict[str, List[WeaponVariantInfo]], Dict[str, str]]:
+    global _VARIANT_FAMILY_CACHE
+    if _VARIANT_FAMILY_CACHE is not None:
+        return _VARIANT_FAMILY_CACHE
+
+    by_family: Dict[str, List[WeaponVariantInfo]] = {}
+    slug_to_family: Dict[str, str] = {}
+    path = _resolve_weapons_riven_path()
+    if path is None:
+        _VARIANT_FAMILY_CACHE = (by_family, slug_to_family)
+        return _VARIANT_FAMILY_CACHE
+
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        wmap = raw.get("weapons") if isinstance(raw, dict) else {}
+        if not isinstance(wmap, dict):
+            _VARIANT_FAMILY_CACHE = (by_family, slug_to_family)
+            return _VARIANT_FAMILY_CACHE
+
+        # Deduplicate aliases pointing to the same slug (prefer dotted canonical ZH name like "赤毒·布拉玛")
+        by_slug: Dict[str, Tuple[str, Dict[str, object]]] = {}
+        for zh_name, info in wmap.items():
+            if not isinstance(info, dict):
+                continue
+            slug = _norm_weapon_key(str(info.get("slug") or ""), str(info.get("en_name") or ""))
+            if not slug:
+                continue
+            prev = by_slug.get(slug)
+            if prev is None:
+                by_slug[slug] = (str(zh_name), info)
+            else:
+                prev_zh = prev[0]
+                # Prefer name with '·' or ' Prime' or longer canonical form over stripped alias
+                score_new = (2 if "·" in zh_name else 0) + (2 if "Prime" in zh_name else 0) + len(zh_name)
+                score_old = (2 if "·" in prev_zh else 0) + (2 if "Prime" in prev_zh else 0) + len(prev_zh)
+                if score_new > score_old:
+                    by_slug[slug] = (str(zh_name), info)
+
+        for slug, (zh_name, info) in by_slug.items():
+            w_cls = str(info.get("riven_class") or info.get("class") or "rifle").strip().lower()
+            en_name = str(info.get("en_name") or slug).strip()
+            fam = _base_family_key(slug, allow_adversary=True)
+            if not fam:
+                continue
+            fam_key = f"{w_cls}:{fam}"
+            vinfo = WeaponVariantInfo(
+                slug=slug,
+                name_zh=zh_name,
+                name_en=en_name,
+                weapon_class=w_cls,
+                crit_chance=float(info["crit_chance"]) if info.get("crit_chance") is not None else None,
+                crit_mult=float(info["crit_mult"]) if info.get("crit_mult") is not None else None,
+                status_chance=float(info["status_chance"]) if info.get("status_chance") is not None else None,
+                tier_rank=_variant_tier_rank(slug),
+                is_adversary=is_progenitor_weapon(slug, en_name),
+            )
+            by_family.setdefault(fam_key, []).append(vinfo)
+            slug_to_family[slug] = fam_key
+
+        # Sort each family: strongest variant FIRST (Prime / Coda / Tenet / Kuva > Prisma/Wraith/Vandal/Syndicate > Base > MK1)
+        for fk, vlist in by_family.items():
+            vlist.sort(
+                key=lambda v: (
+                    -v.tier_rank,
+                    -(1 if v.slug.endswith("_prime") else 0),
+                    -(float(v.crit_chance or 0.0) * float(v.crit_mult or 1.5) + float(v.status_chance or 0.0)),
+                    v.name_en,
+                )
+            )
+    except Exception:
+        pass
+
+    _VARIANT_FAMILY_CACHE = (by_family, slug_to_family)
+    return _VARIANT_FAMILY_CACHE
+
+
+def get_weapon_variants(
+    weapon_slug: str = "",
+    weapon_name_en: str = "",
+    weapon_class: str = "rifle",
+) -> List[WeaponVariantInfo]:
+    """Return all Riven-sharing variants of this weapon, ordered with the strongest variant FIRST."""
+    by_family, slug_to_family = _load_variant_families()
+    wkey = _norm_weapon_key(weapon_slug, weapon_name_en)
+    if not wkey:
+        return []
+    fam_key = slug_to_family.get(wkey)
+    if not fam_key:
+        fam = _base_family_key(wkey, allow_adversary=True)
+        cls = (weapon_class or "rifle").strip().lower()
+        fam_key = f"{cls}:{fam}"
+    variants = by_family.get(fam_key, [])
+    if len(variants) <= 1:
+        return list(variants)
+    return list(variants)
+
+
+def apply_variant_to_evaluation(ev: RivenEvaluation, variant: WeaponVariantInfo) -> RivenEvaluation:
+    """Return a lightweight copy of `ev` targeting the selected upgraded `variant` (preserving Riven stats)."""
+    from dataclasses import replace
+
+    return replace(
+        ev,
+        weapon_name=variant.name_zh,
+        weapon_name_en=variant.name_en,
+        weapon_slug=variant.slug,
+        weapon_class=variant.weapon_class or ev.weapon_class,
+        weapon_crit_chance=variant.crit_chance if variant.crit_chance is not None else ev.weapon_crit_chance,
+        weapon_crit_mult=variant.crit_mult if variant.crit_mult is not None else ev.weapon_crit_mult,
+        weapon_status_chance=variant.status_chance if variant.status_chance is not None else ev.weapon_status_chance,
+    )
+
+
+def get_available_archetypes_for_weapon(
+    weapon_class: str,
+    *,
+    weapon_slug: str = "",
+    weapon_name_en: str = "",
+    crit_chance: Optional[float] = None,
+    status_chance: Optional[float] = None,
+) -> List[str]:
+    """Return ONLY build archetypes truly applicable to this specific weapon (never shows Incarnon on non-Incarnon!)."""
+    cls = (weapon_class or "rifle").strip().lower()
+    wkey = _norm_weapon_key(weapon_slug, weapon_name_en)
+
     if cls == "archgun":
-        return [ARCHETYPE_AUTO, ARCHETYPE_STANDARD]
-    return [
-        ARCHETYPE_AUTO,
-        ARCHETYPE_INCARNON_META,
-        ARCHETYPE_STANDARD,
-        ARCHETYPE_NON_CRIT,
-    ]
+        return [ARCHETYPE_STANDARD]
+
+    if cls == "melee":
+        opts = [ARCHETYPE_AUTO, ARCHETYPE_MELEE_INFLUENCE, ARCHETYPE_HEAVY_ATTACK]
+        if wkey not in _GLAIVE_SLUGS:
+            opts.append(ARCHETYPE_HEAVY_SLAM)
+        opts.append(ARCHETYPE_STANDARD)
+        return opts
+
+    # Ranged guns (rifle / shotgun / pistol): strictly check Incarnon & Zariman Non-Crit eligibility!
+    has_incarnon = is_incarnon_weapon(weapon_slug, weapon_name_en)
+    has_non_crit = is_zariman_non_crit_weapon(weapon_slug, weapon_name_en)
+    cc = float(crit_chance) if (crit_chance is not None and crit_chance > 0) else 0.22
+    sc = float(status_chance) if (status_chance is not None and status_chance > 0) else 0.20
+    is_status_viable = (sc >= 0.28) or (cc <= 0.16 and sc >= 0.22)
+
+    real_opts: List[str] = []
+    if has_non_crit:
+        real_opts.append(ARCHETYPE_NON_CRIT)
+    if has_incarnon:
+        real_opts.append(ARCHETYPE_INCARNON_META)
+    real_opts.append(ARCHETYPE_STANDARD)
+    if is_status_viable and not has_non_crit:
+        real_opts.append(ARCHETYPE_STATUS_DOT)
+
+    if len(real_opts) <= 1:
+        return real_opts
+    return [ARCHETYPE_AUTO] + real_opts
+
+
+def get_available_archetypes_for_class(weapon_class: str) -> List[str]:
+    """Backward-compatible wrapper returning default class-level archetypes."""
+    return get_available_archetypes_for_weapon(weapon_class)
 
 
 def detect_meta_archetype(
     ev: RivenEvaluation,
     riven_prof: Optional[Dict[str, object]] = None,
 ) -> Tuple[str, str, str]:
-    """Auto-detect the hottest meta build archetype from weapon Incarnon rules & scanned Riven stats."""
+    """Auto-detect the hottest applicable meta build archetype for this specific weapon & Riven."""
     w_cls = (ev.weapon_class or "rifle").strip().lower()
     wkey = _norm_weapon_key(ev.weapon_slug, ev.weapon_name_en)
     matched_id = (ev.matched_archetype_id or "").strip().lower()
     matched_zh = (ev.matched_archetype_name or "").strip()
     matched_en = (ev.matched_archetype_name_en or "").strip()
 
-    if matched_id == "non_crit_devour" or wkey in ("laetum", "phenmor", "felarx"):
+    if is_zariman_non_crit_weapon(ev.weapon_slug, ev.weapon_name_en) or matched_id == "non_crit_devour":
         return (
             ARCHETYPE_NON_CRIT,
             matched_zh or ARCHETYPE_LABELS_ZH[ARCHETYPE_NON_CRIT],
@@ -711,7 +1066,7 @@ def detect_meta_archetype(
         r_slam = float((riven_prof or {}).get("slam_dmg", 0.0))
         r_heavy = float((riven_prof or {}).get("heavy_dmg", 0.0))
         r_ic = float((riven_prof or {}).get("initial_combo", 0.0))
-        if matched_id == "heavy_slam" or wkey in _SLAM_META_WEAPONS or r_slam >= 0.4:
+        if (wkey not in _GLAIVE_SLUGS) and (matched_id == "heavy_slam" or wkey in _SLAM_META_WEAPONS or r_slam >= 0.4):
             return (
                 ARCHETYPE_HEAVY_SLAM,
                 matched_zh or ARCHETYPE_LABELS_ZH[ARCHETYPE_HEAVY_SLAM],
@@ -723,23 +1078,26 @@ def detect_meta_archetype(
                 matched_zh or ARCHETYPE_LABELS_ZH[ARCHETYPE_HEAVY_ATTACK],
                 matched_en or ARCHETYPE_LABELS_EN[ARCHETYPE_HEAVY_ATTACK],
             )
-        if matched_id == "melee_influence" or wkey in _INCARNON_GUN_SLUGS:
-            return (
-                ARCHETYPE_MELEE_INFLUENCE,
-                matched_zh or ARCHETYPE_LABELS_ZH[ARCHETYPE_MELEE_INFLUENCE],
-                matched_en or ARCHETYPE_LABELS_EN[ARCHETYPE_MELEE_INFLUENCE],
-            )
         return (
             ARCHETYPE_MELEE_INFLUENCE,
-            ARCHETYPE_LABELS_ZH[ARCHETYPE_MELEE_INFLUENCE],
-            ARCHETYPE_LABELS_EN[ARCHETYPE_MELEE_INFLUENCE],
+            matched_zh or ARCHETYPE_LABELS_ZH[ARCHETYPE_MELEE_INFLUENCE],
+            matched_en or ARCHETYPE_LABELS_EN[ARCHETYPE_MELEE_INFLUENCE],
         )
 
-    if wkey in _INCARNON_GUN_SLUGS or (matched_zh and "灵化" in matched_zh):
+    if is_incarnon_weapon(ev.weapon_slug, ev.weapon_name_en):
         return (
             ARCHETYPE_INCARNON_META,
             matched_zh or ARCHETYPE_LABELS_ZH[ARCHETYPE_INCARNON_META],
             matched_en or ARCHETYPE_LABELS_EN[ARCHETYPE_INCARNON_META],
+        )
+
+    cc = float(ev.weapon_crit_chance) if (ev.weapon_crit_chance and ev.weapon_crit_chance > 0) else 0.22
+    sc = float(ev.weapon_status_chance) if (ev.weapon_status_chance and ev.weapon_status_chance > 0) else 0.20
+    if w_cls != "archgun" and cc <= 0.15 and sc >= 0.30:
+        return (
+            ARCHETYPE_STATUS_DOT,
+            ARCHETYPE_LABELS_ZH[ARCHETYPE_STATUS_DOT],
+            ARCHETYPE_LABELS_EN[ARCHETYPE_STATUS_DOT],
         )
 
     return (
@@ -1168,16 +1526,22 @@ def _score_build(
     arcane: Optional[ArcaneDef],
     scenario: str,
     archetype_id: str = ARCHETYPE_STANDARD,
+    valence_element: Optional[str] = None,
+    valence_bonus: float = 0.0,
 ) -> Tuple[float, Set[str], Set[str]]:
-    """Compute realistic expected combat DPS score for `(weapon + riven + mods + arcane + archetype)`."""
+    """Compute realistic expected combat DPS score for `(weapon + valence + riven + mods + arcane + archetype)`."""
     is_melee = ev.weapon_class == "melee"
     is_non_crit = archetype_id == ARCHETYPE_NON_CRIT or ev.matched_archetype_id == "non_crit_devour"
+    is_status_dot = archetype_id == ARCHETYPE_STATUS_DOT
     is_heavy = is_melee and archetype_id in (ARCHETYPE_HEAVY_ATTACK, ARCHETYPE_HEAVY_SLAM)
     is_slam = is_melee and archetype_id == ARCHETYPE_HEAVY_SLAM
 
     w_cc = float(ev.weapon_crit_chance) if (ev.weapon_crit_chance and ev.weapon_crit_chance > 0) else (0.24 if is_melee else 0.22)
     w_cd = float(ev.weapon_crit_mult) if (ev.weapon_crit_mult and ev.weapon_crit_mult > 1.0) else (2.2 if is_melee else 2.0)
     w_sc = float(ev.weapon_status_chance) if (ev.weapon_status_chance and ev.weapon_status_chance > 0) else 0.20
+
+    val_el = (valence_element or "").strip().lower()
+    val_b = max(0.0, min(0.60, float(valence_bonus or 0.0))) if val_el else 0.0
 
     dmg = 1.0
     ms = 1.0
@@ -1200,6 +1564,11 @@ def _score_build(
 
     base_elems: Set[str] = set()
     comp_elems: Set[str] = set()
+    if val_el and val_b > 0:
+        if val_el in ("magnetic", "radiation"):
+            comp_elems.add(val_el)
+        elif val_el in ("toxin", "cold", "heat", "electricity"):
+            base_elems.add(val_el)
 
     if riven_prof is not None:
         dmg += float(riven_prof["damage"])
@@ -1374,12 +1743,16 @@ def _score_build(
         utility *= 1.0 + min(3.0, max(0.0, punch_through)) * (0.06 if scenario != SCENARIO_BOSS_DIRECT else 0.015)
         utility *= max(0.82, 1.0 + reload_bonus * 0.16)
 
-    # Status Damage scaling on non-Heat/non-HM procs
+    # Status Damage scaling on non-Heat/non-HM procs (boosted further in Status / DoT archetype)
     if st_dmg > 1.0 and "heat" not in rem_elems and not has_hm:
-        dot_share = 0.22 if w_sc >= 0.22 else 0.10
+        dot_share = 0.48 if is_status_dot else (0.22 if w_sc >= 0.22 else 0.10)
         utility *= 1.0 + (st_dmg - 1.0) * dot_share * max(0.35, proc_uptime)
+    if is_status_dot:
+        utility *= 1.0 + 0.30 * max(0.0, proc_uptime)
 
-    score = dmg * ms * fr * elem * crit_mult * faction * weakpoint * elem_synergy * utility
+    # Progenitor Valence directly multiplies weapon base damage by (1 + valence_bonus)
+    val_mult = 1.0 + val_b
+    score = val_mult * dmg * ms * fr * elem * crit_mult * faction * weakpoint * elem_synergy * utility
     return score, comps, rem_elems
 
 
@@ -1389,6 +1762,8 @@ def compute_build_stat_summary(
     mods: Sequence[ModDef],
     arcane: Optional[ArcaneDef],
     scenario: str = SCENARIO_STEEL_PATH,
+    valence_element: Optional[str] = None,
+    valence_bonus: float = 0.0,
 ) -> BuildStatSummary:
     """Compute human-readable overall build stats with concrete values + percentages & per-element breakdown."""
     w_cls = (ev.weapon_class or "rifle").strip().lower()
@@ -1398,7 +1773,10 @@ def compute_build_stat_summary(
     w_sc = float(ev.weapon_status_chance) if (ev.weapon_status_chance and ev.weapon_status_chance > 0) else 0.20
 
     base_stats = get_weapon_base_stats(ev.weapon_slug, ev.weapon_name_en, w_cls)
-    w_base_dmg = float(base_stats.get("base_damage", 100.0))
+    val_el = (valence_element or "").strip().lower()
+    val_b = max(0.0, min(0.60, float(valence_bonus or 0.0))) if val_el else 0.0
+    # Kuva/Tenet/Coda Valence multiplies base weapon damage by (1 + valence_bonus)
+    w_base_dmg = float(base_stats.get("base_damage", 100.0)) * (1.0 + val_b)
     w_base_fr = float(base_stats.get("fire_rate", 1.0))
     w_base_ms = float(base_stats.get("multishot", 1.0))
     w_base_rng = float(base_stats.get("range_m", 2.5 if is_melee else 0.0))
@@ -1467,6 +1845,14 @@ def compute_build_stat_summary(
     if arcane is not None and arcane.corrosive_bonus > 0:
         elem += arcane.corrosive_bonus
         comp_elem_vals["corrosive"] = comp_elem_vals.get("corrosive", 0.0) + arcane.corrosive_bonus
+
+    # Innate Progenitor Valence element combines AFTER Mods & Riven (adds innate share `val_b / (1 + val_b)` of total base)
+    if val_el and val_b > 0:
+        innate_share = val_b / (1.0 + val_b)
+        if val_el in ("magnetic", "radiation"):
+            comp_elem_vals[val_el] = comp_elem_vals.get(val_el, 0.0) + innate_share
+        elif val_el in ("toxin", "cold", "heat", "electricity"):
+            base_elem_vals[val_el] = base_elem_vals.get(val_el, 0.0) + innate_share
 
     comps, rem_elems, final_elem_vals = _combine_elements_with_values(
         base_elem_vals,
@@ -1556,6 +1942,8 @@ def _optimize_for_arcane(
     scenario: str,
     slots: int = 7,
     archetype_id: str = ARCHETYPE_STANDARD,
+    valence_element: Optional[str] = None,
+    valence_bonus: float = 0.0,
 ) -> Tuple[List[ModDef], float, Set[str], Set[str]]:
     chosen: List[ModDef] = []
 
@@ -1569,14 +1957,20 @@ def _optimize_for_arcane(
         for cand in pool:
             if _conflict_with(cand, chosen):
                 continue
-            sc, _, _ = _score_build(ev, riven_prof, chosen + [cand], arcane, scenario, archetype_id=archetype_id)
+            sc, _, _ = _score_build(
+                ev, riven_prof, chosen + [cand], arcane, scenario,
+                archetype_id=archetype_id, valence_element=valence_element, valence_bonus=valence_bonus,
+            )
             if sc > best_score:
                 best_score = sc
                 best_next = cand
 
         # 2-step lookahead for elemental pairs when >= 2 slots remain
         if len(chosen) <= slots - 2:
-            base_now, _, _ = _score_build(ev, riven_prof, chosen, arcane, scenario, archetype_id=archetype_id)
+            base_now, _, _ = _score_build(
+                ev, riven_prof, chosen, arcane, scenario,
+                archetype_id=archetype_id, valence_element=valence_element, valence_bonus=valence_bonus,
+            )
             best_pair_avg = (best_score - base_now) if best_score > base_now else 0.0
             for i, m1 in enumerate(elem_mods):
                 if _conflict_with(m1, chosen):
@@ -1584,7 +1978,10 @@ def _optimize_for_arcane(
                 for m2 in elem_mods[i + 1 :]:
                     if m1.element == m2.element or _conflict_with(m2, chosen) or _conflict_with(m2, [m1]):
                         continue
-                    sc2, _, _ = _score_build(ev, riven_prof, chosen + [m1, m2], arcane, scenario, archetype_id=archetype_id)
+                    sc2, _, _ = _score_build(
+                        ev, riven_prof, chosen + [m1, m2], arcane, scenario,
+                        archetype_id=archetype_id, valence_element=valence_element, valence_bonus=valence_bonus,
+                    )
                     avg_gain = (sc2 - base_now) * 0.52
                     if avg_gain > best_pair_avg:
                         best_pair_avg = avg_gain
@@ -1595,7 +1992,10 @@ def _optimize_for_arcane(
         chosen.append(best_next)
 
     # Step 2: Coordinate-descent 1-swap local refinement until convergence
-    cur_score, cur_comps, cur_rem = _score_build(ev, riven_prof, chosen, arcane, scenario, archetype_id=archetype_id)
+    cur_score, cur_comps, cur_rem = _score_build(
+        ev, riven_prof, chosen, arcane, scenario,
+        archetype_id=archetype_id, valence_element=valence_element, valence_bonus=valence_bonus,
+    )
     for _ in range(4):
         improved = False
         for idx in range(len(chosen)):
@@ -1605,7 +2005,10 @@ def _optimize_for_arcane(
             for cand in pool:
                 if cand.id == chosen[idx].id or _conflict_with(cand, others):
                     continue
-                sc, _, _ = _score_build(ev, riven_prof, others + [cand], arcane, scenario, archetype_id=archetype_id)
+                sc, _, _ = _score_build(
+                    ev, riven_prof, others + [cand], arcane, scenario,
+                    archetype_id=archetype_id, valence_element=valence_element, valence_bonus=valence_bonus,
+                )
                 if sc > best_sc * 1.0005:
                     best_sc = sc
                     best_m = cand
@@ -1616,7 +2019,10 @@ def _optimize_for_arcane(
         if not improved:
             break
 
-    cur_score, cur_comps, cur_rem = _score_build(ev, riven_prof, chosen, arcane, scenario, archetype_id=archetype_id)
+    cur_score, cur_comps, cur_rem = _score_build(
+        ev, riven_prof, chosen, arcane, scenario,
+        archetype_id=archetype_id, valence_element=valence_element, valence_bonus=valence_bonus,
+    )
     return chosen, cur_score, cur_comps, cur_rem
 
 
@@ -1652,10 +2058,20 @@ def optimize_build_for_riven(
     scenario: str = SCENARIO_STEEL_PATH,
     allow_bane_mods: bool = True,
     archetype: str = ARCHETYPE_AUTO,
+    valence_element: Optional[str] = None,
+    valence_bonus: Optional[float] = None,
 ) -> BuildOptimizationResult:
-    """Find the optimal 7 Mods + Arcane complementing the scanned Riven & hot meta archetype (<30ms offline)."""
+    """Find the optimal 7 Mods + Arcane complementing the scanned Riven, Progenitor Valence & hot meta archetype (<30ms)."""
     w_cls = (ev.weapon_class or "rifle").strip().lower()
     riven_prof = _extract_riven_profile(ev)
+
+    eff_val_el: Optional[str] = None
+    eff_val_bonus: float = 0.0
+    if is_progenitor_weapon(ev.weapon_slug, ev.weapon_name_en):
+        eff_val_el = (valence_element or "").strip().lower() or get_default_progenitor_element(
+            ev.weapon_slug, ev.weapon_name_en, w_cls
+        )
+        eff_val_bonus = max(0.25, min(0.60, float(valence_bonus if valence_bonus is not None else 0.60)))
 
     if not archetype or archetype == ARCHETYPE_AUTO:
         arch_id, arch_zh, arch_en = detect_meta_archetype(ev, riven_prof)
@@ -1701,7 +2117,8 @@ def optimize_build_for_riven(
 
     for arc in arcanes:
         mods, sc, comps, rem = _optimize_for_arcane(
-            ev, riven_prof, pool, arc, scenario, slots=7, archetype_id=arch_id
+            ev, riven_prof, pool, arc, scenario, slots=7, archetype_id=arch_id,
+            valence_element=eff_val_el, valence_bonus=eff_val_bonus,
         )
         if sc > best_score:
             best_score = sc
@@ -1714,12 +2131,18 @@ def optimize_build_for_riven(
     slot_results: List[OptimizedModSlot] = []
     for i, m in enumerate(best_mods):
         without_m = best_mods[:i] + best_mods[i + 1 :]
-        sc_without, _, _ = _score_build(ev, riven_prof, without_m, best_arcane, scenario, archetype_id=arch_id)
+        sc_without, _, _ = _score_build(
+            ev, riven_prof, without_m, best_arcane, scenario,
+            archetype_id=arch_id, valence_element=eff_val_el, valence_bonus=eff_val_bonus,
+        )
         gain_pct = round(((best_score / sc_without) - 1.0) * 100.0, 1) if sc_without > 0 else 0.0
         slot_results.append(OptimizedModSlot(mod=m, marginal_gain_pct=gain_pct))
     slot_results.sort(key=lambda s: s.marginal_gain_pct, reverse=True)
 
-    sc_no_riven, _, _ = _score_build(ev, None, best_mods, best_arcane, scenario, archetype_id=arch_id)
+    sc_no_riven, _, _ = _score_build(
+        ev, None, best_mods, best_arcane, scenario,
+        archetype_id=arch_id, valence_element=eff_val_el, valence_bonus=eff_val_bonus,
+    )
     riven_gain_pct = round(((best_score / sc_no_riven) - 1.0) * 100.0, 1) if sc_no_riven > 0 else 0.0
 
     # Format active elements & smart human-readable explanations
@@ -1765,11 +2188,20 @@ def optimize_build_for_riven(
         rationale_zh.append("保留独立【电击】触发【近战·侵染】大范围异常扩散清图体系")
         rationale_en.append("Preserved standalone [Electricity] to trigger [Melee Influence] AoE spread")
 
+    if eff_val_el and eff_val_bonus > 0:
+        ve_zh = PROGENITOR_LABELS_ZH.get(eff_val_el, eff_val_el)
+        ve_en = PROGENITOR_LABELS_EN.get(eff_val_el, eff_val_el)
+        rationale_zh.insert(0, f"效价加成【{int(round(eff_val_bonus * 100))}% {ve_zh}】已计入基础伤害与元素组合（可顶部自由切换）")
+        rationale_en.insert(0, f"Progenitor Valence [{int(round(eff_val_bonus * 100))}% {ve_en}] factored into base damage & elemental merging")
+
     if not rationale_zh:
         rationale_zh.append("已按当前紫卡词条自动平衡双暴、多重、射速与元素乘区，避免重复稀释")
         rationale_en.append("Balanced Crit, Multishot, Fire Rate & Elemental multipliers around your scanned Riven")
 
-    stat_summary = compute_build_stat_summary(ev, riven_prof, best_mods, best_arcane, scenario)
+    stat_summary = compute_build_stat_summary(
+        ev, riven_prof, best_mods, best_arcane, scenario,
+        valence_element=eff_val_el, valence_bonus=eff_val_bonus,
+    )
     return BuildOptimizationResult(
         weapon_name=ev.weapon_name or ev.weapon_name_en or "",
         weapon_class=w_cls,
@@ -1788,6 +2220,8 @@ def optimize_build_for_riven(
         active_archetype_id=arch_id,
         active_archetype_zh=arch_zh,
         active_archetype_en=arch_en,
+        valence_element=eff_val_el,
+        valence_bonus=eff_val_bonus,
     )
 
 
@@ -1800,9 +2234,19 @@ def evaluate_custom_build_for_riven(
     reference_score: Optional[float] = None,
     exilus_mod_id: Optional[str] = None,
     archetype: str = ARCHETYPE_AUTO,
+    valence_element: Optional[str] = None,
+    valence_bonus: Optional[float] = None,
 ) -> BuildOptimizationResult:
-    """Evaluate a user-customized 0..7 Mod + Exilus (#9) + Arcane combination around the scanned Riven (<2ms)."""
+    """Evaluate a user-customized 0..7 Mod + Exilus (#9) + Arcane + Valence combination around the scanned Riven (<2ms)."""
     w_cls = (ev.weapon_class or "rifle").strip().lower()
+    eff_val_el: Optional[str] = None
+    eff_val_bonus: float = 0.0
+    if is_progenitor_weapon(ev.weapon_slug, ev.weapon_name_en):
+        eff_val_el = (valence_element or "").strip().lower() or get_default_progenitor_element(
+            ev.weapon_slug, ev.weapon_name_en, w_cls
+        )
+        eff_val_bonus = max(0.25, min(0.60, float(valence_bonus if valence_bonus is not None else 0.60)))
+
     pool = get_mod_pool(
         w_cls,
         allow_bane_mods=True,
@@ -1841,16 +2285,25 @@ def evaluate_custom_build_for_riven(
         arch_en = ARCHETYPE_LABELS_EN.get(arch_id, arch_id)
 
     all_active_mods = chosen_mods + ([exilus_mod] if exilus_mod is not None else [])
-    score, comps, rem = _score_build(ev, riven_prof, all_active_mods, chosen_arcane, scenario, archetype_id=arch_id)
+    score, comps, rem = _score_build(
+        ev, riven_prof, all_active_mods, chosen_arcane, scenario,
+        archetype_id=arch_id, valence_element=eff_val_el, valence_bonus=eff_val_bonus,
+    )
 
     slot_results: List[OptimizedModSlot] = []
     for i, m in enumerate(chosen_mods):
         without_m = chosen_mods[:i] + chosen_mods[i + 1 :] + ([exilus_mod] if exilus_mod is not None else [])
-        sc_without, _, _ = _score_build(ev, riven_prof, without_m, chosen_arcane, scenario, archetype_id=arch_id)
+        sc_without, _, _ = _score_build(
+            ev, riven_prof, without_m, chosen_arcane, scenario,
+            archetype_id=arch_id, valence_element=eff_val_el, valence_bonus=eff_val_bonus,
+        )
         gain_pct = round(((score / sc_without) - 1.0) * 100.0, 1) if sc_without > 0 else 0.0
         slot_results.append(OptimizedModSlot(mod=m, marginal_gain_pct=gain_pct))
 
-    sc_no_riven, _, _ = _score_build(ev, None, all_active_mods, chosen_arcane, scenario, archetype_id=arch_id)
+    sc_no_riven, _, _ = _score_build(
+        ev, None, all_active_mods, chosen_arcane, scenario,
+        archetype_id=arch_id, valence_element=eff_val_el, valence_bonus=eff_val_bonus,
+    )
     riven_gain_pct = round(((score / sc_no_riven) - 1.0) * 100.0, 1) if sc_no_riven > 0 else 0.0
 
     delta_vs_rec: Optional[float] = None
@@ -1894,7 +2347,10 @@ def evaluate_custom_build_for_riven(
             rationale_zh.append("当前自定义配卡与自动推荐强度基本持平，可一键跳转 WFSim 精确逐帧验证")
             rationale_en.append("Custom build matches the auto-recommended DPS closely; verify in WFSim anytime")
 
-    stat_summary = compute_build_stat_summary(ev, riven_prof, all_active_mods, chosen_arcane, scenario)
+    stat_summary = compute_build_stat_summary(
+        ev, riven_prof, all_active_mods, chosen_arcane, scenario,
+        valence_element=eff_val_el, valence_bonus=eff_val_bonus,
+    )
     return BuildOptimizationResult(
         weapon_name=ev.weapon_name or ev.weapon_name_en or "",
         weapon_class=w_cls,
@@ -1913,4 +2369,6 @@ def evaluate_custom_build_for_riven(
         active_archetype_id=arch_id,
         active_archetype_zh=arch_zh,
         active_archetype_en=arch_en,
+        valence_element=eff_val_el,
+        valence_bonus=eff_val_bonus,
     )

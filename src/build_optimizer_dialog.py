@@ -33,6 +33,7 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QScrollArea,
     QSizePolicy,
+    QSpinBox,
     QToolButton,
     QVBoxLayout,
     QWidget,
@@ -42,19 +43,27 @@ from src.build_optimizer import (
     ARCHETYPE_AUTO,
     ARCHETYPE_LABELS_EN,
     ARCHETYPE_LABELS_ZH,
+    PROGENITOR_ELEMENTS,
+    PROGENITOR_LABELS_EN,
+    PROGENITOR_LABELS_ZH,
     SCENARIO_KEYS,
     SCENARIO_STEEL_PATH,
     ArcaneDef,
     BuildOptimizationResult,
     BuildStatSummary,
     ModDef,
+    WeaponVariantInfo,
+    apply_variant_to_evaluation,
     categorize_mods_for_menu,
     evaluate_custom_build_for_riven,
     format_mod_stats,
     get_arcane_pool,
-    get_available_archetypes_for_class,
+    get_available_archetypes_for_weapon,
+    get_default_progenitor_element,
     get_exilus_pool,
     get_mod_pool,
+    get_weapon_variants,
+    is_progenitor_weapon,
     match_mod_search,
     optimize_build_for_riven,
 )
@@ -550,8 +559,13 @@ class BuildOptimizerDialog(QDialog):
         self._scenario: str = SCENARIO_STEEL_PATH
         self._archetype: str = ARCHETYPE_AUTO
         self._no_bane: bool = False
+        self._base_eval: Optional[RivenEvaluation] = None
         self._current_eval: Optional[RivenEvaluation] = None
         self._current_riven: Optional[RivenData] = None
+        self._variants: List[WeaponVariantInfo] = []
+        self._selected_variant_slug: Optional[str] = None
+        self._valence_element: Optional[str] = None
+        self._valence_bonus: float = 0.60
         self._recommended_result: Optional[BuildOptimizationResult] = None
         self._last_result: Optional[BuildOptimizationResult] = None
         self._slot_mod_ids: List[Optional[str]] = [None] * 7
@@ -632,7 +646,7 @@ class BuildOptimizerDialog(QDialog):
         self._scroll_area.setWidget(self._scroll_body)
         root.addWidget(self._scroll_area, stretch=1)
 
-        # Control Bar Row 1: Scenario selector pills
+        # Control Bar Row 1: Scenario selector pills + Variant selector (shown only when variants exist)
         ctrl_row_1 = QHBoxLayout()
         ctrl_row_1.setSpacing(8)
         for skey in SCENARIO_KEYS:
@@ -644,9 +658,18 @@ class BuildOptimizerDialog(QDialog):
             self._scenario_btns[skey] = btn
             ctrl_row_1.addWidget(btn)
         ctrl_row_1.addStretch(1)
+
+        self._lbl_variant = QLabel("")
+        self._cmb_variant = QComboBox()
+        self._cmb_variant.setMinimumWidth(145)
+        self._cmb_variant.currentIndexChanged.connect(self._on_variant_combo_changed)
+        self._lbl_variant.hide()
+        self._cmb_variant.hide()
+        ctrl_row_1.addWidget(self._lbl_variant)
+        ctrl_row_1.addWidget(self._cmb_variant)
         body_lay.addLayout(ctrl_row_1)
 
-        # Control Bar Row 2: Hot Meta Archetype + No-Bane toggle + Reset button (never overflows horizontally!)
+        # Control Bar Row 2: Applicable Archetype + Progenitor Valence (Kuva/Tenet/Coda only!) + No-Bane + Reset
         ctrl_row_2 = QHBoxLayout()
         ctrl_row_2.setSpacing(10)
         self._lbl_archetype = QLabel("")
@@ -655,6 +678,23 @@ class BuildOptimizerDialog(QDialog):
         self._cmb_archetype.currentIndexChanged.connect(self._on_archetype_combo_changed)
         ctrl_row_2.addWidget(self._lbl_archetype)
         ctrl_row_2.addWidget(self._cmb_archetype)
+
+        self._lbl_valence = QLabel("")
+        self._cmb_valence_elem = QComboBox()
+        self._cmb_valence_elem.setMinimumWidth(86)
+        self._cmb_valence_elem.currentIndexChanged.connect(self._on_valence_changed)
+        self._spin_valence_pct = QSpinBox()
+        self._spin_valence_pct.setRange(25, 60)
+        self._spin_valence_pct.setValue(60)
+        self._spin_valence_pct.setSuffix("%")
+        self._spin_valence_pct.setFixedWidth(74)
+        self._spin_valence_pct.valueChanged.connect(self._on_valence_changed)
+        self._lbl_valence.hide()
+        self._cmb_valence_elem.hide()
+        self._spin_valence_pct.hide()
+        ctrl_row_2.addWidget(self._lbl_valence)
+        ctrl_row_2.addWidget(self._cmb_valence_elem)
+        ctrl_row_2.addWidget(self._spin_valence_pct)
 
         self._chk_no_bane = QCheckBox("")
         self._chk_no_bane.toggled.connect(self._on_no_bane_toggled)
@@ -911,12 +951,22 @@ class BuildOptimizerDialog(QDialog):
         )
         self._lbl_title.setStyleSheet(f"color: {accent}; font-size: {title_px}px; font-weight: bold; background: transparent; border: none;")
         self._lbl_weapon_meta.setStyleSheet(f"color: {muted}; font-size: {fpx}px; background: transparent; border: none;")
-        self._lbl_archetype.setStyleSheet(f"color: {muted}; font-size: {fpx}px; background: transparent; border: none;")
-        self._cmb_archetype.setStyleSheet(
+        combo_css = (
             f"QComboBox {{ background-color: {input_bg}; color: {text}; border: 1px solid {border_soft}; border-radius: 5px; padding: 3px 8px; font-size: {fpx}px; font-weight: 600; }}"
             f"QComboBox:hover {{ border-color: {accent}; }}"
             f"QComboBox QAbstractItemView {{ background-color: {bg}; color: {text}; selection-background-color: {btn_bg}; selection-color: {btn_fg}; border: 1px solid {border}; font-size: {fpx}px; }}"
         )
+        self._lbl_archetype.setStyleSheet(f"color: {muted}; font-size: {fpx}px; background: transparent; border: none;")
+        self._cmb_archetype.setStyleSheet(combo_css)
+        self._lbl_variant.setStyleSheet(f"color: {accent}; font-size: {fpx}px; font-weight: bold; background: transparent; border: none;")
+        self._cmb_variant.setStyleSheet(combo_css)
+        self._lbl_valence.setStyleSheet(f"color: {accent}; font-size: {fpx}px; font-weight: bold; background: transparent; border: none;")
+        self._cmb_valence_elem.setStyleSheet(combo_css)
+        self._spin_valence_pct.setStyleSheet(
+            f"QSpinBox {{ background-color: {input_bg}; color: {accent}; border: 1px solid {border_soft}; border-radius: 5px; padding: 3px 6px; font-size: {fpx}px; font-weight: bold; }}"
+            f"QSpinBox:hover {{ border-color: {accent}; }}"
+        )
+        self._spin_valence_pct.setFixedWidth(max(70, int(round(fpx * 5.8))))
         self._lbl_arcane.setStyleSheet(f"color: {accent}; font-size: {hdr_px}px; font-weight: bold; background: transparent; border: none;")
         self._lbl_arcane_none.setStyleSheet(f"color: {muted}; font-size: {fpx}px; background: transparent; border: none;")
         self._lbl_arcane_desc.setStyleSheet(f"color: {muted}; font-size: {small_px}px; background: transparent; border: none;")
@@ -969,6 +1019,8 @@ class BuildOptimizerDialog(QDialog):
         self._chk_no_bane.setText(I18N.t("panel.opt_no_bane_chk", self._lang))
         self._btn_reset_rec.setText(I18N.t("panel.opt_reset_btn", self._lang))
         self._lbl_archetype.setText(I18N.t("panel.opt_archetype_label", self._lang))
+        self._lbl_variant.setText(I18N.t("panel.opt_variant_label", self._lang))
+        self._lbl_valence.setText(I18N.t("panel.opt_valence_label", self._lang))
         self._lbl_arcane.setText(I18N.t("panel.opt_arcane_label", self._lang))
         self._lbl_arcane_none.setText(I18N.t("panel.opt_no_arcane", self._lang))
         self._lbl_exilus.setText(I18N.t("panel.opt_exilus_label", self._lang))
@@ -991,13 +1043,83 @@ class BuildOptimizerDialog(QDialog):
             self._lbl_weapon_meta.setText(I18N.t("panel.opt_need_card", self._lang))
 
     def show_for_card(self, evaluation: RivenEvaluation, riven: RivenData) -> None:
-        self._current_eval = evaluation
+        self._base_eval = evaluation
         self._current_riven = riven
-        self._archetype = ARCHETYPE_AUTO
+        # Auto-discover weapon variants and prefer the strongest variant (Prime / Coda / Tenet / Kuva > Wraith/Vandal > Base)
+        self._variants = get_weapon_variants(
+            weapon_slug=evaluation.weapon_slug,
+            weapon_name_en=evaluation.weapon_name_en,
+            weapon_class=evaluation.weapon_class,
+        )
+        if self._variants:
+            preferred = self._variants[0]
+            self._selected_variant_slug = preferred.slug
+            self._current_eval = apply_variant_to_evaluation(evaluation, preferred)
+        else:
+            self._selected_variant_slug = evaluation.weapon_slug or None
+            self._current_eval = evaluation
+
+        self._init_valence_for_active_weapon()
+        self._reset_archetype_for_active_weapon()
         self._recompute_recommended()
         self.showNormal()
         self.raise_()
         self.activateWindow()
+
+    def _init_valence_for_active_weapon(self) -> None:
+        ev = self._current_eval
+        if ev is not None and is_progenitor_weapon(ev.weapon_slug, ev.weapon_name_en):
+            self._valence_element = get_default_progenitor_element(
+                ev.weapon_slug, ev.weapon_name_en, ev.weapon_class
+            )
+            self._valence_bonus = 0.60
+        else:
+            self._valence_element = None
+            self._valence_bonus = 0.0
+
+    def _reset_archetype_for_active_weapon(self) -> None:
+        ev = self._current_eval
+        if ev is None:
+            self._archetype = ARCHETYPE_AUTO
+            return
+        avail = get_available_archetypes_for_weapon(
+            ev.weapon_class,
+            weapon_slug=ev.weapon_slug,
+            weapon_name_en=ev.weapon_name_en,
+            crit_chance=ev.weapon_crit_chance,
+            status_chance=ev.weapon_status_chance,
+        )
+        self._archetype = avail[0] if avail else ARCHETYPE_AUTO
+
+    def set_selected_variant(self, variant_slug: str) -> None:
+        if self._base_eval is None or not variant_slug:
+            return
+        match = next((v for v in self._variants if v.slug == variant_slug), None)
+        if match is None or match.slug == self._selected_variant_slug:
+            return
+        self._selected_variant_slug = match.slug
+        self._current_eval = apply_variant_to_evaluation(self._base_eval, match)
+        self._init_valence_for_active_weapon()
+        self._reset_archetype_for_active_weapon()
+        self._recompute_recommended()
+
+    def set_valence(self, element: str, bonus_pct: int) -> None:
+        if self._current_eval is None or not is_progenitor_weapon(
+            self._current_eval.weapon_slug, self._current_eval.weapon_name_en
+        ):
+            return
+        el = (element or "").strip().lower()
+        if el not in PROGENITOR_ELEMENTS:
+            return
+        b = max(25, min(60, int(bonus_pct))) / 100.0
+        if el == self._valence_element and abs(b - self._valence_bonus) < 1e-4:
+            return
+        self._valence_element = el
+        self._valence_bonus = b
+        if self._is_customized:
+            self._evaluate_current_selection()
+        else:
+            self._recompute_recommended()
 
     def set_slot_mod(self, slot_idx: int, mod_id: Optional[str]) -> None:
         """Replace Mod in `slot_idx` (0..6) and live-recalculate."""
@@ -1100,6 +1222,21 @@ class BuildOptimizerDialog(QDialog):
         if isinstance(akey, str) and akey:
             self.set_archetype(akey)
 
+    def _on_variant_combo_changed(self, _index: int) -> None:
+        if self._updating_widgets:
+            return
+        vslug = self._cmb_variant.currentData()
+        if isinstance(vslug, str) and vslug:
+            self.set_selected_variant(vslug)
+
+    def _on_valence_changed(self, *_args) -> None:
+        if self._updating_widgets:
+            return
+        el = self._cmb_valence_elem.currentData()
+        pct = int(self._spin_valence_pct.value())
+        if isinstance(el, str) and el:
+            self.set_valence(el, pct)
+
     def _on_no_bane_toggled(self, checked: bool) -> None:
         self._no_bane = bool(checked)
         self._recompute_recommended()
@@ -1118,6 +1255,8 @@ class BuildOptimizerDialog(QDialog):
             scenario=self._scenario,
             allow_bane_mods=not self._no_bane,
             archetype=self._archetype,
+            valence_element=self._valence_element,
+            valence_bonus=self._valence_bonus if self._valence_element else None,
         )
         self._recommended_result = rec
         self._slot_mod_ids = [s.mod.id for s in rec.mods[:7]]
@@ -1164,6 +1303,8 @@ class BuildOptimizerDialog(QDialog):
             reference_score=ref_score,
             exilus_mod_id=self._selected_exilus_id,
             archetype=self._archetype,
+            valence_element=self._valence_element,
+            valence_bonus=self._valence_bonus if self._valence_element else None,
         )
         self._last_result = custom_res
         self._render_result(custom_res)
@@ -1330,15 +1471,58 @@ class BuildOptimizerDialog(QDialog):
                     meta_parts.append(I18N.t("panel.opt_modified_badge", lang, delta=res.delta_vs_recommended_pct))
                 self._lbl_weapon_meta.setText("  ·  ".join(meta_parts))
 
-                # Sync Archetype dropdown options for current weapon class
+                # Sync Variant dropdown (visible ONLY when this weapon family has multiple variants)
+                if len(self._variants) > 1:
+                    self._lbl_variant.show()
+                    self._cmb_variant.show()
+                    self._cmb_variant.blockSignals(True)
+                    self._cmb_variant.clear()
+                    for v in self._variants:
+                        self._cmb_variant.addItem(v.name_zh if is_zh else v.name_en, v.slug)
+                    v_idx = self._cmb_variant.findData(self._selected_variant_slug)
+                    self._cmb_variant.setCurrentIndex(v_idx if v_idx >= 0 else 0)
+                    self._cmb_variant.blockSignals(False)
+                else:
+                    self._lbl_variant.hide()
+                    self._cmb_variant.hide()
+
+                # Sync strictly weapon-applicable Archetypes (never shows Incarnon on non-Incarnon weapons!)
+                avail_archs = get_available_archetypes_for_weapon(
+                    res.weapon_class,
+                    weapon_slug=ev.weapon_slug,
+                    weapon_name_en=ev.weapon_name_en,
+                    crit_chance=ev.weapon_crit_chance,
+                    status_chance=ev.weapon_status_chance,
+                )
                 self._cmb_archetype.blockSignals(True)
                 self._cmb_archetype.clear()
                 arch_labels = ARCHETYPE_LABELS_ZH if is_zh else ARCHETYPE_LABELS_EN
-                for ak in get_available_archetypes_for_class(res.weapon_class):
+                for ak in avail_archs:
                     self._cmb_archetype.addItem(arch_labels.get(ak, ak), ak)
                 a_idx = self._cmb_archetype.findData(self._archetype)
                 self._cmb_archetype.setCurrentIndex(a_idx if a_idx >= 0 else 0)
                 self._cmb_archetype.blockSignals(False)
+
+                # Sync Progenitor Valence controls (visible ONLY for Kuva / Tenet / Coda weapons!)
+                if is_progenitor_weapon(ev.weapon_slug, ev.weapon_name_en) and self._valence_element:
+                    self._lbl_valence.show()
+                    self._cmb_valence_elem.show()
+                    self._spin_valence_pct.show()
+                    val_labels = PROGENITOR_LABELS_ZH if is_zh else PROGENITOR_LABELS_EN
+                    self._cmb_valence_elem.blockSignals(True)
+                    self._cmb_valence_elem.clear()
+                    for ek in PROGENITOR_ELEMENTS:
+                        self._cmb_valence_elem.addItem(val_labels.get(ek, ek), ek)
+                    ve_idx = self._cmb_valence_elem.findData(self._valence_element)
+                    self._cmb_valence_elem.setCurrentIndex(ve_idx if ve_idx >= 0 else 0)
+                    self._cmb_valence_elem.blockSignals(False)
+                    self._spin_valence_pct.blockSignals(True)
+                    self._spin_valence_pct.setValue(int(round(self._valence_bonus * 100)))
+                    self._spin_valence_pct.blockSignals(False)
+                else:
+                    self._lbl_valence.hide()
+                    self._cmb_valence_elem.hide()
+                    self._spin_valence_pct.hide()
 
             colors = self._theme_colors or resolve_theme_colors(DEFAULT_THEME_PRESET)
             bg = colors.get("bg", "#120C20")

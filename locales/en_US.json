@@ -161,6 +161,8 @@
     "opt_exilus_none_opt": "(Empty)",
     "opt_search_exilus_ph": "Search Exilus Mod...",
     "opt_archetype_label": "Meta:",
+    "opt_variant_label": "Variant:",
+    "opt_valence_label": "Valence:",
     "opt_empty_slot": "(Empty Slot)",
     "opt_search_mod_ph": "Search Mod / Corrosive / Viral / Crit...",
     "opt_search_arcane_ph": "Search Arcane...",

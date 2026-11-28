@@ -1797,6 +1797,8 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
             custom_arcanes=getattr(opt_res, "arcane_ids", None),
             custom_exilus=getattr(opt_res, "exilus_mod_id", None),
             custom_build_label="本地优化配装",
+            valence_element=getattr(opt_res, "valence_element", None),
+            valence_bonus=getattr(opt_res, "valence_bonus", None),
         )
         if not res.ok:
             if build_optimizer_dialog is not None:
