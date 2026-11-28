@@ -88,22 +88,22 @@ class ArcaneDef:
 # ---- Curated Mod Pools (100% verified WFSim share IDs) ----
 
 RIFLE_MODS: Tuple[ModDef, ...] = (
-    ModDef("galvanized_chamber", "镀层膛室", "Galvanized Chamber", exclusive_group="ms", multishot=2.30),
-    ModDef("critical_delay", "致命延迟", "Critical Delay", exclusive_group="cc", crit_chance=2.00, fire_rate=-0.20),
+    ModDef("galvanized_chamber", "镀层 分裂膛室", "Galvanized Chamber", exclusive_group="ms", multishot=2.30),
+    ModDef("critical_delay", "关键延迟", "Critical Delay", exclusive_group="cc", crit_chance=2.00, fire_rate=-0.20),
     ModDef("point_strike", "致命一击", "Point Strike", exclusive_group="cc", crit_chance=1.50),
     ModDef("vital_sense", "弱点感应", "Vital Sense", exclusive_group="cd", crit_damage=1.20),
     ModDef("hammer_shot", "重锤射击", "Hammer Shot", crit_damage=0.60, status_chance=0.80),
     ModDef("bladed_rounds", "尖刃弹头", "Bladed Rounds", crit_damage=1.20),
-    ModDef("galvanized_scope", "镀层瞄准", "Galvanized Scope", crit_chance=3.20),
+    ModDef("galvanized_scope", "镀层 氩晶瞄具", "Galvanized Scope", crit_chance=3.20),
     ModDef("serration", "膛线", "Serration", exclusive_group="base_dmg", damage=1.65),
     ModDef("amalgam_serration", "并合 膛线", "Amalgam Serration", exclusive_group="base_dmg", damage=1.55),
-    ModDef("galvanized_aptitude", "镀层赋能", "Galvanized Aptitude", status_chance=0.80, co_per_status=0.80),
+    ModDef("galvanized_aptitude", "镀层 步枪才能", "Galvanized Aptitude", status_chance=0.80, co_per_status=0.80),
     ModDef("vile_acceleration", "卑劣加速", "Vile Acceleration", exclusive_group="fr", fire_rate=0.90, damage=-0.15),
     ModDef("primed_shred", "撕裂 Prime", "Primed Shred", exclusive_group="fr", fire_rate=0.55, punch_through=2.2),
     ModDef("speed_trigger", "灵敏扳机", "Speed Trigger", exclusive_group="fr", fire_rate=0.60),
-    ModDef("hunter_munitions", "猎人战备", "Hunter Munitions", hunter_munitions=True),
+    ModDef("hunter_munitions", "猎人 战备", "Hunter Munitions", hunter_munitions=True),
     ModDef("rifle_elementalist", "步枪元素师", "Rifle Elementalist", status_damage=0.90, punch_through=0.6),
-    ModDef("malignant_force", "恶性力场", "Malignant Force", exclusive_group="tox60", element="toxin", element_value=0.60, status_chance=0.60),
+    ModDef("malignant_force", "致命火力", "Malignant Force", exclusive_group="tox60", element="toxin", element_value=0.60, status_chance=0.60),
     ModDef("infected_clip", "污染弹匣", "Infected Clip", exclusive_group="tox90", element="toxin", element_value=0.90),
     ModDef("rime_rounds", "白霜弹头", "Rime Rounds", exclusive_group="cold60", element="cold", element_value=0.60, status_chance=0.60),
     ModDef("primed_cryo_rounds", "低温弹头 Prime", "Primed Cryo Rounds", exclusive_group="cold90", element="cold", element_value=1.65),
@@ -112,22 +112,22 @@ RIFLE_MODS: Tuple[ModDef, ...] = (
     ModDef("high_voltage", "高压电流", "High Voltage", exclusive_group="elec60", element="electricity", element_value=0.60, status_chance=0.60),
     ModDef("stormbringer", "暴风使者", "Stormbringer", exclusive_group="elec90", element="electricity", element_value=0.90),
     ModDef("primed_bane_of_grineer", "灭亡 Grineer Prime", "Primed Bane of Grineer", exclusive_group="bane", faction=0.55, is_bane=True),
-    ModDef("vigilante_armaments", "私法军备", "Vigilante Armaments", multishot=0.60),
+    ModDef("vigilante_armaments", "私法 军备", "Vigilante Armaments", multishot=0.60),
     ModDef("primed_fast_hands", "爆发装填 Prime", "Primed Fast Hands", reload=0.55),
 )
 
 SHOTGUN_MODS: Tuple[ModDef, ...] = (
-    ModDef("galvanized_hell", "镀层地狱", "Galvanized Hell", exclusive_group="ms", multishot=2.30),
-    ModDef("critical_deceleration", "致命减速", "Critical Deceleration", exclusive_group="cc", crit_chance=2.00, fire_rate=-0.20),
+    ModDef("galvanized_hell", "镀层 地狱弹膛", "Galvanized Hell", exclusive_group="ms", multishot=2.30),
+    ModDef("critical_deceleration", "降速暴击", "Critical Deceleration", exclusive_group="cc", crit_chance=2.00, fire_rate=-0.20),
     ModDef("blunderbuss", "雷筒", "Blunderbuss", exclusive_group="cc", crit_chance=0.90),
-    ModDef("primed_ravage", "摧残 Prime", "Primed Ravage", exclusive_group="cd", crit_damage=1.10),
+    ModDef("primed_ravage", "破灭 Prime", "Primed Ravage", exclusive_group="cd", crit_damage=1.10),
     ModDef("primed_point_blank", "抵近射击 Prime", "Primed Point Blank", exclusive_group="base_dmg", damage=1.65),
-    ModDef("galvanized_savvy", "镀层精通", "Galvanized Savvy", status_chance=0.80, co_per_status=0.80),
-    ModDef("shotgun_barrage", "霰弹速射", "Shotgun Barrage", exclusive_group="fr", fire_rate=0.90),
-    ModDef("shotgun_elementalist", "霰弹元素师", "Shotgun Elementalist", status_damage=0.90),
-    ModDef("toxic_barrage", "剧毒弹幕", "Toxic Barrage", exclusive_group="tox60", element="toxin", element_value=0.60, status_chance=0.60),
+    ModDef("galvanized_savvy", "镀层 通晓霰弹枪", "Galvanized Savvy", status_chance=0.80, co_per_status=0.80),
+    ModDef("shotgun_barrage", "霰弹弹幕", "Shotgun Barrage", exclusive_group="fr", fire_rate=0.90),
+    ModDef("shotgun_elementalist", "霰弹枪元素师", "Shotgun Elementalist", status_damage=0.90),
+    ModDef("toxic_barrage", "毒素弹幕", "Toxic Barrage", exclusive_group="tox60", element="toxin", element_value=0.60, status_chance=0.60),
     ModDef("contagious_spread", "传染蔓延", "Contagious Spread", exclusive_group="tox90", element="toxin", element_value=0.90),
-    ModDef("chilling_reload", "急冻装填", "Chilling Reload", exclusive_group="cold_util", element="cold", element_value=0.60, reload=0.40),
+    ModDef("chilling_reload", "激冷装填", "Chilling Reload", exclusive_group="cold_util", element="cold", element_value=0.60, reload=0.40),
     ModDef("frigid_blast", "冰冷疾风", "Frigid Blast", exclusive_group="cold60", element="cold", element_value=0.60, status_chance=0.60),
     ModDef("primed_chilling_grasp", "急冻控场 Prime", "Primed Chilling Grasp", exclusive_group="cold90", element="cold", element_value=1.65),
     ModDef("incendiary_coat", "燃烧外壳", "Incendiary Coat", exclusive_group="heat90", element="heat", element_value=0.90),
@@ -136,19 +136,19 @@ SHOTGUN_MODS: Tuple[ModDef, ...] = (
     ModDef("shell_shock", "电冲弹药", "Shell Shock", exclusive_group="elec60", element="electricity", element_value=0.60, status_chance=0.60),
     ModDef("primed_charged_shell", "充电弹头 Prime", "Primed Charged Shell", exclusive_group="elec90", element="electricity", element_value=1.65),
     ModDef("primed_cleanse_grineer", "净化 Grineer Prime", "Primed Cleanse Grineer", exclusive_group="bane", faction=0.55, is_bane=True),
-    ModDef("vigilante_armaments", "私法军备", "Vigilante Armaments", multishot=0.60),
+    ModDef("vigilante_armaments", "私法 军备", "Vigilante Armaments", multishot=0.60),
     ModDef("seeking_fury", "狂暴追猎", "Seeking Fury", punch_through=1.2, reload=0.15),
 )
 
 PISTOL_MODS: Tuple[ModDef, ...] = (
-    ModDef("galvanized_diffusion", "镀层扩散", "Galvanized Diffusion", exclusive_group="ms", multishot=2.30),
+    ModDef("galvanized_diffusion", "镀层 弹头扩散", "Galvanized Diffusion", exclusive_group="ms", multishot=2.30),
     ModDef("lethal_torrent", "致命洪流", "Lethal Torrent", multishot=0.60, fire_rate=0.60),
-    ModDef("creeping_bullseye", "缓慢精确", "Creeping Bullseye", exclusive_group="cc", crit_chance=2.00, fire_rate=-0.20),
+    ModDef("creeping_bullseye", "匍匐靶心", "Creeping Bullseye", exclusive_group="cc", crit_chance=2.00, fire_rate=-0.20),
     ModDef("primed_pistol_gambit", "手枪精通 Prime", "Primed Pistol Gambit", exclusive_group="cc", crit_chance=1.87),
     ModDef("primed_target_cracker", "弱点专精 Prime", "Primed Target Cracker", exclusive_group="cd", crit_damage=1.10),
-    ModDef("galvanized_crosshairs", "镀层十字准星", "Galvanized Crosshairs", crit_chance=3.20),
-    ModDef("hornet_strike", "黄蜂蛰刺", "Hornet Strike", exclusive_group="base_dmg", damage=2.20),
-    ModDef("galvanized_shot", "镀层射击", "Galvanized Shot", status_chance=0.80, co_per_status=0.80),
+    ModDef("galvanized_crosshairs", "镀层 液压准心", "Galvanized Crosshairs", crit_chance=3.20),
+    ModDef("hornet_strike", "黄蜂螫刺", "Hornet Strike", exclusive_group="base_dmg", damage=2.20),
+    ModDef("galvanized_shot", "镀层 准确射手", "Galvanized Shot", status_chance=0.80, co_per_status=0.80),
     ModDef("anemic_agility", "乏能迅敏", "Anemic Agility", exclusive_group="fr", fire_rate=0.90, damage=-0.15),
     ModDef("gunslinger", "神枪手", "Gunslinger", exclusive_group="fr", fire_rate=0.72),
     ModDef("pistol_elementalist", "手枪元素师", "Pistol Elementalist", status_damage=0.90, reload=0.30),
@@ -157,7 +157,7 @@ PISTOL_MODS: Tuple[ModDef, ...] = (
     ModDef("frostbite", "结霜侵蚀", "Frostbite", exclusive_group="cold60", element="cold", element_value=0.60, status_chance=0.60),
     ModDef("deep_freeze", "深层冷冻", "Deep Freeze", exclusive_group="cold90", element="cold", element_value=0.90),
     ModDef("primed_heated_charge", "火焰装填 Prime", "Primed Heated Charge", exclusive_group="heat90", element="heat", element_value=1.65),
-    ModDef("scorch", "焦痕", "Scorch", exclusive_group="heat60", element="heat", element_value=0.60, status_chance=0.60),
+    ModDef("scorch", "灼痕焦点", "Scorch", exclusive_group="heat60", element="heat", element_value=0.60, status_chance=0.60),
     ModDef("jolt", "电流震击", "Jolt", exclusive_group="elec60", element="electricity", element_value=0.60, status_chance=0.60),
     ModDef("primed_convulsion", "痉挛 Prime", "Primed Convulsion", exclusive_group="elec90", element="electricity", element_value=1.65),
     ModDef("primed_expel_grineer", "驱逐 Grineer Prime", "Primed Expel Grineer", exclusive_group="bane", faction=0.55, is_bane=True),
@@ -173,11 +173,11 @@ MELEE_MODS: Tuple[ModDef, ...] = (
     ModDef("amalgam_organ_shatter", "并合 肢解", "Amalgam Organ Shatter", exclusive_group="cd", crit_damage=0.85, heavy_dmg=0.25),
     ModDef("gladiator_might", "角斗士 威猛", "Gladiator Might", crit_damage=0.60, crit_chance=1.10),
     ModDef("weeping_wounds", "创口溃烂", "Weeping Wounds", weeping_sc=4.40),
-    ModDef("berserker_fury", "狂战士之怒", "Berserker Fury", exclusive_group="as", fire_rate=0.70),
+    ModDef("berserker_fury", "嗜血 狂暴", "Berserker Fury", exclusive_group="as", fire_rate=0.70),
     ModDef("quickening", "加速", "Quickening", exclusive_group="as", fire_rate=0.40),
     ModDef("primed_fury", "狂暴 Prime", "Primed Fury", exclusive_group="as", fire_rate=0.55),
     ModDef("primed_reach", "剑风 Prime", "Primed Reach", exclusive_group="range", range_m=3.0),
-    ModDef("galvanized_elementalist", "镀层元素师", "Galvanized Elementalist", exclusive_group="elem_st", status_damage=0.80, status_chance=1.20),
+    ModDef("galvanized_elementalist", "镀层 元素师", "Galvanized Elementalist", exclusive_group="elem_st", status_damage=0.80, status_chance=1.20),
     ModDef("voltaic_strike", "伏打电能", "Voltaic Strike", exclusive_group="elec60", element="electricity", element_value=0.60, status_chance=0.60),
     ModDef("shocking_touch", "电击触点", "Shocking Touch", exclusive_group="elec90", element="electricity", element_value=0.90),
     ModDef("virulent_scourge", "剧毒灾害", "Virulent Scourge", exclusive_group="tox60", element="toxin", element_value=0.60, status_chance=0.60),
@@ -185,7 +185,7 @@ MELEE_MODS: Tuple[ModDef, ...] = (
     ModDef("vicious_frost", "蚀骨寒霜", "Vicious Frost", exclusive_group="cold60", element="cold", element_value=0.60, status_chance=0.60),
     ModDef("volcanic_edge", "爆裂刀刃", "Volcanic Edge", exclusive_group="heat60", element="heat", element_value=0.60, status_chance=0.60),
     ModDef("primed_smite_grineer", "毁灭 Grineer Prime", "Primed Smite Grineer", exclusive_group="bane", faction=0.55, is_bane=True),
-    ModDef("galvanized_reflex", "镀层 反射", "Galvanized Reflex", exclusive_group="heavy_init", initial_combo=80.0),
+    ModDef("galvanized_reflex", "镀层 增幅线圈", "Galvanized Reflex", exclusive_group="heavy_init", initial_combo=80.0),
     ModDef("killing_blow", "一击必杀", "Killing Blow", heavy_dmg=1.20),
     ModDef("seismic_wave", "震波", "Seismic Wave", slam_dmg=2.00),
 )
@@ -197,12 +197,12 @@ ARCHGUN_MODS: Tuple[ModDef, ...] = (
     ModDef("critical_focus", "关键焦点", "Critical Focus", crit_chance=0.60, crit_damage=0.60),
     ModDef("hollowed_bullets", "中空子弹", "Hollowed Bullets", crit_damage=0.80),
     ModDef("automatic_trigger", "自动扳机", "Automatic Trigger", fire_rate=0.60),
-    ModDef("sabot_rounds", "脱壳穿甲弹", "Sabot Rounds", damage=0.60, punch_through=3.0),
+    ModDef("sabot_rounds", "覆壳弹药", "Sabot Rounds", damage=0.60, punch_through=3.0),
     ModDef("venomous_clip", "恶毒弹匣", "Venomous Clip", element="toxin", element_value=1.20),
     ModDef("polar_magazine", "极地弹仓", "Polar Magazine", element="cold", element_value=1.20),
     ModDef("combustion_rounds", "燃烧弹头", "Combustion Rounds", element="heat", element_value=1.20),
     ModDef("electrified_barrel", "带电枪管", "Electrified Barrel", element="electricity", element_value=1.20),
-    ModDef("contamination_casing", "污染弹壳", "Contamination Casing", element="toxin", element_value=0.60, status_chance=0.60),
+    ModDef("contamination_casing", "毒染套管", "Contamination Casing", element="toxin", element_value=0.60, status_chance=0.60),
     ModDef("hypothermic_shell", "低温外壳", "Hypothermic Shell", element="cold", element_value=0.60, status_chance=0.60),
     ModDef("magma_chamber", "熔岩弹膛", "Magma Chamber", element="heat", element_value=0.60, status_chance=0.60),
     ModDef("charged_bullets", "带电子弹", "Charged Bullets", element="electricity", element_value=0.60, status_chance=0.60),
@@ -221,7 +221,7 @@ ARCANE_POOLS: Dict[str, Tuple[ArcaneDef, ...]] = {
         ArcaneDef("primary_merciless", "主要·无情", "Primary Merciless", damage=3.60),
         ArcaneDef("primary_deadhead", "主要·死首", "Primary Deadhead", damage=3.60, weakpoint=0.30),
         ArcaneDef("primary_frostbite", "主要·霜冻", "Primary Frostbite", crit_damage=1.20, multishot=0.90),
-        ArcaneDef("primary_blight", "主要·枯萎", "Primary Blight", crit_damage=1.48, multishot=0.90),
+        ArcaneDef("primary_blight", "主要·毒侵", "Primary Blight", crit_damage=1.48, multishot=0.90),
     ),
     "shotgun": (
         ArcaneDef("primary_merciless", "主要·无情", "Primary Merciless", damage=3.60),
@@ -231,12 +231,12 @@ ARCANE_POOLS: Dict[str, Tuple[ArcaneDef, ...]] = {
     "pistol": (
         ArcaneDef("secondary_merciless", "次要·无情", "Secondary Merciless", damage=3.60),
         ArcaneDef("secondary_deadhead", "次要·死首", "Secondary Deadhead", damage=3.60, weakpoint=0.30),
-        ArcaneDef("cascadia_flare", "卡斯卡迪亚·耀斑", "Cascadia Flare", damage=4.80),
+        ArcaneDef("cascadia_flare", "瀑流·耀炎", "Cascadia Flare", damage=4.80),
     ),
     "melee": (
-        ArcaneDef("melee_influence", "近战·电击影响", "Melee Influence", influence_aoe=True),
-        ArcaneDef("melee_exposure", "近战·腐蚀曝光", "Melee Exposure", corrosive_bonus=2.40),
-        ArcaneDef("melee_afflictions", "近战·苦痛折磨", "Melee Afflictions", afflictions_bonus=True),
+        ArcaneDef("melee_influence", "近战·侵染", "Melee Influence", influence_aoe=True),
+        ArcaneDef("melee_exposure", "近战·暴露", "Melee Exposure", corrosive_bonus=2.40),
+        ArcaneDef("melee_afflictions", "近战·苦痛", "Melee Afflictions", afflictions_bonus=True),
     ),
     "archgun": (),
 }
@@ -280,6 +280,7 @@ class BuildOptimizationResult:
     active_elements_en: List[str] = field(default_factory=list)
     rationale_zh: List[str] = field(default_factory=list)
     rationale_en: List[str] = field(default_factory=list)
+    delta_vs_recommended_pct: Optional[float] = None
 
     @property
     def mod_ids(self) -> List[str]:
@@ -288,6 +289,19 @@ class BuildOptimizationResult:
     @property
     def arcane_ids(self) -> List[str]:
         return [self.arcane.id] if self.arcane is not None else []
+
+
+def get_mod_pool(weapon_class: str, *, allow_bane_mods: bool = True) -> List[ModDef]:
+    """Return all candidate Mods for `weapon_class` (optionally filtering faction Bane mods)."""
+    w_cls = (weapon_class or "rifle").strip().lower()
+    raw_pool = MOD_POOLS.get(w_cls, RIFLE_MODS)
+    return [m for m in raw_pool if allow_bane_mods or not m.is_bane]
+
+
+def get_arcane_pool(weapon_class: str) -> List[ArcaneDef]:
+    """Return all candidate Weapon Arcanes for `weapon_class`."""
+    w_cls = (weapon_class or "rifle").strip().lower()
+    return list(ARCANE_POOLS.get(w_cls, ()))
 
 
 def _extract_riven_profile(ev: RivenEvaluation) -> Dict[str, object]:
@@ -795,7 +809,7 @@ def optimize_build_for_riven(
         rationale_en.append(f"[{best_arcane.name_en}] saturates base damage → skipped flat Damage mod to avoid dilution")
 
     if best_arcane is not None and best_arcane.influence_aoe and "electricity" in best_rem:
-        rationale_zh.append("保留独立【电击】触发【近战·电击影响】大范围异常扩散清图体系")
+        rationale_zh.append("保留独立【电击】触发【近战·侵染】大范围异常扩散清图体系")
         rationale_en.append("Preserved standalone [Electricity] to trigger [Melee Influence] AoE spread")
 
     if not rationale_zh:
@@ -814,4 +828,106 @@ def optimize_build_for_riven(
         active_elements_en=active_en,
         rationale_zh=rationale_zh,
         rationale_en=rationale_en,
+        delta_vs_recommended_pct=0.0,
+    )
+
+
+def evaluate_custom_build_for_riven(
+    ev: RivenEvaluation,
+    mod_ids: Sequence[Optional[str]],
+    arcane_id: Optional[str],
+    *,
+    scenario: str = SCENARIO_STEEL_PATH,
+    reference_score: Optional[float] = None,
+) -> BuildOptimizationResult:
+    """Evaluate a user-customized 0..7 Mod + Arcane combination around the scanned Riven (<2ms)."""
+    w_cls = (ev.weapon_class or "rifle").strip().lower()
+    pool = MOD_POOLS.get(w_cls, RIFLE_MODS)
+    mod_by_id: Dict[str, ModDef] = {m.id: m for m in pool}
+    arc_by_id: Dict[str, ArcaneDef] = {a.id: a for a in ARCANE_POOLS.get(w_cls, ())}
+
+    chosen_mods: List[ModDef] = []
+    seen_ids: Set[str] = set()
+    for mid in list(mod_ids)[:7]:
+        if not mid:
+            continue
+        m = mod_by_id.get(str(mid).strip())
+        if m is not None and m.id not in seen_ids:
+            chosen_mods.append(m)
+            seen_ids.add(m.id)
+
+    chosen_arcane: Optional[ArcaneDef] = arc_by_id.get(str(arcane_id).strip()) if arcane_id else None
+    riven_prof = _extract_riven_profile(ev)
+
+    score, comps, rem = _score_build(ev, riven_prof, chosen_mods, chosen_arcane, scenario)
+
+    slot_results: List[OptimizedModSlot] = []
+    for i, m in enumerate(chosen_mods):
+        without_m = chosen_mods[:i] + chosen_mods[i + 1 :]
+        sc_without, _, _ = _score_build(ev, riven_prof, without_m, chosen_arcane, scenario)
+        gain_pct = round(((score / sc_without) - 1.0) * 100.0, 1) if sc_without > 0 else 0.0
+        slot_results.append(OptimizedModSlot(mod=m, marginal_gain_pct=gain_pct))
+
+    sc_no_riven, _, _ = _score_build(ev, None, chosen_mods, chosen_arcane, scenario)
+    riven_gain_pct = round(((score / sc_no_riven) - 1.0) * 100.0, 1) if sc_no_riven > 0 else 0.0
+
+    delta_vs_rec: Optional[float] = None
+    if reference_score is not None and reference_score > 0:
+        delta_vs_rec = round(((score / reference_score) - 1.0) * 100.0, 1)
+
+    elem_order = sorted(comps) + sorted(rem)
+    active_zh = [_ELEM_LABEL_ZH.get(e, e) for e in elem_order]
+    active_en = [_ELEM_LABEL_EN.get(e, e) for e in elem_order]
+
+    rationale_zh: List[str] = []
+    rationale_en: List[str] = []
+
+    all_base_elems: Set[str] = set(riven_prof["base_elements"])  # type: ignore[arg-type]
+    for m in chosen_mods:
+        if m.element:
+            all_base_elems.add(m.element)
+
+    if chosen_arcane is not None:
+        if chosen_arcane.id == "melee_influence" and "electricity" not in rem:
+            rationale_zh.append("⚠ 当前赋能为【近战·侵染】，但配卡缺少独立【电击】元素，无法稳定触发大范围扩散")
+            rationale_en.append("⚠ [Melee Influence] requires standalone [Electricity] to trigger AoE spread")
+        elif chosen_arcane.id == "primary_frostbite" and "cold" not in all_base_elems:
+            rationale_zh.append("⚠ 当前赋能为【主要·霜冻】，但配卡/紫卡缺少【冰冻】元素，建议补冰卡或更换赋能")
+            rationale_en.append("⚠ [Primary Frostbite] needs [Cold] procs to stack; add a Cold mod or switch arcane")
+        elif chosen_arcane.id == "primary_blight" and "toxin" not in all_base_elems:
+            rationale_zh.append("⚠ 当前赋能为【主要·毒侵】，但配卡/紫卡缺少【毒素】元素，建议补毒卡或更换赋能")
+            rationale_en.append("⚠ [Primary Blight] needs [Toxin] procs to stack; add a Toxin mod or switch arcane")
+        elif chosen_arcane.id == "cascadia_flare" and "heat" not in rem:
+            rationale_zh.append("⚠ 当前赋能为【瀑流·耀炎】，但当前配卡缺少独立【火焰】触发，建议补火卡或改用无情/死首")
+            rationale_en.append("⚠ [Cascadia Flare] requires standalone [Heat] procs; add a Heat mod or switch arcane")
+
+    if len(chosen_mods) < 7:
+        empty_n = 7 - len(chosen_mods)
+        rationale_zh.append(f"当前有 {empty_n} 个空闲 Mod 槽位，可在卡片下拉菜单中继续补齐")
+        rationale_en.append(f"{empty_n} empty Mod slot(s) remaining; pick a Mod from any slot dropdown to fill")
+
+    if delta_vs_rec is not None:
+        if delta_vs_rec > 0.1:
+            rationale_zh.append(f"已应用你的手动配卡，本地模型预计比自动推荐高 {delta_vs_rec:+.1f}% DPS")
+            rationale_en.append(f"Custom build evaluated at {delta_vs_rec:+.1f}% vs auto-recommended baseline")
+        elif delta_vs_rec < -0.1:
+            rationale_zh.append(f"已应用你的手动配卡（相对自动推荐 {delta_vs_rec:+.1f}% DPS），可根据手感保留或点「恢复自动推荐」")
+            rationale_en.append(f"Custom build evaluated at {delta_vs_rec:+.1f}% vs auto-recommended (click Reset anytime)")
+        else:
+            rationale_zh.append("当前自定义配卡与自动推荐强度基本持平，可一键跳转 WFSim 精确逐帧验证")
+            rationale_en.append("Custom build matches the auto-recommended DPS closely; verify in WFSim anytime")
+
+    return BuildOptimizationResult(
+        weapon_name=ev.weapon_name or ev.weapon_name_en or "",
+        weapon_class=w_cls,
+        scenario=scenario,
+        mods=slot_results,
+        arcane=chosen_arcane,
+        total_dps_index=round(score, 2),
+        riven_gain_pct=riven_gain_pct,
+        active_elements_zh=active_zh,
+        active_elements_en=active_en,
+        rationale_zh=rationale_zh,
+        rationale_en=rationale_en,
+        delta_vs_recommended_pct=delta_vs_rec,
     )

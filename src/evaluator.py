@@ -2191,7 +2191,7 @@ _SINGLE_ELEM_COMBO_TIPS: Dict[str, Tuple[str, str]] = {
         "Has [Heat] → Plugs straight into meta [Viral + Heat], or combines into [Radiation / Gas]!",
     ),
     "电击伤害": (
-        "含【电击】→ 单插毒卡直出【腐蚀】，近战更可直触发【近战电击影响】清图体系！",
+        "含【电击】→ 单插毒卡直出【腐蚀】，近战更可直触发【近战·侵染】清图体系！",
         "Has [Electricity] → Add Toxin for [Corrosive], or run [Melee Influence] AoE builds!",
     ),
 }

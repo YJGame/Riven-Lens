@@ -12,9 +12,12 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from PyQt6.QtWidgets import QApplication
 
 from src.build_optimizer import (
+    MOD_POOLS,
+    ARCANE_POOLS,
     SCENARIO_BOSS_DIRECT,
     SCENARIO_GENERAL,
     SCENARIO_STEEL_PATH,
+    evaluate_custom_build_for_riven,
     optimize_build_for_riven,
 )
 from src.build_optimizer_dialog import BuildOptimizerDialog
@@ -130,12 +133,33 @@ class TestBuildOptimizer(unittest.TestCase):
             self.assertNotIn("primed_smite_grineer", dlg._last_result.mod_ids)
             dlg._set_scenario(SCENARIO_BOSS_DIRECT)
 
+            # Test live user editing of recommended Mods + Arcane & WFSim export of modified build
+            self.assertEqual(len(dlg._slot_combos), 7)
+            self.assertFalse(dlg._btn_reset_rec.isEnabled())
+
+            # Swap slot 0 to a different mod ("killing_blow") and switch Arcane to "melee_exposure"
+            dlg.set_slot_mod(0, "killing_blow")
+            dlg.set_selected_arcane("melee_exposure")
+            self.assertTrue(dlg._is_customized)
+            self.assertTrue(dlg._btn_reset_rec.isEnabled())
+            self.assertIn("killing_blow", dlg._last_result.mod_ids)
+            self.assertEqual(dlg._last_result.arcane_ids, ["melee_exposure"])
+            self.assertIsNotNone(dlg._last_result.delta_vs_recommended_pct)
+
+            # Mutually exclusive conflict test: picking "primed_pressure_point" auto-clears "condition_overload"
+            dlg.set_slot_mod(1, "condition_overload")
+            dlg.set_slot_mod(2, "primed_pressure_point")
+            self.assertNotIn("condition_overload", dlg._last_result.mod_ids)
+            self.assertIn("primed_pressure_point", dlg._last_result.mod_ids)
+
             emitted = []
             dlg.send_optimized_to_wfsim.connect(lambda e, r, o: emitted.append((e, r, o)))
             dlg._btn_send_wfsim.click()
             self.assertEqual(len(emitted), 1)
 
             e_out, r_out, opt_out = emitted[0]
+            self.assertIn("killing_blow", opt_out.mod_ids)
+            self.assertEqual(opt_out.arcane_ids, ["melee_exposure"])
             wf_link = build_wfsim_url(
                 e_out,
                 r_out,
@@ -149,10 +173,61 @@ class TestBuildOptimizer(unittest.TestCase):
             exported_mods = [s[0] for s in payload[3][:7] if isinstance(s, list)]
             self.assertEqual(exported_mods, opt_out.mod_ids)
             self.assertEqual(payload[3][7], ["~0"])
-            self.assertEqual(payload[4], opt_out.arcane_ids)
+            self.assertEqual(payload[4], ["melee_exposure"])
+
+            # Reset restores auto-recommended build cleanly
+            dlg.reset_to_recommended()
+            self.assertFalse(dlg._is_customized)
+            self.assertFalse(dlg._btn_reset_rec.isEnabled())
         finally:
             dlg.close()
             panel.close()
+
+    def test_official_simplified_chinese_mod_and_arcane_names(self) -> None:
+        mods_by_id = {m.id: m.name_zh for pool in MOD_POOLS.values() for m in pool}
+        arcs_by_id = {a.id: a.name_zh for pool in ARCANE_POOLS.values() for a in pool}
+        expected_mods = {
+            "galvanized_chamber": "镀层 分裂膛室",
+            "galvanized_aptitude": "镀层 步枪才能",
+            "galvanized_hell": "镀层 地狱弹膛",
+            "galvanized_savvy": "镀层 通晓霰弹枪",
+            "galvanized_diffusion": "镀层 弹头扩散",
+            "galvanized_shot": "镀层 准确射手",
+            "galvanized_reflex": "镀层 增幅线圈",
+            "critical_delay": "关键延迟",
+            "critical_deceleration": "降速暴击",
+            "creeping_bullseye": "匍匐靶心",
+            "malignant_force": "致命火力",
+            "berserker_fury": "嗜血 狂暴",
+            "primed_ravage": "破灭 Prime",
+            "scorch": "灼痕焦点",
+            "chilling_reload": "激冷装填",
+            "hornet_strike": "黄蜂螫刺",
+        }
+        for mid, zh in expected_mods.items():
+            self.assertEqual(mods_by_id[mid], zh, msg=f"Official zh-hans mismatch for {mid}")
+
+        expected_arcanes = {
+            "melee_influence": "近战·侵染",
+            "melee_exposure": "近战·暴露",
+            "melee_afflictions": "近战·苦痛",
+            "cascadia_flare": "瀑流·耀炎",
+            "primary_blight": "主要·毒侵",
+        }
+        for aid, zh in expected_arcanes.items():
+            self.assertEqual(arcs_by_id[aid], zh, msg=f"Official zh-hans mismatch for {aid}")
+
+        # Sanity check direct evaluate_custom_build_for_riven helper
+        r_torid = self.parser.parse(["托里德 Crita-acrican", "+180% 暴击几率", "+145% 暴击伤害", "段位 16 O 8"])
+        ev_torid = self.evaluator.evaluate(r_torid)
+        custom = evaluate_custom_build_for_riven(
+            ev_torid,
+            ["galvanized_chamber", "critical_delay", "vital_sense", None, "malignant_force", "rime_rounds", "hellfire"],
+            "primary_merciless",
+        )
+        self.assertEqual(len(custom.mods), 6)
+        self.assertIn("病毒", custom.active_elements_zh)
+        self.assertIn("火焰", custom.active_elements_zh)
 
 
 if __name__ == "__main__":

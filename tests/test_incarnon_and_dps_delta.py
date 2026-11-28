@@ -82,7 +82,7 @@ class TestIncarnonRulesAndDPSDelta(unittest.TestCase):
         )
         ev_ichor = self.evaluator.evaluate(r_ichor)
         self.assertEqual(ev_ichor.matched_archetype_id, "melee_influence")
-        self.assertIn("电击影响", ev_ichor.matched_archetype_name)
+        self.assertIn("侵染", ev_ichor.matched_archetype_name)
 
         # Kunai (苦无) Auto-Headshot Weak Point archetype
         r_kunai = self.parser.parse(

@@ -513,7 +513,7 @@
       "archetypes": [
         {
           "id": "melee_influence",
-          "name_zh": "灵化近战电击影响流",
+          "name_zh": "灵化近战侵染流",
           "name_en": "Incarnon Melee Influence",
           "positives": ["电击伤害", "攻击速度", "攻击范围", "暴击伤害", "异常状态伤害"],
           "negatives": ["处决伤害", "滑行攻击暴击几率", "冲击伤害"]
@@ -533,7 +533,7 @@
       "archetypes": [
         {
           "id": "melee_influence",
-          "name_zh": "灵化毒云电击影响流",
+          "name_zh": "灵化毒云侵染流",
           "name_en": "Incarnon Toxin-Cloud Influence",
           "positives": ["电击伤害", "攻击速度", "攻击范围", "暴击伤害", "异常状态伤害"],
           "negatives": ["处决伤害", "滑行攻击暴击几率", "冲击伤害", "穿刺伤害"]
@@ -553,7 +553,7 @@
       "archetypes": [
         {
           "id": "melee_influence",
-          "name_zh": "灵化火焰波电击影响流",
+          "name_zh": "灵化火焰波侵染流",
           "name_en": "Incarnon Heat-Wave Influence",
           "positives": ["电击伤害", "暴击伤害", "攻击速度", "攻击范围", "异常状态伤害"],
           "negatives": ["处决伤害", "滑行攻击暴击几率", "冲击伤害", "穿刺伤害"]
@@ -573,7 +573,7 @@
       "archetypes": [
         {
           "id": "melee_influence",
-          "name_zh": "灵化冰匕电击影响流",
+          "name_zh": "灵化冰匕侵染流",
           "name_en": "Incarnon Dagger Influence",
           "positives": ["电击伤害", "攻击速度", "攻击范围", "暴击伤害", "异常状态伤害"],
           "negatives": ["处决伤害", "滑行攻击暴击几率", "冲击伤害"]
@@ -593,7 +593,7 @@
       "archetypes": [
         {
           "id": "melee_influence",
-          "name_zh": "灵化超大范围电击影响流",
+          "name_zh": "灵化超大范围侵染流",
           "name_en": "Incarnon Wide-Range Influence",
           "positives": ["电击伤害", "攻击范围", "攻击速度", "暴击伤害", "异常状态伤害"],
           "negatives": ["处决伤害", "滑行攻击暴击几率", "冲击伤害", "穿刺伤害"]
@@ -613,7 +613,7 @@
       "archetypes": [
         {
           "id": "melee_influence",
-          "name_zh": "灵化电击影响流",
+          "name_zh": "灵化侵染流",
           "name_en": "Incarnon Melee Influence",
           "positives": ["电击伤害", "攻击速度", "攻击范围", "暴击伤害", "异常状态伤害"],
           "negatives": ["处决伤害", "滑行攻击暴击几率", "冲击伤害"]
@@ -633,7 +633,7 @@
       "archetypes": [
         {
           "id": "melee_influence",
-          "name_zh": "灵化长距电击影响流",
+          "name_zh": "灵化长距侵染流",
           "name_en": "Incarnon Long-Reach Influence",
           "positives": ["电击伤害", "攻击范围", "攻击速度", "暴击伤害", "异常状态伤害"],
           "negatives": ["处决伤害", "滑行攻击暴击几率", "穿刺伤害"]
@@ -667,7 +667,7 @@
       "archetypes": [
         {
           "id": "melee_influence",
-          "name_zh": "灵化剑气电击影响流",
+          "name_zh": "灵化剑气侵染流",
           "name_en": "Incarnon Projectile Influence",
           "positives": ["电击伤害", "暴击伤害", "攻击速度", "攻击范围", "伤害"],
           "negatives": ["处决伤害", "滑行攻击暴击几率", "穿刺伤害"]

@@ -240,7 +240,7 @@ BASELINE_BUILDS: Dict[str, Tuple[List[str], List[str], str]] = {
             "shocking_touch",
         ],
         ["melee_influence"],
-        "近战钢铁电击影响基准",
+        "近战钢铁侵染基准",
     ),
     "archgun": (
         [
