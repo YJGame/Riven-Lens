@@ -17,7 +17,10 @@ descent (<30ms offline) to find the highest-synergy 7 mods + 1 arcane:
 
 from __future__ import annotations
 
+import json
+import sys
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Set, Tuple
 
 from src.evaluator import RivenEvaluation
@@ -57,13 +60,15 @@ class ModDef:
     initial_combo: float = 0.0
     heavy_dmg: float = 0.0
     slam_dmg: float = 0.0
-    element: Optional[str] = None  # "toxin" | "cold" | "heat" | "electricity"
+    element: Optional[str] = None  # "toxin" | "cold" | "heat" | "electricity" | "radiation" | "magnetic" | ...
     element_value: float = 0.0
     co_per_status: float = 0.0     # Galvanized Aptitude/Savvy/Shot or Condition Overload
     blood_rush_cc: float = 0.0     # Blood Rush at 12x combo
     weeping_sc: float = 0.0        # Weeping Wounds at 12x combo
     hunter_munitions: bool = False
     is_bane: bool = False
+    optimizer_core: bool = True
+    raw_stats_en: Tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -84,6 +89,9 @@ class ArcaneDef:
     heat_bonus: float = 0.0
     influence_aoe: bool = False
     afflictions_bonus: bool = False
+    optimizer_core: bool = True
+    desc_zh: str = ""
+    desc_en: str = ""
 
 
 # ---- Curated Mod Pools (100% verified WFSim share IDs) ----
@@ -266,6 +274,28 @@ class OptimizedModSlot:
     marginal_gain_pct: float
 
 
+@dataclass(frozen=True)
+class BuildStatSummary:
+    """Aggregated combat statistics for the active build (Weapon Base + Riven + Mods + Arcane)."""
+
+    weapon_class: str
+    damage_bonus_pct: float = 0.0
+    multishot_pct: float = 0.0
+    crit_chance_bonus_pct: float = 0.0
+    eff_crit_chance_pct: float = 0.0
+    crit_damage_bonus_pct: float = 0.0
+    eff_crit_mult: float = 2.0
+    fire_rate_pct: float = 0.0
+    status_chance_bonus_pct: float = 0.0
+    eff_status_chance_pct: float = 0.0
+    elemental_pct: float = 0.0
+    status_damage_pct: float = 0.0
+    faction_pct: float = 0.0
+    range_m: float = 0.0
+    punch_through_m: float = 0.0
+    reload_pct: float = 0.0
+
+
 @dataclass
 class BuildOptimizationResult:
     """Complete optimized 7-Mod + Arcane + Riven build recommendation."""
@@ -282,6 +312,7 @@ class BuildOptimizationResult:
     rationale_zh: List[str] = field(default_factory=list)
     rationale_en: List[str] = field(default_factory=list)
     delta_vs_recommended_pct: Optional[float] = None
+    stat_summary: Optional[BuildStatSummary] = None
 
     @property
     def mod_ids(self) -> List[str]:
@@ -292,17 +323,287 @@ class BuildOptimizationResult:
         return [self.arcane.id] if self.arcane is not None else []
 
 
-def get_mod_pool(weapon_class: str, *, allow_bane_mods: bool = True) -> List[ModDef]:
-    """Return all candidate Mods for `weapon_class` (optionally filtering faction Bane mods)."""
-    w_cls = (weapon_class or "rifle").strip().lower()
-    raw_pool = MOD_POOLS.get(w_cls, RIFLE_MODS)
-    return [m for m in raw_pool if allow_bane_mods or not m.is_bane]
+# ---- Dynamic Catalog Loader (`data/optimizer_catalog.json`) ----
+
+_CATALOG_CACHE: Optional[Tuple[Dict[str, Tuple[ModDef, ...]], Dict[str, Tuple[ArcaneDef, ...]]]] = None
 
 
-def get_arcane_pool(weapon_class: str) -> List[ArcaneDef]:
-    """Return all candidate Weapon Arcanes for `weapon_class`."""
+def _resolve_catalog_path() -> Optional[Path]:
+    candidates: List[Path] = []
+    if getattr(sys, "frozen", False):
+        exe_dir = Path(sys.executable).resolve().parent
+        candidates.append(exe_dir / "data" / "optimizer_catalog.json")
+        candidates.append(exe_dir / "_internal" / "data" / "optimizer_catalog.json")
+        meipass = getattr(sys, "_MEIPASS", None)
+        if meipass:
+            candidates.append(Path(meipass) / "data" / "optimizer_catalog.json")
+    candidates.append(Path(__file__).resolve().parent.parent / "data" / "optimizer_catalog.json")
+    for p in candidates:
+        if p.is_file():
+            return p
+    return None
+
+
+def _load_catalog() -> Tuple[Dict[str, Tuple[ModDef, ...]], Dict[str, Tuple[ArcaneDef, ...]]]:
+    global _CATALOG_CACHE
+    if _CATALOG_CACHE is not None:
+        return _CATALOG_CACHE
+
+    cat_path = _resolve_catalog_path()
+    if cat_path is None:
+        _CATALOG_CACHE = (MOD_POOLS, ARCANE_POOLS)
+        return _CATALOG_CACHE
+
+    try:
+        raw = json.loads(cat_path.read_text(encoding="utf-8"))
+        mods_map: Dict[str, Tuple[ModDef, ...]] = {}
+        arcanes_map: Dict[str, Tuple[ArcaneDef, ...]] = {}
+
+        for cls, fallback_pool in MOD_POOLS.items():
+            items = (raw.get("mods") or {}).get(cls)
+            if not isinstance(items, list) or not items:
+                mods_map[cls] = fallback_pool
+                continue
+            parsed_mods: List[ModDef] = []
+            for d in items:
+                if not isinstance(d, dict) or not d.get("id"):
+                    continue
+                parsed_mods.append(
+                    ModDef(
+                        id=str(d["id"]),
+                        name_zh=str(d.get("name_zh") or d["id"]),
+                        name_en=str(d.get("name_en") or d["id"]),
+                        exclusive_group=str(d.get("exclusive_group") or ""),
+                        damage=float(d.get("damage") or 0.0),
+                        multishot=float(d.get("multishot") or 0.0),
+                        crit_chance=float(d.get("crit_chance") or 0.0),
+                        crit_damage=float(d.get("crit_damage") or 0.0),
+                        fire_rate=float(d.get("fire_rate") or 0.0),
+                        status_chance=float(d.get("status_chance") or 0.0),
+                        status_damage=float(d.get("status_damage") or 0.0),
+                        faction=float(d.get("faction") or 0.0),
+                        weakpoint=float(d.get("weakpoint") or 0.0),
+                        punch_through=float(d.get("punch_through") or 0.0),
+                        range_m=float(d.get("range_m") or 0.0),
+                        reload=float(d.get("reload") or 0.0),
+                        initial_combo=float(d.get("initial_combo") or 0.0),
+                        heavy_dmg=float(d.get("heavy_dmg") or 0.0),
+                        slam_dmg=float(d.get("slam_dmg") or 0.0),
+                        element=str(d["element"]) if d.get("element") else None,
+                        element_value=float(d.get("element_value") or 0.0),
+                        co_per_status=float(d.get("co_per_status") or 0.0),
+                        blood_rush_cc=float(d.get("blood_rush_cc") or 0.0),
+                        weeping_sc=float(d.get("weeping_sc") or 0.0),
+                        hunter_munitions=bool(d.get("hunter_munitions")),
+                        is_bane=bool(d.get("is_bane")),
+                        optimizer_core=bool(d.get("optimizer_core", False)),
+                        raw_stats_en=tuple(str(x) for x in (d.get("raw_stats_en") or [])),
+                    )
+                )
+            mods_map[cls] = tuple(parsed_mods) if parsed_mods else fallback_pool
+
+        for cls, fallback_arcs in ARCANE_POOLS.items():
+            items = (raw.get("arcanes") or {}).get(cls)
+            if not isinstance(items, list):
+                arcanes_map[cls] = fallback_arcs
+                continue
+            parsed_arcs: List[ArcaneDef] = []
+            for d in items:
+                if not isinstance(d, dict) or not d.get("id"):
+                    continue
+                parsed_arcs.append(
+                    ArcaneDef(
+                        id=str(d["id"]),
+                        name_zh=str(d.get("name_zh") or d["id"]),
+                        name_en=str(d.get("name_en") or d["id"]),
+                        damage=float(d.get("damage") or 0.0),
+                        multishot=float(d.get("multishot") or 0.0),
+                        crit_damage=float(d.get("crit_damage") or 0.0),
+                        crit_chance=float(d.get("crit_chance") or 0.0),
+                        weakpoint=float(d.get("weakpoint") or 0.0),
+                        reload=float(d.get("reload") or 0.0),
+                        status_chance=float(d.get("status_chance") or 0.0),
+                        corrosive_bonus=float(d.get("corrosive_bonus") or 0.0),
+                        heat_bonus=float(d.get("heat_bonus") or 0.0),
+                        influence_aoe=bool(d.get("influence_aoe")),
+                        afflictions_bonus=bool(d.get("afflictions_bonus")),
+                        optimizer_core=bool(d.get("optimizer_core", False)),
+                        desc_zh=str(d.get("desc_zh") or ""),
+                        desc_en=str(d.get("desc_en") or ""),
+                    )
+                )
+            arcanes_map[cls] = tuple(parsed_arcs)
+
+        _CATALOG_CACHE = (mods_map, arcanes_map)
+        return _CATALOG_CACHE
+    except Exception:
+        _CATALOG_CACHE = (MOD_POOLS, ARCANE_POOLS)
+        return _CATALOG_CACHE
+
+
+def get_mod_pool(
+    weapon_class: str,
+    *,
+    allow_bane_mods: bool = True,
+    optimizer_only: bool = False,
+) -> List[ModDef]:
+    """Return candidate Mods for `weapon_class` (full catalog for user editing, or core subset for auto-search)."""
     w_cls = (weapon_class or "rifle").strip().lower()
-    return list(ARCANE_POOLS.get(w_cls, ()))
+    mods_map, _ = _load_catalog()
+    raw_pool = mods_map.get(w_cls, mods_map.get("rifle", RIFLE_MODS))
+    out = [m for m in raw_pool if (allow_bane_mods or not m.is_bane) and (not optimizer_only or m.optimizer_core)]
+    return out if out else list(MOD_POOLS.get(w_cls, RIFLE_MODS))
+
+
+def get_arcane_pool(weapon_class: str, *, optimizer_only: bool = False) -> List[ArcaneDef]:
+    """Return candidate Weapon Arcanes for `weapon_class`."""
+    w_cls = (weapon_class or "rifle").strip().lower()
+    _, arcs_map = _load_catalog()
+    raw_pool = arcs_map.get(w_cls, ())
+    if optimizer_only:
+        core = [a for a in raw_pool if a.optimizer_core]
+        return core if core else list(raw_pool)
+    return list(raw_pool)
+
+
+# ---- Mod Stat Formatting & Compound-Element Smart Search ----
+
+_COMPOUND_QUERY_EXPANSION: Dict[str, Tuple[str, ...]] = {
+    "腐蚀": ("toxin", "electricity", "corrosive"),
+    "corrosive": ("toxin", "electricity", "corrosive"),
+    "病毒": ("toxin", "cold", "viral"),
+    "viral": ("toxin", "cold", "viral"),
+    "辐射": ("heat", "electricity", "radiation"),
+    "radiation": ("heat", "electricity", "radiation"),
+    "磁力": ("cold", "electricity", "magnetic"),
+    "magnetic": ("cold", "electricity", "magnetic"),
+    "毒气": ("toxin", "heat", "gas"),
+    "gas": ("toxin", "heat", "gas"),
+    "爆炸": ("heat", "cold", "blast"),
+    "blast": ("heat", "cold", "blast"),
+    "毒素": ("toxin",),
+    "毒": ("toxin",),
+    "冰冻": ("cold",),
+    "冰": ("cold",),
+    "火焰": ("heat",),
+    "火": ("heat",),
+    "电击": ("electricity",),
+    "电": ("electricity",),
+}
+
+
+def format_mod_stats(mod: ModDef, weapon_class: str = "rifle", lang: str = "zh_CN") -> str:
+    """Format concise human-readable stat lines for display inside each Mod card."""
+    is_zh = lang in ("zh_CN", "zh_TW")
+    is_melee = (weapon_class or "").lower() == "melee"
+    parts: List[str] = []
+
+    def _pct(val: float) -> str:
+        p = val * 100.0
+        return f"{p:+.0f}%" if abs(p - round(p)) < 0.05 else f"{p:+.1f}%"
+
+    if mod.damage:
+        parts.append(f"{_pct(mod.damage)} {'近战伤害' if is_melee else '伤害'}" if is_zh else f"{_pct(mod.damage)} Damage")
+    if mod.multishot:
+        parts.append(f"{_pct(mod.multishot)} 多重射击" if is_zh else f"{_pct(mod.multishot)} Multishot")
+    if mod.blood_rush_cc:
+        parts.append(f"12x连击 +440% 暴击几率" if is_zh else "12x Combo +440% Crit Chance")
+    elif mod.crit_chance:
+        parts.append(f"{_pct(mod.crit_chance)} 暴击几率" if is_zh else f"{_pct(mod.crit_chance)} Crit Chance")
+    if mod.crit_damage:
+        parts.append(f"{_pct(mod.crit_damage)} 暴击伤害" if is_zh else f"{_pct(mod.crit_damage)} Crit Damage")
+    if mod.fire_rate:
+        parts.append(
+            f"{_pct(mod.fire_rate)} {'攻击速度' if is_melee else '射速'}"
+            if is_zh
+            else f"{_pct(mod.fire_rate)} {'Attack Speed' if is_melee else 'Fire Rate'}"
+        )
+    if mod.element and mod.element_value:
+        el_zh = _ELEM_LABEL_ZH.get(mod.element, mod.element)
+        el_en = _ELEM_LABEL_EN.get(mod.element, mod.element)
+        parts.append(f"{_pct(mod.element_value)} {el_zh}伤害" if is_zh else f"{_pct(mod.element_value)} {el_en}")
+    if mod.co_per_status:
+        parts.append(f"每异常 {_pct(mod.co_per_status)} 伤害" if is_zh else f"{_pct(mod.co_per_status)} DMG / Status")
+    if mod.weeping_sc:
+        parts.append("12x连击 +440% 触发几率" if is_zh else "12x Combo +440% Status")
+    elif mod.status_chance:
+        parts.append(f"{_pct(mod.status_chance)} 触发几率" if is_zh else f"{_pct(mod.status_chance)} Status Chance")
+    if mod.status_damage:
+        parts.append(f"{_pct(mod.status_damage)} 异常伤害" if is_zh else f"{_pct(mod.status_damage)} Status DMG")
+    if mod.hunter_munitions:
+        parts.append("暴击 30% 触发切割" if is_zh else "30% Slash on Crit")
+    if mod.faction:
+        parts.append(f"x{1.0 + mod.faction:.2f} 阵营增伤" if is_zh else f"x{1.0 + mod.faction:.2f} Faction DMG")
+    if mod.weakpoint:
+        parts.append(f"{_pct(mod.weakpoint)} 弱点伤害" if is_zh else f"{_pct(mod.weakpoint)} Weak Point")
+    if mod.range_m:
+        parts.append(f"{mod.range_m:+.1f}m 攻击范围" if is_zh else f"{mod.range_m:+.1f}m Range")
+    if mod.punch_through:
+        parts.append(f"{mod.punch_through:+.1f}m 穿透" if is_zh else f"{mod.punch_through:+.1f}m Punch Through")
+    if mod.reload:
+        parts.append(f"{_pct(mod.reload)} 装填速度" if is_zh else f"{_pct(mod.reload)} Reload")
+    if mod.initial_combo:
+        parts.append(f"{mod.initial_combo:+.0f} 初始连击" if is_zh else f"{mod.initial_combo:+.0f} Initial Combo")
+    if mod.heavy_dmg:
+        parts.append(f"{_pct(mod.heavy_dmg)} 重击伤害" if is_zh else f"{_pct(mod.heavy_dmg)} Heavy DMG")
+    if mod.slam_dmg:
+        parts.append(f"{_pct(mod.slam_dmg)} 震地伤害" if is_zh else f"{_pct(mod.slam_dmg)} Slam DMG")
+
+    if not parts and mod.raw_stats_en:
+        return " · ".join(mod.raw_stats_en[:2])
+    return " · ".join(parts[:3]) if parts else "-"
+
+
+def match_mod_search(mod: ModDef, query: str, weapon_class: str = "rifle") -> bool:
+    """Return True if `mod` matches user's search text (supports name, stats, & compound elements!)."""
+    q = (query or "").strip().lower()
+    if not q:
+        return True
+
+    tokens = [t for t in q.split() if t]
+    stat_zh = format_mod_stats(mod, weapon_class, "zh_CN").lower()
+    stat_en = format_mod_stats(mod, weapon_class, "en_US").lower()
+    haystack = " ".join(
+        [
+            mod.name_zh.lower(),
+            mod.name_en.lower(),
+            mod.id.lower(),
+            stat_zh,
+            stat_en,
+            " ".join(mod.raw_stats_en).lower(),
+            "歧视 种族" if mod.is_bane else "",
+            "爆伤 暴伤" if mod.crit_damage else "",
+            "暴击 双暴" if (mod.crit_chance or mod.blood_rush_cc) else "",
+            "多重" if mod.multishot else "",
+            "射速 攻速" if mod.fire_rate else "",
+            "基伤 伤害" if (mod.damage or mod.co_per_status) else "",
+            "范围" if mod.range_m else "",
+            "穿透" if mod.punch_through else "",
+            "触发" if (mod.status_chance or mod.weeping_sc) else "",
+            "异伤 异常" if mod.status_damage else "",
+            "重击" if (mod.heavy_dmg or mod.initial_combo) else "",
+            "震地" if mod.slam_dmg else "",
+            "切割" if mod.hunter_munitions else "",
+        ]
+    )
+
+    for tok in tokens:
+        if tok in haystack:
+            continue
+        # Compound & single element expansion (e.g. "腐蚀" -> toxin + electricity + corrosive!)
+        expanded_elems = _COMPOUND_QUERY_EXPANSION.get(tok)
+        if expanded_elems and mod.element in expanded_elems:
+            continue
+        # Also allow substring match for compound keywords like "腐" or "病"
+        matched_comp = False
+        if mod.element:
+            for k, elems in _COMPOUND_QUERY_EXPANSION.items():
+                if len(tok) >= 2 and tok in k and mod.element in elems:
+                    matched_comp = True
+                    break
+        if not matched_comp:
+            return False
+    return True
 
 
 def _extract_riven_profile(ev: RivenEvaluation) -> Dict[str, object]:
@@ -525,7 +826,10 @@ def _score_build(
         if m.hunter_munitions:
             has_hm = True
         if m.element:
-            base_elems.add(m.element)
+            if m.element in ("viral", "corrosive", "radiation", "magnetic", "gas", "blast"):
+                comp_elems.add(m.element)
+            else:
+                base_elems.add(m.element)
             elem += m.element_value
 
     prefer_influence = bool(arcane is not None and arcane.influence_aoe and is_melee)
@@ -637,6 +941,125 @@ def _score_build(
 
     score = dmg * ms * fr * elem * crit_mult * faction * weakpoint * elem_synergy * utility
     return score, comps, rem_elems
+
+
+def compute_build_stat_summary(
+    ev: RivenEvaluation,
+    riven_prof: Optional[Dict[str, object]],
+    mods: Sequence[ModDef],
+    arcane: Optional[ArcaneDef],
+    scenario: str = SCENARIO_STEEL_PATH,
+) -> BuildStatSummary:
+    """Compute human-readable overall build stats (Damage, MS, CC, CD, FR/AS, Range, SC, Elem, etc.)."""
+    w_cls = (ev.weapon_class or "rifle").strip().lower()
+    is_melee = w_cls == "melee"
+    w_cc = float(ev.weapon_crit_chance) if (ev.weapon_crit_chance and ev.weapon_crit_chance > 0) else (0.24 if is_melee else 0.22)
+    w_cd = float(ev.weapon_crit_mult) if (ev.weapon_crit_mult and ev.weapon_crit_mult > 1.0) else (2.2 if is_melee else 2.0)
+    w_sc = float(ev.weapon_status_chance) if (ev.weapon_status_chance and ev.weapon_status_chance > 0) else 0.20
+
+    dmg = 0.0
+    ms = 0.0
+    cc_mod = 0.0
+    cd_mod = 0.0
+    fr = 0.0
+    sc_mod = 0.0
+    st_dmg = 0.0
+    faction = 0.0
+    elem = 0.0
+    range_m = 0.0
+    punch_through = 0.0
+    reload_b = 0.0
+    co_per_status = 0.0
+    base_elems: Set[str] = set()
+    comp_elems: Set[str] = set()
+
+    if riven_prof is not None:
+        dmg += float(riven_prof["damage"])
+        if not is_melee:
+            ms += float(riven_prof["multishot"])
+        cc_mod += float(riven_prof["crit_chance"])
+        cd_mod += float(riven_prof["crit_damage"])
+        fr += float(riven_prof["fire_rate"])
+        sc_mod += float(riven_prof["status_chance"])
+        st_dmg += float(riven_prof["status_damage"])
+        faction += float(riven_prof["faction"])
+        elem += float(riven_prof["elem_total"])
+        range_m += float(riven_prof["range_m"])
+        punch_through += float(riven_prof["punch_through"])
+        reload_b += float(riven_prof["reload"])
+        base_elems |= set(riven_prof["base_elements"])  # type: ignore[arg-type]
+        comp_elems |= set(riven_prof["compound_elements"])  # type: ignore[arg-type]
+
+    for m in mods:
+        dmg += m.damage
+        if not is_melee:
+            ms += m.multishot
+        cc_mod += m.crit_chance + m.blood_rush_cc
+        cd_mod += m.crit_damage
+        fr += m.fire_rate
+        sc_mod += m.status_chance + m.weeping_sc
+        st_dmg += m.status_damage
+        faction += m.faction
+        range_m += m.range_m
+        punch_through += m.punch_through
+        reload_b += m.reload
+        co_per_status += m.co_per_status
+        if m.element:
+            if m.element in ("viral", "corrosive", "radiation", "magnetic", "gas", "blast"):
+                comp_elems.add(m.element)
+            else:
+                base_elems.add(m.element)
+            elem += m.element_value
+
+    prefer_influence = bool(arcane is not None and arcane.influence_aoe and is_melee)
+    if arcane is not None and arcane.corrosive_bonus > 0:
+        elem += arcane.corrosive_bonus
+        comp_elems.add("corrosive")
+    comps, rem_elems = _combine_elements(base_elems, comp_elems, prefer_influence=prefer_influence)
+
+    if arcane is not None:
+        arc_active = True
+        if arcane.id == "primary_frostbite" and "cold" not in rem_elems:
+            arc_active = False
+        elif arcane.id == "primary_blight" and "toxin" not in rem_elems:
+            arc_active = False
+        elif arcane.id == "cascadia_flare" and "heat" not in rem_elems:
+            arc_active = False
+        if arc_active:
+            dmg += arcane.damage
+            if not is_melee:
+                ms += arcane.multishot
+            cd_mod += arcane.crit_damage
+            cc_mod += arcane.crit_chance
+            sc_mod += arcane.status_chance
+            reload_b += arcane.reload
+
+    distinct_statuses = 2.0 + len(comps) + len(rem_elems)
+    if co_per_status > 0:
+        dmg += co_per_status * min(5.0, distinct_statuses)
+
+    eff_cc = max(0.0, w_cc * (1.0 + cc_mod)) * 100.0
+    eff_cd = max(1.0, w_cd * (1.0 + cd_mod))
+    eff_sc = max(0.0, w_sc * (1.0 + sc_mod)) * 100.0
+
+    return BuildStatSummary(
+        weapon_class=w_cls,
+        damage_bonus_pct=round(dmg * 100.0, 1),
+        multishot_pct=round(ms * 100.0, 1),
+        crit_chance_bonus_pct=round(cc_mod * 100.0, 1),
+        eff_crit_chance_pct=round(eff_cc, 1),
+        crit_damage_bonus_pct=round(cd_mod * 100.0, 1),
+        eff_crit_mult=round(eff_cd, 2),
+        fire_rate_pct=round(fr * 100.0, 1),
+        status_chance_bonus_pct=round(sc_mod * 100.0, 1),
+        eff_status_chance_pct=round(eff_sc, 1),
+        elemental_pct=round(elem * 100.0, 1),
+        status_damage_pct=round(st_dmg * 100.0, 1),
+        faction_pct=round(faction * 100.0, 1),
+        range_m=round(range_m, 2),
+        punch_through_m=round(punch_through, 2),
+        reload_pct=round(reload_b * 100.0, 1),
+    )
 
 
 def _conflict_with(mod: ModDef, chosen: Sequence[ModDef]) -> bool:
@@ -753,9 +1176,8 @@ def optimize_build_for_riven(
 ) -> BuildOptimizationResult:
     """Find the optimal 7 Mods + Arcane complementing the scanned Riven Mod (<30ms offline)."""
     w_cls = (ev.weapon_class or "rifle").strip().lower()
-    raw_pool = MOD_POOLS.get(w_cls, RIFLE_MODS)
-    pool = [m for m in raw_pool if allow_bane_mods or not m.is_bane]
-    arcanes = ARCANE_POOLS.get(w_cls, ()) or (None,)
+    pool = get_mod_pool(w_cls, allow_bane_mods=allow_bane_mods, optimizer_only=True)
+    arcanes = get_arcane_pool(w_cls, optimizer_only=True) or [None]
 
     riven_prof = _extract_riven_profile(ev)
 
@@ -824,6 +1246,7 @@ def optimize_build_for_riven(
         rationale_zh.append("已按当前紫卡词条自动平衡双暴、多重、射速与元素乘区，避免重复稀释")
         rationale_en.append("Balanced Crit, Multishot, Fire Rate & Elemental multipliers around your scanned Riven")
 
+    stat_summary = compute_build_stat_summary(ev, riven_prof, best_mods, best_arcane, scenario)
     return BuildOptimizationResult(
         weapon_name=ev.weapon_name or ev.weapon_name_en or "",
         weapon_class=w_cls,
@@ -837,6 +1260,7 @@ def optimize_build_for_riven(
         rationale_zh=rationale_zh,
         rationale_en=rationale_en,
         delta_vs_recommended_pct=0.0,
+        stat_summary=stat_summary,
     )
 
 
@@ -850,9 +1274,9 @@ def evaluate_custom_build_for_riven(
 ) -> BuildOptimizationResult:
     """Evaluate a user-customized 0..7 Mod + Arcane combination around the scanned Riven (<2ms)."""
     w_cls = (ev.weapon_class or "rifle").strip().lower()
-    pool = MOD_POOLS.get(w_cls, RIFLE_MODS)
+    pool = get_mod_pool(w_cls, allow_bane_mods=True, optimizer_only=False)
     mod_by_id: Dict[str, ModDef] = {m.id: m for m in pool}
-    arc_by_id: Dict[str, ArcaneDef] = {a.id: a for a in ARCANE_POOLS.get(w_cls, ())}
+    arc_by_id: Dict[str, ArcaneDef] = {a.id: a for a in get_arcane_pool(w_cls, optimizer_only=False)}
 
     chosen_mods: List[ModDef] = []
     seen_ids: Set[str] = set()
@@ -920,6 +1344,7 @@ def evaluate_custom_build_for_riven(
             rationale_zh.append("当前自定义配卡与自动推荐强度基本持平，可一键跳转 WFSim 精确逐帧验证")
             rationale_en.append("Custom build matches the auto-recommended DPS closely; verify in WFSim anytime")
 
+    stat_summary = compute_build_stat_summary(ev, riven_prof, chosen_mods, chosen_arcane, scenario)
     return BuildOptimizationResult(
         weapon_name=ev.weapon_name or ev.weapon_name_en or "",
         weapon_class=w_cls,
@@ -933,4 +1358,5 @@ def evaluate_custom_build_for_riven(
         rationale_zh=rationale_zh,
         rationale_en=rationale_en,
         delta_vs_recommended_pct=delta_vs_rec,
+        stat_summary=stat_summary,
     )

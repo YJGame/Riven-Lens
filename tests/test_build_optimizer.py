@@ -18,6 +18,10 @@ from src.build_optimizer import (
     SCENARIO_GENERAL,
     SCENARIO_STEEL_PATH,
     evaluate_custom_build_for_riven,
+    format_mod_stats,
+    get_arcane_pool,
+    get_mod_pool,
+    match_mod_search,
     optimize_build_for_riven,
 )
 from src.build_optimizer_dialog import BuildOptimizerDialog
@@ -146,11 +150,11 @@ class TestBuildOptimizer(unittest.TestCase):
             self.assertEqual(dlg._last_result.arcane_ids, ["melee_exposure"])
             self.assertIsNotNone(dlg._last_result.delta_vs_recommended_pct)
 
-            # Mutually exclusive conflict test: picking "primed_pressure_point" auto-clears "condition_overload"
-            dlg.set_slot_mod(1, "condition_overload")
-            dlg.set_slot_mod(2, "primed_pressure_point")
-            self.assertNotIn("condition_overload", dlg._last_result.mod_ids)
-            self.assertIn("primed_pressure_point", dlg._last_result.mod_ids)
+            # Mutually exclusive conflict test: picking "sacrificial_pressure" auto-clears "primed_pressure_point"
+            dlg.set_slot_mod(1, "primed_pressure_point")
+            dlg.set_slot_mod(2, "sacrificial_pressure")
+            self.assertNotIn("primed_pressure_point", dlg._last_result.mod_ids)
+            self.assertIn("sacrificial_pressure", dlg._last_result.mod_ids)
 
             emitted = []
             dlg.send_optimized_to_wfsim.connect(lambda e, r, o: emitted.append((e, r, o)))
@@ -260,6 +264,81 @@ class TestBuildOptimizer(unittest.TestCase):
             scenario=SCENARIO_GENERAL,
         )
         self.assertTrue(any("主要·毒侵" in msg and "独立【毒素】" in msg for msg in warned.rationale_zh))
+
+    def test_full_catalog_compound_element_search_purple_riven_and_overall_stats(self) -> None:
+        # 1. Full catalog loaded with expanded Mods & Arcanes
+        rifle_mods = get_mod_pool("rifle")
+        rifle_arcs = get_arcane_pool("rifle")
+        pistol_arcs = get_arcane_pool("pistol")
+        melee_arcs = get_arcane_pool("melee")
+        self.assertGreaterEqual(len(rifle_mods), 100)
+        self.assertGreaterEqual(len(rifle_arcs), 12)
+        self.assertGreaterEqual(len(pistol_arcs), 20)
+        self.assertGreaterEqual(len(melee_arcs), 10)
+        self.assertIn("primary_crux", [a.id for a in rifle_arcs])
+        self.assertIn("secondary_encumber", [a.id for a in pistol_arcs])
+        self.assertIn("melee_duplicate", [a.id for a in melee_arcs])
+        self.assertIn("radiated_reload", [m.id for m in rifle_mods])
+        self.assertIn("magnetic_capacity", [m.id for m in rifle_mods])
+
+        # 2. Compound element search: "腐蚀" -> returns Toxin + Electricity mods!
+        corr_hits = [m.id for m in rifle_mods if match_mod_search(m, "腐蚀", "rifle")]
+        self.assertIn("infected_clip", corr_hits)
+        self.assertIn("malignant_force", corr_hits)
+        self.assertIn("high_voltage", corr_hits)
+        self.assertIn("stormbringer", corr_hits)
+        self.assertNotIn("hellfire", corr_hits)
+
+        # "辐射" -> returns Heat + Electricity + direct Radiation ("radiated_reload")
+        rad_hits = [m.id for m in rifle_mods if match_mod_search(m, "辐射", "rifle")]
+        self.assertIn("hellfire", rad_hits)
+        self.assertIn("stormbringer", rad_hits)
+        self.assertIn("radiated_reload", rad_hits)
+
+        # 3. Mod stat formatting produces explicit values
+        chamber = next(m for m in rifle_mods if m.id == "galvanized_chamber")
+        self.assertIn("+230%", format_mod_stats(chamber, "rifle", "zh_CN"))
+
+        # 4. Dialog shows purple Riven card, searchable combo filtering, & overall stats (melee includes Range)
+        r_ichor = self.parser.parse(
+            [
+                "恶脓双斧 Croni-loctitron",
+                "+95.0% 电击伤害",
+                "+60.0% 攻击速度",
+                "+2.1 攻击范围",
+                "-90.0% 处决伤害",
+                "段位 15 O 12",
+            ]
+        )
+        ev_m = self.evaluator.evaluate(r_ichor)
+        settings = UserSettings()
+        dlg = BuildOptimizerDialog(settings=settings, lang="zh_CN")
+        try:
+            dlg.show_for_card(ev_m, r_ichor)
+            # Slot #8 Riven frame uses purple border (#C084FC) and purple bg (#2A1246)
+            riven_frame = dlg._slot_frames[-1]
+            self.assertEqual(riven_frame.objectName(), "RivenCard")
+            self.assertIn("#C084FC", riven_frame.styleSheet())
+            self.assertIn("#2A1246", riven_frame.styleSheet())
+
+            # Searchable dropdown filters by compound element "腐蚀" -> Toxin & Electricity melee mods
+            combo0 = dlg._slot_combos[0]
+            filtered_ids = combo0.filtered_item_ids("腐蚀")
+            self.assertIn("voltaic_strike", filtered_ids)
+            self.assertIn("virulent_scourge", filtered_ids)
+            self.assertNotIn("vicious_frost", filtered_ids)
+
+            # Overall build stat summary populated & melee displays Range pill
+            self.assertIsNotNone(dlg._last_result.stat_summary)
+            self.assertGreater(dlg._last_result.stat_summary.range_m, 0.0)
+            pill_texts = " ".join(p.text() for p in dlg._stat_pills)
+            self.assertIn("攻速", pill_texts)
+            self.assertIn("范围", pill_texts)
+            self.assertIn("暴击", pill_texts)
+            self.assertIn("爆伤", pill_texts)
+            self.assertIn("触发", pill_texts)
+        finally:
+            dlg.close()
 
 
 if __name__ == "__main__":
