@@ -38,6 +38,7 @@ $dataDst = Join-Path $StageDir "data"
 New-Item -ItemType Directory -Force -Path $dataDst | Out-Null
 foreach ($jsonName in @(
     "custom_riven_stats.json",
+    "optimizer_catalog.json",
     "prime_prices.json",
     "recommended_tiers.json",
     "riven_attributes.json",
