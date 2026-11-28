@@ -163,7 +163,7 @@
     "opt_reset_btn": "↺ Reset Recommended",
     "opt_modified_badge": "Custom Build ({delta:+.1f}% vs Auto)",
     "opt_slot_modified_tag": "Edited",
-    "opt_rationale_hdr": "Overall Stats & Build Analysis (type in any dropdown to filter by name or element):",
+    "opt_rationale_hdr": "Overall Stats & Analysis (click ▾ to browse hover categories, or type e.g. Corrosive/Viral):",
     "opt_disclaimer": "Fast local model (<30ms). Right button opens wfsim.app via WFSim share link (unofficial independent project).",
     "opt_send_wfsim_btn": "🚀 Open This Build in WFSim (wfsim.app)",
     "hk_save_btn": "Save Hotkeys",

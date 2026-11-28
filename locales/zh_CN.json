@@ -163,7 +163,7 @@
     "opt_reset_btn": "↺ 恢复自动推荐",
     "opt_modified_badge": "已手动调整（相对推荐 {delta:+.1f}% DPS）",
     "opt_slot_modified_tag": "已改",
-    "opt_rationale_hdr": "配卡整体数值与分析（下拉框支持输入名称或“腐蚀/病毒/辐射/磁力”筛选）：",
+    "opt_rationale_hdr": "配卡整体数值与分析（点 ▾ 悬停分类选卡，或在框内输入“腐蚀/病毒/辐射/磁力”筛选）：",
     "opt_disclaimer": "本地期望模型 (<30ms) 供快速参考；右侧按钮通过 WFSim 分享链接跳转 wfsim.app 模拟（非官方独立项目）。",
     "opt_send_wfsim_btn": "🚀 在 WFSim 中打开这套配装（wfsim.app）",
     "hk_save_btn": "保存热键",

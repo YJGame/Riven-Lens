@@ -67,6 +67,7 @@ class ModDef:
     weeping_sc: float = 0.0        # Weeping Wounds at 12x combo
     hunter_munitions: bool = False
     is_bane: bool = False
+    compat_weapon: str = ""
     optimizer_core: bool = True
     raw_stats_en: Tuple[str, ...] = ()
 
@@ -396,6 +397,7 @@ def _load_catalog() -> Tuple[Dict[str, Tuple[ModDef, ...]], Dict[str, Tuple[Arca
                         weeping_sc=float(d.get("weeping_sc") or 0.0),
                         hunter_munitions=bool(d.get("hunter_munitions")),
                         is_bane=bool(d.get("is_bane")),
+                        compat_weapon=str(d.get("compat_weapon") or ""),
                         optimizer_core=bool(d.get("optimizer_core", False)),
                         raw_stats_en=tuple(str(x) for x in (d.get("raw_stats_en") or [])),
                     )
@@ -441,18 +443,185 @@ def _load_catalog() -> Tuple[Dict[str, Tuple[ModDef, ...]], Dict[str, Tuple[Arca
         return _CATALOG_CACHE
 
 
+_SUBTYPE_KEYWORDS: Dict[str, Tuple[str, ...]] = {
+    "bow": (
+        "bramma", "cernos", "dread", "paris", "nataruk", "daikyu", "lenz",
+        "zhuge", "attica", "nagantaka", "cinta", "evensong", "artemis_bow", "bow",
+    ),
+    "sniper": (
+        "rubico", "vectis", "lanka", "vulkar", "snipetron", "komorex",
+        "sporothrix", "perigale", "vadarya",
+    ),
+    "glaive": (
+        "glaive", "xoris", "falcor", "cerata", "orvius", "pathocyst",
+        "kestrel", "halikar", "wolf_sledge",
+    ),
+    "tome": ("grimoire", "noctua"),
+    "dagger": (
+        "karyst", "ceramic_dagger", "innodem", "balla", "dark_dagger",
+        "heat_dagger", "rumblejack", "sheev",
+    ),
+}
+
+
+def _norm_weapon_key(weapon_slug: str = "", weapon_name_en: str = "") -> str:
+    s = (weapon_slug or "").strip().lower()
+    if s:
+        return s.replace("-", "_").replace(" ", "_")
+    en = (weapon_name_en or "").strip().lower().replace("&", " and ")
+    return "".join(ch if ch.isalnum() else "_" for ch in en).strip("_")
+
+
+def is_mod_compatible_with_weapon(
+    mod: ModDef,
+    *,
+    weapon_slug: str = "",
+    weapon_name_en: str = "",
+) -> bool:
+    """Return True if `mod` is universal (`compat_weapon == ''`) or matches the specified weapon."""
+    cw = (mod.compat_weapon or "").strip().lower()
+    if not cw:
+        return True
+    wkey = _norm_weapon_key(weapon_slug, weapon_name_en)
+    if not wkey:
+        return False
+    if cw.startswith("subtype:"):
+        st = cw.split(":", 1)[1]
+        kws = _SUBTYPE_KEYWORDS.get(st, ())
+        return any(kw == wkey or f"_{kw}" in wkey or f"{kw}_" in wkey for kw in kws)
+    return wkey == cw or wkey.endswith(f"_{cw}") or wkey.startswith(f"{cw}_")
+
+
 def get_mod_pool(
     weapon_class: str,
     *,
     allow_bane_mods: bool = True,
     optimizer_only: bool = False,
+    weapon_slug: str = "",
+    weapon_name_en: str = "",
 ) -> List[ModDef]:
-    """Return candidate Mods for `weapon_class` (full catalog for user editing, or core subset for auto-search)."""
+    """Return candidate Mods for `weapon_class`, filtering weapon-exclusive Mods to the active weapon."""
     w_cls = (weapon_class or "rifle").strip().lower()
     mods_map, _ = _load_catalog()
     raw_pool = mods_map.get(w_cls, mods_map.get("rifle", RIFLE_MODS))
-    out = [m for m in raw_pool if (allow_bane_mods or not m.is_bane) and (not optimizer_only or m.optimizer_core)]
+    has_weapon_ctx = bool((weapon_slug or "").strip() or (weapon_name_en or "").strip())
+    out: List[ModDef] = []
+    for m in raw_pool:
+        if not allow_bane_mods and m.is_bane:
+            continue
+        if optimizer_only and not m.optimizer_core:
+            continue
+        if has_weapon_ctx:
+            if not is_mod_compatible_with_weapon(m, weapon_slug=weapon_slug, weapon_name_en=weapon_name_en):
+                continue
+        elif optimizer_only and m.compat_weapon:
+            continue
+        out.append(m)
     return out if out else list(MOD_POOLS.get(w_cls, RIFLE_MODS))
+
+
+def categorize_mods_for_menu(
+    mods: Sequence[ModDef],
+    weapon_class: str = "rifle",
+    lang: str = "zh_CN",
+) -> List[Tuple[str, List[ModDef]]]:
+    """Group compatible Mods into crisp top-level categories for cascading hover submenus."""
+    is_zh = lang in ("zh_CN", "zh_TW")
+    is_melee = (weapon_class or "").lower() == "melee"
+
+    buckets: Dict[str, List[ModDef]] = {
+        "exclusive": [],
+        "dmg_ms": [],
+        "crit": [],
+        "speed_range": [],
+        "elem_toxin": [],
+        "elem_cold": [],
+        "elem_heat": [],
+        "elem_elec": [],
+        "elem_comp": [],
+        "status_slash": [],
+        "bane": [],
+        "heavy_util": [],
+    }
+
+    for m in mods:
+        if m.compat_weapon:
+            buckets["exclusive"].append(m)
+        elif m.is_bane:
+            buckets["bane"].append(m)
+        elif m.element == "toxin":
+            buckets["elem_toxin"].append(m)
+        elif m.element == "cold":
+            buckets["elem_cold"].append(m)
+        elif m.element == "heat":
+            buckets["elem_heat"].append(m)
+        elif m.element == "electricity":
+            buckets["elem_elec"].append(m)
+        elif m.element in ("radiation", "magnetic", "viral", "corrosive", "blast", "gas"):
+            buckets["elem_comp"].append(m)
+        elif m.crit_chance or m.crit_damage or m.blood_rush_cc or m.weakpoint:
+            buckets["crit"].append(m)
+        elif m.damage or m.multishot or m.co_per_status:
+            buckets["dmg_ms"].append(m)
+        elif m.fire_rate or (is_melee and m.range_m):
+            buckets["speed_range"].append(m)
+        elif m.status_chance or m.status_damage or m.weeping_sc or m.hunter_munitions:
+            buckets["status_slash"].append(m)
+        else:
+            buckets["heavy_util"].append(m)
+
+    labels_zh = {
+        "exclusive": "★ 武器专属",
+        "dmg_ms": "⚔ 伤害 / 多重" if not is_melee else "⚔ 基础伤害 / 异况",
+        "crit": "🎯 暴击 / 爆伤",
+        "speed_range": "⚡ 攻速 / 范围" if is_melee else "⚡ 射速",
+        "elem_toxin": "☠ 元素：毒素",
+        "elem_cold": "❄ 元素：冰冻",
+        "elem_heat": "🔥 元素：火焰",
+        "elem_elec": "⚡ 元素：电击",
+        "elem_comp": "☢ 元素：辐射 / 磁力",
+        "status_slash": "🩸 触发 / 异常 / 切割",
+        "bane": "🛡 种族歧视",
+        "heavy_util": "🔧 重击 / 震地 / 连击" if is_melee else "🔧 装填 / 穿透 / 功能",
+    }
+    labels_en = {
+        "exclusive": "★ Weapon Exclusive",
+        "dmg_ms": "⚔ Damage & Multishot" if not is_melee else "⚔ Base Damage / CO",
+        "crit": "🎯 Crit Chance & Damage",
+        "speed_range": "⚡ Attack Speed & Range" if is_melee else "⚡ Fire Rate",
+        "elem_toxin": "☠ Element: Toxin",
+        "elem_cold": "❄ Element: Cold",
+        "elem_heat": "🔥 Element: Heat",
+        "elem_elec": "⚡ Element: Electricity",
+        "elem_comp": "☢ Element: Rad / Mag",
+        "status_slash": "🩸 Status & Slash",
+        "bane": "🛡 Faction Bane",
+        "heavy_util": "🔧 Heavy / Slam / Utility" if is_melee else "🔧 Reload / Punch / Utility",
+    }
+    labels = labels_zh if is_zh else labels_en
+
+    ordered_keys = (
+        "exclusive",
+        "dmg_ms",
+        "crit",
+        "speed_range",
+        "elem_toxin",
+        "elem_cold",
+        "elem_heat",
+        "elem_elec",
+        "elem_comp",
+        "status_slash",
+        "bane",
+        "heavy_util",
+    )
+    result: List[Tuple[str, List[ModDef]]] = []
+    for k in ordered_keys:
+        items = buckets[k]
+        if items:
+            # Show core meta mods first inside each submenu, then alphabetical
+            items.sort(key=lambda x: (0 if x.optimizer_core else 1, x.name_zh if is_zh else x.name_en))
+            result.append((labels[k], items))
+    return result
 
 
 def get_arcane_pool(weapon_class: str, *, optimizer_only: bool = False) -> List[ArcaneDef]:
@@ -1176,7 +1345,13 @@ def optimize_build_for_riven(
 ) -> BuildOptimizationResult:
     """Find the optimal 7 Mods + Arcane complementing the scanned Riven Mod (<30ms offline)."""
     w_cls = (ev.weapon_class or "rifle").strip().lower()
-    pool = get_mod_pool(w_cls, allow_bane_mods=allow_bane_mods, optimizer_only=True)
+    pool = get_mod_pool(
+        w_cls,
+        allow_bane_mods=allow_bane_mods,
+        optimizer_only=True,
+        weapon_slug=ev.weapon_slug,
+        weapon_name_en=ev.weapon_name_en,
+    )
     arcanes = get_arcane_pool(w_cls, optimizer_only=True) or [None]
 
     riven_prof = _extract_riven_profile(ev)
@@ -1274,7 +1449,13 @@ def evaluate_custom_build_for_riven(
 ) -> BuildOptimizationResult:
     """Evaluate a user-customized 0..7 Mod + Arcane combination around the scanned Riven (<2ms)."""
     w_cls = (ev.weapon_class or "rifle").strip().lower()
-    pool = get_mod_pool(w_cls, allow_bane_mods=True, optimizer_only=False)
+    pool = get_mod_pool(
+        w_cls,
+        allow_bane_mods=True,
+        optimizer_only=False,
+        weapon_slug=ev.weapon_slug,
+        weapon_name_en=ev.weapon_name_en,
+    )
     mod_by_id: Dict[str, ModDef] = {m.id: m for m in pool}
     arc_by_id: Dict[str, ArcaneDef] = {a.id: a for a in get_arcane_pool(w_cls, optimizer_only=False)}
 

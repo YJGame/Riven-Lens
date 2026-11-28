@@ -17,10 +17,12 @@ from src.build_optimizer import (
     SCENARIO_BOSS_DIRECT,
     SCENARIO_GENERAL,
     SCENARIO_STEEL_PATH,
+    categorize_mods_for_menu,
     evaluate_custom_build_for_riven,
     format_mod_stats,
     get_arcane_pool,
     get_mod_pool,
+    is_mod_compatible_with_weapon,
     match_mod_search,
     optimize_build_for_riven,
 )
@@ -321,12 +323,21 @@ class TestBuildOptimizer(unittest.TestCase):
             self.assertIn("#C084FC", riven_frame.styleSheet())
             self.assertIn("#2A1246", riven_frame.styleSheet())
 
-            # Searchable dropdown filters by compound element "腐蚀" -> Toxin & Electricity melee mods
-            combo0 = dlg._slot_combos[0]
-            filtered_ids = combo0.filtered_item_ids("腐蚀")
+            # Searchable selector preserves typed text ("腐蚀") while popup shows Toxin & Electricity melee mods!
+            sel0 = dlg._slot_combos[0]
+            sel0._edit.setText("腐蚀")
+            sel0._on_text_edited("腐蚀")
+            self.assertEqual(sel0.current_text(), "腐蚀")  # typed text stays visible until user picks a mod!
+            filtered_ids = sel0.search_matching_ids("腐蚀")
             self.assertIn("voltaic_strike", filtered_ids)
             self.assertIn("virulent_scourge", filtered_ids)
             self.assertNotIn("vicious_frost", filtered_ids)
+
+            # Cascading hover-category QMenu builds submenus cleanly
+            cat_menu = sel0.build_category_menu()
+            submenu_titles = [act.text() for act in cat_menu.actions() if act.menu() is not None]
+            self.assertTrue(any("毒素" in t for t in submenu_titles))
+            self.assertTrue(any("暴击" in t for t in submenu_titles))
 
             # Overall build stat summary populated & melee displays Range pill
             self.assertIsNotNone(dlg._last_result.stat_summary)
@@ -339,6 +350,33 @@ class TestBuildOptimizer(unittest.TestCase):
             self.assertIn("触发", pill_texts)
         finally:
             dlg.close()
+
+    def test_weapon_exclusive_mods_only_appear_for_matching_weapon_in_dedicated_category(self) -> None:
+        # 1. Higasa Serration (晴日伞 膛线) MUST NOT appear for Torid / Amprex
+        torid_pool = get_mod_pool("rifle", weapon_slug="torid", weapon_name_en="Torid")
+        self.assertNotIn("higasa_serration", [m.id for m in torid_pool])
+        torid_cats = categorize_mods_for_menu(torid_pool, "rifle", "zh_CN")
+        self.assertFalse(any("武器专属" in title for title, _ in torid_cats))
+
+        # 2. Higasa Serration (晴日伞 膛线) MUST appear for Higasa inside dedicated "★ 武器专属" category!
+        higasa_pool = get_mod_pool("rifle", weapon_slug="higasa", weapon_name_en="Higasa")
+        self.assertIn("higasa_serration", [m.id for m in higasa_pool])
+        higasa_cats = categorize_mods_for_menu(higasa_pool, "rifle", "zh_CN")
+        self.assertEqual(higasa_cats[0][0], "★ 武器专属")
+        self.assertIn("higasa_serration", [m.id for m in higasa_cats[0][1]])
+
+        # 3. Kuva Sobek gets Acid Shells (酸性弹药); Rubico gets Sniper Primed Chamber; Xoris gets Glaive Volatile Quick Return
+        sobek_pool = get_mod_pool("shotgun", weapon_slug="kuva_sobek", weapon_name_en="Kuva Sobek")
+        self.assertIn("acid_shells", [m.id for m in sobek_pool])
+        self.assertNotIn("scattered_justice", [m.id for m in sobek_pool])
+
+        rubico_pool = get_mod_pool("rifle", weapon_slug="rubico", weapon_name_en="Rubico")
+        self.assertIn("primed_chamber", [m.id for m in rubico_pool])
+        self.assertNotIn("split_flights", [m.id for m in rubico_pool])
+
+        xoris_pool = get_mod_pool("melee", weapon_slug="xoris", weapon_name_en="Xoris")
+        self.assertIn("volatile_quick_return", [m.id for m in xoris_pool])
+        self.assertNotIn("amanata_pressure", [m.id for m in xoris_pool])
 
 
 if __name__ == "__main__":

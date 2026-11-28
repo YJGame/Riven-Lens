@@ -2,30 +2,35 @@
 
 Features:
   - Full WFCD + Warframe.market verified Mod & Weapon Arcane catalog per weapon class.
-  - Searchable Mod & Arcane dropdowns supporting live keyword & compound-element filtering
-    (e.g. typing "腐蚀" shows Toxin + Electricity Mods; "病毒" shows Toxin + Cold Mods).
-  - Exact stat values displayed inside every Mod card AND inside the purple Riven card (#8).
-  - Live aggregated overall build stats (Damage, Multishot, Fire Rate / Attack Speed,
-    Melee Range, Crit Chance, Crit Damage, Status Chance, Elemental, etc.) in the analysis panel.
-  - One-click scenario switching, No-Bane toggle, Reset Recommended, and WFSim v2 share-link export.
+  - Weapon-exclusive Mods (e.g. `晴日伞 膛线`, `酸性弹药`, `散射正义`, `分裂飞行`, `易爆速返`)
+    ONLY appear when the matching weapon is scanned, organized in a dedicated「★ 武器专属」category.
+  - Cascading hover-category QMenu (`分类 ▾`): hovering over any category pops out its Mods
+    immediately with stat previews.
+  - Non-clobbering live search input: typing e.g. "腐蚀" keeps "腐蚀" clearly displayed in the
+    input box while showing a non-focus-stealing popup of matching Toxin + Electricity Mods until
+    the user picks one.
+  - Signature Warframe Riven Purple card (#8) + per-card exact stat values + overall build stat bar.
 """
 
 from __future__ import annotations
 
-from typing import Dict, List, Optional, Sequence
+from typing import Dict, List, Optional, Sequence, Tuple
 
-from PyQt6.QtCore import QModelIndex, QSortFilterProxyModel, Qt, QTimer, pyqtSignal
-from PyQt6.QtGui import QColor, QFont, QStandardItem, QStandardItemModel
+from PyQt6.QtCore import QEvent, QPoint, Qt, QTimer, pyqtSignal
+from PyQt6.QtGui import QColor, QFont
 from PyQt6.QtWidgets import (
     QCheckBox,
-    QComboBox,
-    QCompleter,
     QDialog,
     QFrame,
     QGridLayout,
     QHBoxLayout,
     QLabel,
+    QLineEdit,
+    QListWidget,
+    QListWidgetItem,
+    QMenu,
     QPushButton,
+    QToolButton,
     QVBoxLayout,
     QWidget,
 )
@@ -37,6 +42,7 @@ from src.build_optimizer import (
     BuildOptimizationResult,
     BuildStatSummary,
     ModDef,
+    categorize_mods_for_menu,
     evaluate_custom_build_for_riven,
     format_mod_stats,
     get_arcane_pool,
@@ -51,8 +57,6 @@ from src.settings_manager import DEFAULT_THEME_PRESET, UserSettings, resolve_the
 from src.tray_manager import load_app_icon
 
 _ROLE_ITEM_ID = int(Qt.ItemDataRole.UserRole) + 1
-_ROLE_MOD_OBJ = int(Qt.ItemDataRole.UserRole) + 2
-_ROLE_SEARCH_TEXT = int(Qt.ItemDataRole.UserRole) + 3
 
 
 def _blend_hex(c1_hex: str, c2_hex: str, ratio: float) -> str:
@@ -84,69 +88,137 @@ def _format_riven_stat_line(se: StatEvaluation, lang: str) -> str:
     return f"{sign}{abs(val):.1f} {name}"
 
 
-class _ModFilterProxyModel(QSortFilterProxyModel):
-    """Custom filter proxy supporting Mod names, stat keywords, and compound elements (e.g. 腐蚀 -> 毒+电)."""
+class CategorySearchSelector(QWidget):
+    """Combined non-clobbering live search QLineEdit + cascading hover-category QMenu button.
 
-    def __init__(self, weapon_class: str = "rifle", parent: Optional[QWidget] = None) -> None:
-        super().__init__(parent)
-        self._weapon_class = weapon_class
-        self._query = ""
-
-    def set_query(self, query: str) -> None:
-        q = (query or "").strip()
-        if q == self._query:
-            return
-        self._query = q
-        self.invalidateFilter()
-
-    def filterAcceptsRow(self, source_row: int, source_parent: QModelIndex) -> bool:  # noqa: N802
-        if not self._query:
-            return True
-        idx = self.sourceModel().index(source_row, 0, source_parent)
-        item_id = idx.data(_ROLE_ITEM_ID) or ""
-        if not item_id:
-            return False  # hide "(Empty)" while actively searching
-        mod_obj = idx.data(_ROLE_MOD_OBJ)
-        if isinstance(mod_obj, ModDef):
-            return match_mod_search(mod_obj, self._query, self._weapon_class)
-        blob = (idx.data(_ROLE_SEARCH_TEXT) or "").lower()
-        return all(tok in blob for tok in self._query.lower().split())
-
-
-class SearchableItemComboBox(QComboBox):
-    """Editable QComboBox with instant live filtering (supports compound element queries)."""
+    - Typing (e.g. "腐蚀") keeps the typed query visibly shown in the QLineEdit without
+      ever overwriting it, while displaying a non-activating floating result list below until
+      the user chooses an item (or cancels with Esc / focus-out).
+    - Clicking the `▾` button opens a cascading QMenu of top-level categories where hovering
+      over any category automatically expands its submenu of Mods.
+    """
 
     item_id_selected = pyqtSignal(str)  # emits "" for empty/none
 
-    def __init__(self, weapon_class: str = "rifle", parent: Optional[QWidget] = None) -> None:
+    def __init__(
+        self,
+        *,
+        weapon_class: str = "rifle",
+        theme_colors: Optional[Dict[str, str]] = None,
+        parent: Optional[QWidget] = None,
+    ) -> None:
         super().__init__(parent)
         self._weapon_class = weapon_class
-        self._current_id: str = ""
-        self._current_label: str = ""
-        self._syncing: bool = False
+        self._theme_colors = theme_colors or resolve_theme_colors(DEFAULT_THEME_PRESET)
+        self._lang = "zh_CN"
+        self._mode = "mod"  # "mod" | "arcane"
+        self._mods: List[ModDef] = []
+        self._arcanes: List[ArcaneDef] = []
+        self._empty_label = ""
+        self._current_id = ""
+        self._current_label = ""
+        self._is_searching = False
+        self._syncing = False
+        self._active_menu: Optional[QMenu] = None
 
-        self._source_model = QStandardItemModel(self)
-        self._proxy = _ModFilterProxyModel(weapon_class=weapon_class, parent=self)
-        self._proxy.setSourceModel(self._source_model)
+        lay = QHBoxLayout(self)
+        lay.setContentsMargins(0, 0, 0, 0)
+        lay.setSpacing(3)
 
-        self.setEditable(True)
-        self.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
-        self.setModel(self._proxy)
-        self.setMaxVisibleItems(14)
+        self._edit = QLineEdit(self)
+        self._edit.setClearButtonEnabled(False)
+        self._edit.textEdited.connect(self._on_text_edited)
+        self._edit.returnPressed.connect(self._on_return_pressed)
+        self._edit.installEventFilter(self)
+        lay.addWidget(self._edit, stretch=1)
 
-        self._completer = QCompleter(self._proxy, self)
-        self._completer.setCompletionMode(QCompleter.CompletionMode.UnfilteredPopupCompletion)
-        self._completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
-        self._completer.setMaxVisibleItems(14)
-        self.setCompleter(self._completer)
+        self._btn_menu = QToolButton(self)
+        self._btn_menu.setText("▾")
+        self._btn_menu.setFixedWidth(24)
+        self._btn_menu.setCursor(Qt.CursorShape.PointingHandCursor)
+        self._btn_menu.clicked.connect(self.open_category_menu)
+        lay.addWidget(self._btn_menu)
 
-        le = self.lineEdit()
-        if le is not None:
-            le.textEdited.connect(self._on_text_edited)
-            le.returnPressed.connect(self._on_return_pressed)
+        # Non-activating floating search results popup (never steals keyboard/IME focus!)
+        self._popup = QListWidget(None)
+        self._popup.setWindowFlags(Qt.WindowType.ToolTip | Qt.WindowType.FramelessWindowHint)
+        self._popup.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating, True)
+        self._popup.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self._popup.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self._popup.setVerticalScrollMode(QListWidget.ScrollMode.ScrollPerPixel)
+        self._popup.itemClicked.connect(self._on_popup_item_clicked)
+        self._apply_selector_style()
 
-        self._completer.activated[QModelIndex].connect(self._on_completer_index_activated)
-        self.activated.connect(self._on_combo_activated)
+    def _apply_selector_style(self) -> None:
+        colors = self._theme_colors
+        bg = colors.get("bg", "#120C20")
+        border = colors.get("border", "#A876FF")
+        accent = colors.get("accent", "#FFD166")
+        text = colors.get("text", "#EFE4FF")
+        input_bg = _blend_hex(bg, "#000000", 0.28)
+        border_soft = _blend_hex(bg, border, 0.50)
+        btn_bg = _blend_hex(bg, border, 0.24)
+        btn_hover = _blend_hex(bg, border, 0.45)
+        sel_bg = _blend_hex(bg, border, 0.65)
+        sel_fg = _contrast_text_hex(sel_bg)
+
+        self._edit.setStyleSheet(
+            f"""
+            QLineEdit {{
+                background-color: {input_bg};
+                color: {text};
+                border: 1px solid {border_soft};
+                border-radius: 5px;
+                padding: 4px 7px;
+                font-size: 12px;
+                font-weight: 600;
+            }}
+            QLineEdit:hover, QLineEdit:focus {{
+                border-color: {accent};
+            }}
+            """
+        )
+        self._btn_menu.setStyleSheet(
+            f"""
+            QToolButton {{
+                background-color: {btn_bg};
+                color: {accent};
+                border: 1px solid {border_soft};
+                border-radius: 5px;
+                padding: 3px 2px;
+                font-size: 12px;
+                font-weight: bold;
+            }}
+            QToolButton:hover {{
+                background-color: {btn_hover};
+                border-color: {accent};
+            }}
+            """
+        )
+        self._popup.setStyleSheet(
+            f"""
+            QListWidget {{
+                background-color: {bg};
+                color: {text};
+                border: 1.5px solid {accent};
+                border-radius: 6px;
+                padding: 3px;
+                font-size: 12px;
+            }}
+            QListWidget::item {{
+                padding: 5px 8px;
+                border-radius: 4px;
+            }}
+            QListWidget::item:selected, QListWidget::item:hover {{
+                background-color: {sel_bg};
+                color: {sel_fg};
+            }}
+            """
+        )
+
+    def set_theme_colors(self, colors: Dict[str, str]) -> None:
+        self._theme_colors = colors
+        self._apply_selector_style()
 
     def populate_mods(
         self,
@@ -157,34 +229,16 @@ class SearchableItemComboBox(QComboBox):
         lang: str,
         selected_id: Optional[str],
     ) -> None:
-        is_zh = lang in ("zh_CN", "zh_TW")
-        self._syncing = True
-        try:
-            self._proxy.set_query("")
-            self._source_model.clear()
-
-            empty_item = QStandardItem(empty_label)
-            empty_item.setData("", _ROLE_ITEM_ID)
-            empty_item.setData(None, _ROLE_MOD_OBJ)
-            empty_item.setData(empty_label.lower(), _ROLE_SEARCH_TEXT)
-            self._source_model.appendRow(empty_item)
-
-            for m in mods:
-                disp = m.name_zh if is_zh else m.name_en
-                st_txt = format_mod_stats(m, self._weapon_class, lang)
-                it = QStandardItem(disp)
-                it.setToolTip(f"{m.name_zh} ({m.name_en})\n{st_txt}")
-                it.setData(m.id, _ROLE_ITEM_ID)
-                it.setData(m, _ROLE_MOD_OBJ)
-                it.setData(f"{m.name_zh} {m.name_en} {st_txt}".lower(), _ROLE_SEARCH_TEXT)
-                self._source_model.appendRow(it)
-
-            le = self.lineEdit()
-            if le is not None:
-                le.setPlaceholderText(placeholder)
-            self._select_by_id(selected_id or "")
-        finally:
-            self._syncing = False
+        self._mode = "mod"
+        self._lang = lang
+        self._mods = list(mods)
+        self._arcanes = []
+        self._empty_label = empty_label
+        self._edit.setPlaceholderText(placeholder)
+        self._btn_menu.setToolTip(
+            "按大分类选择 Mod（鼠标悬停自动展开）" if lang in ("zh_CN", "zh_TW") else "Browse Mods by category (hover to expand)"
+        )
+        self._set_selected_id(selected_id or "")
 
     def populate_arcanes(
         self,
@@ -195,116 +249,251 @@ class SearchableItemComboBox(QComboBox):
         lang: str,
         selected_id: Optional[str],
     ) -> None:
-        is_zh = lang in ("zh_CN", "zh_TW")
+        self._mode = "arcane"
+        self._lang = lang
+        self._mods = []
+        self._arcanes = list(arcanes)
+        self._empty_label = none_label
+        self._edit.setPlaceholderText(placeholder)
+        self._btn_menu.setToolTip(
+            "展开全部赋能列表" if lang in ("zh_CN", "zh_TW") else "Browse all Arcanes"
+        )
+        self._set_selected_id(selected_id or "")
+
+    def _label_for_id(self, target_id: str) -> str:
+        is_zh = self._lang in ("zh_CN", "zh_TW")
+        if not target_id:
+            return self._empty_label
+        if self._mode == "mod":
+            for m in self._mods:
+                if m.id == target_id:
+                    return m.name_zh if is_zh else m.name_en
+        else:
+            for a in self._arcanes:
+                if a.id == target_id:
+                    return f"{a.name_zh} ({a.name_en})" if is_zh else a.name_en
+        return self._empty_label
+
+    def _set_selected_id(self, target_id: str) -> None:
         self._syncing = True
         try:
-            self._proxy.set_query("")
-            self._source_model.clear()
-
-            none_item = QStandardItem(none_label)
-            none_item.setData("", _ROLE_ITEM_ID)
-            none_item.setData(None, _ROLE_MOD_OBJ)
-            none_item.setData(none_label.lower(), _ROLE_SEARCH_TEXT)
-            self._source_model.appendRow(none_item)
-
-            for a in arcanes:
-                disp = f"{a.name_zh} ({a.name_en})" if is_zh else a.name_en
-                desc = a.desc_zh if is_zh else a.desc_en
-                it = QStandardItem(disp)
-                it.setToolTip(f"{disp}\n{desc}" if desc else disp)
-                it.setData(a.id, _ROLE_ITEM_ID)
-                it.setData(None, _ROLE_MOD_OBJ)
-                it.setData(f"{a.name_zh} {a.name_en} {a.id} {a.desc_zh} {a.desc_en}".lower(), _ROLE_SEARCH_TEXT)
-                self._source_model.appendRow(it)
-
-            le = self.lineEdit()
-            if le is not None:
-                le.setPlaceholderText(placeholder)
-            self._select_by_id(selected_id or "")
+            self._current_id = target_id
+            self._current_label = self._label_for_id(target_id)
+            self._is_searching = False
+            self._popup.hide()
+            self._edit.setText(self._current_label)
+            self._edit.setCursorPosition(0)
         finally:
             self._syncing = False
 
-    def _select_by_id(self, target_id: str) -> None:
-        self._proxy.set_query("")
-        chosen_row = 0
-        chosen_text = ""
-        for r in range(self._proxy.rowCount()):
-            idx = self._proxy.index(r, 0)
-            if (idx.data(_ROLE_ITEM_ID) or "") == target_id:
-                chosen_row = r
-                chosen_text = str(idx.data(Qt.ItemDataRole.DisplayRole) or "")
-                break
-        self._current_id = target_id
-        self._current_label = chosen_text
-        self.setCurrentIndex(chosen_row)
-        if self.lineEdit() is not None:
-            self.lineEdit().setText(chosen_text)
+    def current_text(self) -> str:
+        return self._edit.text()
 
-    def filter_count(self, query: str) -> int:
-        """Apply filter `query` and return number of matching rows (useful for tests & UX)."""
-        self._proxy.set_query(query)
-        return self._proxy.rowCount()
+    def search_matching_ids(self, query: str) -> List[str]:
+        """Return all matching item IDs for `query` (also updates popup if called during typing)."""
+        q = (query or "").strip()
+        if self._mode == "mod":
+            if not q:
+                return [m.id for m in self._mods]
+            return [m.id for m in self._mods if match_mod_search(m, q, self._weapon_class)]
+        if not q:
+            return [a.id for a in self._arcanes]
+        toks = q.lower().split()
+        out: List[str] = []
+        for a in self._arcanes:
+            blob = f"{a.name_zh} {a.name_en} {a.id} {a.desc_zh} {a.desc_en}".lower()
+            if all(t in blob for t in toks):
+                out.append(a.id)
+        return out
 
-    def filtered_item_ids(self, query: str) -> List[str]:
-        self._proxy.set_query(query)
-        return [str(self._proxy.index(r, 0).data(_ROLE_ITEM_ID) or "") for r in range(self._proxy.rowCount())]
+    def build_category_menu(self) -> QMenu:
+        """Build the cascading hover-category QMenu for Mods (or full list menu for Arcanes)."""
+        colors = self._theme_colors
+        bg = colors.get("bg", "#120C20")
+        border = colors.get("border", "#A876FF")
+        accent = colors.get("accent", "#FFD166")
+        text = colors.get("text", "#EFE4FF")
+        sel_bg = _blend_hex(bg, border, 0.65)
+        sel_fg = _contrast_text_hex(sel_bg)
+        sep_col = _blend_hex(bg, border, 0.35)
+
+        menu_css = f"""
+            QMenu {{
+                background-color: {bg};
+                color: {text};
+                border: 1.5px solid {border};
+                border-radius: 6px;
+                padding: 4px;
+                font-family: "Microsoft YaHei UI", "Segoe UI";
+                font-size: 12px;
+            }}
+            QMenu::item {{
+                padding: 5px 22px 5px 10px;
+                border-radius: 4px;
+            }}
+            QMenu::item:selected {{
+                background-color: {sel_bg};
+                color: {sel_fg};
+            }}
+            QMenu::separator {{
+                height: 1px;
+                background: {sep_col};
+                margin: 4px 6px;
+            }}
+        """
+        menu = QMenu(self)
+        menu.setStyleSheet(menu_css)
+        is_zh = self._lang in ("zh_CN", "zh_TW")
+
+        # Empty / clear slot entry at top
+        clear_act = menu.addAction(f"✖  {self._empty_label}")
+        clear_act.triggered.connect(lambda _chk=False: self._commit_id(""))
+        menu.addSeparator()
+
+        if self._mode == "mod":
+            categories = categorize_mods_for_menu(self._mods, self._weapon_class, self._lang)
+            for cat_title, cat_mods in categories:
+                sub = QMenu(f"{cat_title} ({len(cat_mods)})", menu)
+                sub.setStyleSheet(menu_css)
+                for m in cat_mods:
+                    disp = m.name_zh if is_zh else m.name_en
+                    st_txt = format_mod_stats(m, self._weapon_class, self._lang)
+                    prefix = "✓ " if m.id == self._current_id else "   "
+                    label = f"{prefix}{disp}   [{st_txt}]" if st_txt and st_txt != "-" else f"{prefix}{disp}"
+                    act = sub.addAction(label)
+                    act.setData(m.id)
+                    act.triggered.connect(lambda _chk=False, mid=m.id: self._commit_id(mid))
+                menu.addMenu(sub)
+        else:
+            for a in self._arcanes:
+                disp = f"{a.name_zh} ({a.name_en})" if is_zh else a.name_en
+                desc = a.desc_zh if is_zh else a.desc_en
+                prefix = "✓ " if a.id == self._current_id else "   "
+                label = f"{prefix}{disp}" + (f"  —  {desc}" if desc else "")
+                act = menu.addAction(label)
+                act.setData(a.id)
+                act.triggered.connect(lambda _chk=False, aid=a.id: self._commit_id(aid))
+
+        return menu
+
+    def open_category_menu(self) -> None:
+        self._popup.hide()
+        menu = self.build_category_menu()
+        self._active_menu = menu
+        pos = self._edit.mapToGlobal(QPoint(0, self._edit.height() + 2))
+        menu.exec(pos)
+        self._active_menu = None
+
+    def _populate_and_show_search_popup(self, query: str) -> None:
+        is_zh = self._lang in ("zh_CN", "zh_TW")
+        self._popup.clear()
+        matches = self.search_matching_ids(query)
+        if not matches:
+            self._popup.hide()
+            return
+
+        if self._mode == "mod":
+            by_id = {m.id: m for m in self._mods}
+            for mid in matches[:30]:
+                m = by_id[mid]
+                disp = m.name_zh if is_zh else m.name_en
+                st_txt = format_mod_stats(m, self._weapon_class, self._lang)
+                ex_tag = "★ " if m.compat_weapon else ""
+                item = QListWidgetItem(f"{ex_tag}{disp}   [{st_txt}]" if st_txt and st_txt != "-" else f"{ex_tag}{disp}")
+                item.setData(_ROLE_ITEM_ID, m.id)
+                self._popup.addItem(item)
+        else:
+            by_id_a = {a.id: a for a in self._arcanes}
+            for aid in matches[:30]:
+                a = by_id_a[aid]
+                disp = f"{a.name_zh} ({a.name_en})" if is_zh else a.name_en
+                desc = a.desc_zh if is_zh else a.desc_en
+                item = QListWidgetItem(f"{disp}  —  {desc}" if desc else disp)
+                item.setData(_ROLE_ITEM_ID, a.id)
+                self._popup.addItem(item)
+
+        self._popup.setCurrentRow(0)
+        popup_w = max(self.width() + 120, 320)
+        row_h = 28
+        popup_h = min(320, max(44, self._popup.count() * row_h + 10))
+        self._popup.resize(popup_w, popup_h)
+        pos = self._edit.mapToGlobal(QPoint(0, self._edit.height() + 2))
+        self._popup.move(pos)
+        self._popup.show()
 
     def _on_text_edited(self, text: str) -> None:
         if self._syncing:
             return
-        self._proxy.set_query(text)
-        if self._proxy.rowCount() > 0:
-            self._completer.complete()
+        # IMPORTANT: Never overwrite `self._edit` while user is typing (e.g. "腐蚀" stays visible!)
+        self._is_searching = True
+        q = text.strip()
+        if not q:
+            self._popup.hide()
+            return
+        self._populate_and_show_search_popup(q)
 
     def _on_return_pressed(self) -> None:
         if self._syncing:
             return
-        if self._proxy.rowCount() > 0:
-            idx = self._proxy.index(0, 0)
-            item_id = str(idx.data(_ROLE_ITEM_ID) or "")
-            self._commit_id(item_id)
+        if self._popup.isVisible() and self._popup.count() > 0:
+            cur = self._popup.currentItem() or self._popup.item(0)
+            if cur is not None:
+                self._commit_id(str(cur.data(_ROLE_ITEM_ID) or ""))
 
-    def _on_completer_index_activated(self, proxy_idx: QModelIndex) -> None:
-        if self._syncing or not proxy_idx.isValid():
-            return
-        item_id = str(proxy_idx.data(_ROLE_ITEM_ID) or "")
-        QTimer.singleShot(0, lambda iid=item_id: self._commit_id(iid))
-
-    def _on_combo_activated(self, row: int) -> None:
-        if self._syncing or row < 0 or row >= self._proxy.rowCount():
-            return
-        item_id = str(self._proxy.index(row, 0).data(_ROLE_ITEM_ID) or "")
-        self._commit_id(item_id)
+    def _on_popup_item_clicked(self, item: QListWidgetItem) -> None:
+        if item is not None:
+            self._commit_id(str(item.data(_ROLE_ITEM_ID) or ""))
 
     def _commit_id(self, item_id: str) -> None:
-        self._syncing = True
-        try:
-            self._select_by_id(item_id)
-        finally:
-            self._syncing = False
+        self._set_selected_id(item_id)
         self.item_id_selected.emit(item_id)
 
-    def showPopup(self) -> None:  # noqa: N802
-        self._proxy.set_query("")
-        super().showPopup()
+    def eventFilter(self, obj, event) -> bool:  # noqa: N802
+        if obj is self._edit:
+            etype = event.type()
+            if etype == QEvent.Type.FocusIn:
+                # Select current Mod name so typing immediately starts a fresh search cleanly
+                if not self._is_searching:
+                    QTimer.singleShot(0, self._edit.selectAll)
+            elif etype == QEvent.Type.KeyPress:
+                key = event.key()
+                if key == Qt.Key.Key_Escape:
+                    self._popup.hide()
+                    self._set_selected_id(self._current_id)
+                    return True
+                if key == Qt.Key.Key_Down and self._popup.isVisible() and self._popup.count() > 0:
+                    nxt = min(self._popup.count() - 1, self._popup.currentRow() + 1)
+                    self._popup.setCurrentRow(nxt)
+                    return True
+                if key == Qt.Key.Key_Up and self._popup.isVisible() and self._popup.count() > 0:
+                    prv = max(0, self._popup.currentRow() - 1)
+                    self._popup.setCurrentRow(prv)
+                    return True
+            elif etype == QEvent.Type.FocusOut:
+                # Delay slightly so clicking a popup item commits BEFORE popup hides
+                QTimer.singleShot(140, self._handle_deferred_focus_out)
+        return super().eventFilter(obj, event)
 
-    def focusInEvent(self, event) -> None:  # noqa: N802
-        super().focusInEvent(event)
-        if self.lineEdit() is not None:
-            QTimer.singleShot(0, self.lineEdit().selectAll)
+    def _handle_deferred_focus_out(self) -> None:
+        if self._edit.hasFocus():
+            return
+        if self._popup.underMouse():
+            return
+        self._popup.hide()
+        if self._is_searching:
+            self._set_selected_id(self._current_id)
 
-    def focusOutEvent(self, event) -> None:  # noqa: N802
-        super().focusOutEvent(event)
-        if not self._syncing:
-            self._syncing = True
-            try:
-                self._select_by_id(self._current_id)
-            finally:
-                self._syncing = False
+    def hideEvent(self, event) -> None:  # noqa: N802
+        self._popup.hide()
+        super().hideEvent(event)
+
+    def closeEvent(self, event) -> None:  # noqa: N802
+        self._popup.hide()
+        super().closeEvent(event)
 
 
 class BuildOptimizerDialog(QDialog):
-    """Interactive local Riven-aware 7-Mod + Arcane optimizer with searchable customization."""
+    """Interactive local Riven-aware 7-Mod + Arcane optimizer with cascading categories & live search."""
 
     send_optimized_to_wfsim = pyqtSignal(object, object, object)  # (RivenEvaluation, RivenData, BuildOptimizationResult)
 
@@ -327,17 +516,17 @@ class BuildOptimizerDialog(QDialog):
         self._slot_mod_ids: List[Optional[str]] = [None] * 7
         self._selected_arcane_id: Optional[str] = None
         self._is_customized: bool = False
-        self._conflict_notice: Optional[tuple[str, str]] = None
+        self._conflict_notice: Optional[Tuple[str, str]] = None
         self._updating_widgets: bool = False
 
         self._scenario_btns: Dict[str, QPushButton] = {}
         self._slot_frames: List[QFrame] = []
-        self._slot_combos: List[SearchableItemComboBox] = []
+        self._slot_combos: List[CategorySearchSelector] = []
         self._stat_pills: List[QLabel] = []
 
         self.setWindowIcon(load_app_icon())
-        self.setMinimumSize(820, 680)
-        self.resize(890, 740)
+        self.setMinimumSize(840, 690)
+        self.resize(910, 750)
         self.setModal(False)
 
         self._build_ui()
@@ -387,7 +576,7 @@ class BuildOptimizerDialog(QDialog):
         ctrl_row.addWidget(self._btn_reset_rec)
         root.addLayout(ctrl_row)
 
-        # 2 x 4 Mod Grid (7 searchable editable Mod cards + Slot 8 Purple Riven card)
+        # 2 x 4 Mod Grid (7 cascading-category searchable Mod cards + Slot 8 Purple Riven card)
         self._grid_container = QFrame()
         self._grid_container.setObjectName("GridContainer")
         self._mod_grid = QGridLayout(self._grid_container)
@@ -396,7 +585,7 @@ class BuildOptimizerDialog(QDialog):
         self._mod_grid.setVerticalSpacing(10)
         root.addWidget(self._grid_container, stretch=1)
 
-        # Arcane searchable dropdown & Active Elements summary bar
+        # Arcane searchable selector & Active Elements summary bar
         self._summary_frame = QFrame()
         self._summary_frame.setObjectName("SummaryFrame")
         sum_outer = QVBoxLayout(self._summary_frame)
@@ -407,8 +596,8 @@ class BuildOptimizerDialog(QDialog):
         sum_row.setSpacing(10)
         self._lbl_arcane = QLabel("")
         self._lbl_arcane.setFont(QFont("Microsoft YaHei UI", 10, QFont.Weight.Bold))
-        self._cmb_arcane = SearchableItemComboBox(weapon_class="rifle", parent=self)
-        self._cmb_arcane.setMinimumWidth(260)
+        self._cmb_arcane = CategorySearchSelector(weapon_class="rifle", theme_colors=self._theme_colors, parent=self)
+        self._cmb_arcane.setMinimumWidth(280)
         self._cmb_arcane.item_id_selected.connect(self._on_arcane_selected)
         self._lbl_arcane_none = QLabel("")
         self._lbl_arcane_none.hide()
@@ -437,7 +626,6 @@ class BuildOptimizerDialog(QDialog):
         self._lbl_rationale_hdr.setFont(QFont("Microsoft YaHei UI", 10, QFont.Weight.Bold))
         rat_lay.addWidget(self._lbl_rationale_hdr)
 
-        # Live Overall Stat Grid (Damage, MS, FR/AS, Melee Range, CC, CD, SC, Elem, ...)
         self._stats_grid_widget = QWidget()
         self._stats_grid_widget.setStyleSheet("background: transparent;")
         self._stats_grid = QGridLayout(self._stats_grid_widget)
@@ -536,25 +724,6 @@ class BuildOptimizerDialog(QDialog):
                 color: {pill_fg};
                 border-color: {accent};
             }}
-            QComboBox {{
-                background-color: {input_bg};
-                color: {text};
-                border: 1px solid {border_soft};
-                border-radius: 5px;
-                padding: 4px 8px;
-                font-size: 12px;
-                font-weight: 600;
-            }}
-            QComboBox:hover, QComboBox:focus {{
-                border-color: {accent};
-            }}
-            QComboBox QAbstractItemView {{
-                background-color: {bg};
-                color: {text};
-                selection-background-color: {btn_bg};
-                selection-color: {btn_fg};
-                border: 1px solid {border};
-            }}
             QCheckBox {{
                 spacing: 7px;
                 color: {text};
@@ -594,6 +763,7 @@ class BuildOptimizerDialog(QDialog):
         self._lbl_rationale_hdr.setStyleSheet(f"color: {accent}; background: transparent; border: none;")
         self._lbl_rationale_body.setStyleSheet(f"color: {text}; font-size: 12px; background: transparent; border: none;")
         self._lbl_disclaimer.setStyleSheet(f"color: {muted}; font-size: 11px; border: none;")
+        self._cmb_arcane.set_theme_colors(colors)
 
         if self._last_result is not None:
             self._render_result(self._last_result)
@@ -643,7 +813,13 @@ class BuildOptimizerDialog(QDialog):
         """Replace Mod in `slot_idx` (0..6) and live-recalculate."""
         if not (0 <= slot_idx < 7) or self._current_eval is None:
             return
-        pool = get_mod_pool(self._current_eval.weapon_class, allow_bane_mods=True, optimizer_only=False)
+        pool = get_mod_pool(
+            self._current_eval.weapon_class,
+            allow_bane_mods=True,
+            optimizer_only=False,
+            weapon_slug=self._current_eval.weapon_slug,
+            weapon_name_en=self._current_eval.weapon_name_en,
+        )
         mod_by_id: Dict[str, ModDef] = {m.id: m for m in pool}
 
         new_id = str(mod_id).strip() if mod_id else None
@@ -655,12 +831,10 @@ class BuildOptimizerDialog(QDialog):
 
         self._conflict_notice = None
         if new_id is not None:
-            # 1. If already equipped in another slot, swap cleanly instead of duplicating
             for j, existing_id in enumerate(self._slot_mod_ids):
                 if j != slot_idx and existing_id == new_id:
                     self._slot_mod_ids[j] = prev_id
                     break
-            # 2. Auto-clear mutually exclusive Mod in another slot
             new_mod = mod_by_id[new_id]
             if new_mod.exclusive_group:
                 for j, existing_id in enumerate(self._slot_mod_ids):
@@ -676,7 +850,6 @@ class BuildOptimizerDialog(QDialog):
         self._evaluate_current_selection()
 
     def set_selected_arcane(self, arcane_id: Optional[str]) -> None:
-        """Switch the Weapon Arcane and live-recalculate."""
         if self._current_eval is None:
             return
         norm = str(arcane_id).strip() if arcane_id else None
@@ -687,7 +860,6 @@ class BuildOptimizerDialog(QDialog):
         self._evaluate_current_selection()
 
     def reset_to_recommended(self) -> None:
-        """Restore the auto-recommended 7 Mods + Arcane for the current scenario."""
         if self._recommended_result is None:
             return
         rec = self._recommended_result
@@ -781,6 +953,8 @@ class BuildOptimizerDialog(QDialog):
         self.set_selected_arcane(arcane_id or None)
 
     def _clear_mod_grid(self) -> None:
+        for sel in self._slot_combos:
+            sel._popup.hide()
         while self._mod_grid.count():
             item = self._mod_grid.takeAt(0)
             w = item.widget()
@@ -812,24 +986,14 @@ class BuildOptimizerDialog(QDialog):
         def _fmt_pct(v: float) -> str:
             return f"{v:+.0f}%" if abs(v - round(v)) < 0.05 else f"{v:+.1f}%"
 
-        pills_data: List[tuple[str, str, str]] = []
-        pills_data.append(
-            ("伤害" if is_zh else "Damage", _fmt_pct(summary.damage_bonus_pct), "#FDE68A")
-        )
+        pills_data: List[Tuple[str, str, str]] = []
+        pills_data.append(("伤害" if is_zh else "Damage", _fmt_pct(summary.damage_bonus_pct), "#FDE68A"))
         if not is_melee:
-            pills_data.append(
-                ("多重" if is_zh else "Multishot", _fmt_pct(summary.multishot_pct), "#93C5FD")
-            )
-            pills_data.append(
-                ("射速" if is_zh else "Fire Rate", _fmt_pct(summary.fire_rate_pct), "#A7F3D0")
-            )
+            pills_data.append(("多重" if is_zh else "Multishot", _fmt_pct(summary.multishot_pct), "#93C5FD"))
+            pills_data.append(("射速" if is_zh else "Fire Rate", _fmt_pct(summary.fire_rate_pct), "#A7F3D0"))
         else:
-            pills_data.append(
-                ("攻速" if is_zh else "Attack Speed", _fmt_pct(summary.fire_rate_pct), "#A7F3D0")
-            )
-            pills_data.append(
-                ("范围" if is_zh else "Range", f"{summary.range_m:+.1f}m", "#C4B5FD")
-            )
+            pills_data.append(("攻速" if is_zh else "Attack Speed", _fmt_pct(summary.fire_rate_pct), "#A7F3D0"))
+            pills_data.append(("范围" if is_zh else "Range", f"{summary.range_m:+.1f}m", "#C4B5FD"))
 
         pills_data.append(
             (
@@ -852,25 +1016,15 @@ class BuildOptimizerDialog(QDialog):
                 "#67E8F9",
             )
         )
-        pills_data.append(
-            ("元素" if is_zh else "Elemental", _fmt_pct(summary.elemental_pct), "#86EFAC")
-        )
+        pills_data.append(("元素" if is_zh else "Elemental", _fmt_pct(summary.elemental_pct), "#86EFAC"))
         if abs(summary.status_damage_pct) >= 0.5:
-            pills_data.append(
-                ("异伤" if is_zh else "Status DMG", _fmt_pct(summary.status_damage_pct), "#F9A8D4")
-            )
+            pills_data.append(("异伤" if is_zh else "Status DMG", _fmt_pct(summary.status_damage_pct), "#F9A8D4"))
         if abs(summary.faction_pct) >= 0.5:
-            pills_data.append(
-                ("歧视" if is_zh else "Faction", f"x{1.0 + summary.faction_pct / 100.0:.2f}", "#FCA5A5")
-            )
+            pills_data.append(("歧视" if is_zh else "Faction", f"x{1.0 + summary.faction_pct / 100.0:.2f}", "#FCA5A5"))
         if not is_melee and abs(summary.punch_through_m) >= 0.05:
-            pills_data.append(
-                ("穿透" if is_zh else "Punch", f"{summary.punch_through_m:+.1f}m", "#DDD6FE")
-            )
+            pills_data.append(("穿透" if is_zh else "Punch", f"{summary.punch_through_m:+.1f}m", "#DDD6FE"))
         if not is_melee and abs(summary.reload_pct) >= 0.5:
-            pills_data.append(
-                ("装填" if is_zh else "Reload", _fmt_pct(summary.reload_pct), "#CBD5E1")
-            )
+            pills_data.append(("装填" if is_zh else "Reload", _fmt_pct(summary.reload_pct), "#CBD5E1"))
 
         cols = 4
         for idx, (label, val_txt, val_color) in enumerate(pills_data):
@@ -896,13 +1050,9 @@ class BuildOptimizerDialog(QDialog):
                 meta_parts = [f"{w_name} [{cls_txt}]"]
                 if arch_txt:
                     meta_parts.append(arch_txt)
-                meta_parts.append(
-                    I18N.t("panel.opt_riven_gain_badge", lang, gain=res.riven_gain_pct)
-                )
+                meta_parts.append(I18N.t("panel.opt_riven_gain_badge", lang, gain=res.riven_gain_pct))
                 if self._is_customized and res.delta_vs_recommended_pct is not None:
-                    meta_parts.append(
-                        I18N.t("panel.opt_modified_badge", lang, delta=res.delta_vs_recommended_pct)
-                    )
+                    meta_parts.append(I18N.t("panel.opt_modified_badge", lang, delta=res.delta_vs_recommended_pct))
                 self._lbl_weapon_meta.setText("  ·  ".join(meta_parts))
 
             colors = self._theme_colors or resolve_theme_colors(DEFAULT_THEME_PRESET)
@@ -914,7 +1064,13 @@ class BuildOptimizerDialog(QDialog):
             edited_bg = _blend_hex(bg, accent, 0.09)
             muted = _blend_hex(text, border, 0.35)
 
-            pool = get_mod_pool(res.weapon_class, allow_bane_mods=True, optimizer_only=False)
+            pool = get_mod_pool(
+                res.weapon_class,
+                allow_bane_mods=True,
+                optimizer_only=False,
+                weapon_slug=ev.weapon_slug if ev is not None else "",
+                weapon_name_en=ev.weapon_name_en if ev is not None else "",
+            )
             mod_by_id: Dict[str, ModDef] = {m.id: m for m in pool}
             gain_by_id: Dict[str, float] = {s.mod.id: s.marginal_gain_pct for s in res.mods}
             rec_ids: List[Optional[str]] = (
@@ -927,7 +1083,6 @@ class BuildOptimizerDialog(QDialog):
 
             self._clear_mod_grid()
 
-            # Slots 0..6: 7 searchable editable Mod cards with stat values displayed
             search_ph = I18N.t("panel.opt_search_mod_ph", lang)
             empty_lbl = I18N.t("panel.opt_empty_slot", lang)
             for idx in range(7):
@@ -952,22 +1107,26 @@ class BuildOptimizerDialog(QDialog):
                 idx_lbl.setStyleSheet(f"color: {muted}; font-size: 10px; background: transparent; border: none;")
                 top_row.addWidget(idx_lbl)
                 top_row.addStretch(1)
+                if cur_mod is not None and cur_mod.compat_weapon:
+                    ex_lbl = QLabel("★专属" if is_zh else "★Excl")
+                    ex_lbl.setStyleSheet("color: #C084FC; font-size: 10px; font-weight: bold; background: transparent; border: none;")
+                    top_row.addWidget(ex_lbl)
                 if slot_edited:
                     ed_lbl = QLabel(I18N.t("panel.opt_slot_modified_tag", lang))
                     ed_lbl.setStyleSheet(f"color: {accent}; font-size: 10px; font-weight: bold; background: transparent; border: none;")
                     top_row.addWidget(ed_lbl)
                 lay.addLayout(top_row)
 
-                cmb = SearchableItemComboBox(weapon_class=res.weapon_class, parent=card)
-                cmb.populate_mods(
+                sel = CategorySearchSelector(weapon_class=res.weapon_class, theme_colors=colors, parent=card)
+                sel.populate_mods(
                     pool,
                     empty_label=empty_lbl,
                     placeholder=search_ph,
                     lang=lang,
                     selected_id=cur_mid,
                 )
-                cmb.item_id_selected.connect(lambda mid, s_idx=idx: self._on_slot_mod_selected(s_idx, mid))
-                lay.addWidget(cmb)
+                sel.item_id_selected.connect(lambda mid, s_idx=idx: self._on_slot_mod_selected(s_idx, mid))
+                lay.addWidget(sel)
 
                 if cur_mod is not None:
                     secondary = cur_mod.name_en if is_zh else cur_mod.name_zh
@@ -999,10 +1158,10 @@ class BuildOptimizerDialog(QDialog):
                     lay.addWidget(gain_lbl)
 
                 self._slot_frames.append(card)
-                self._slot_combos.append(cmb)
+                self._slot_combos.append(sel)
                 self._mod_grid.addWidget(card, idx // 4, idx % 4)
 
-            # Slot 7 (8th card): Active Scanned Riven — ALWAYS Warframe Riven Purple!
+            # Slot 7 (8th card): Active Scanned Riven — Warframe Riven Purple!
             rcard = QFrame()
             rcard.setObjectName("RivenCard")
             rcard.setStyleSheet(
@@ -1040,7 +1199,7 @@ class BuildOptimizerDialog(QDialog):
             self._slot_frames.append(rcard)
             self._mod_grid.addWidget(rcard, 1, 3)
 
-            # Searchable Arcane selector bar + selected Arcane effect description
+            # Searchable Arcane bar
             arcanes = get_arcane_pool(res.weapon_class, optimizer_only=False)
             if arcanes:
                 self._cmb_arcane.show()
@@ -1062,15 +1221,12 @@ class BuildOptimizerDialog(QDialog):
                 self._lbl_arcane_none.show()
                 self._lbl_arcane_desc.hide()
 
-            # Active Elements
             elems = res.active_elements_zh if is_zh else res.active_elements_en
             elem_txt = " + ".join(elems) if elems else "-"
             self._lbl_elements.setText(I18N.t("panel.opt_elements_label", lang, elems=elem_txt))
 
-            # Overall Build Stats pills
             self._render_overall_stats(res.stat_summary, lang)
 
-            # Rationale bullets
             reasons = list(res.rationale_zh if is_zh else res.rationale_en)
             if self._conflict_notice is not None:
                 reasons.insert(0, self._conflict_notice[0] if is_zh else self._conflict_notice[1])
@@ -1081,3 +1237,9 @@ class BuildOptimizerDialog(QDialog):
     def _on_send_wfsim_clicked(self) -> None:
         if self._current_eval is not None and self._last_result is not None:
             self.send_optimized_to_wfsim.emit(self._current_eval, self._current_riven, self._last_result)
+
+    def hideEvent(self, event) -> None:  # noqa: N802
+        for sel in self._slot_combos:
+            sel._popup.hide()
+        self._cmb_arcane._popup.hide()
+        super().hideEvent(event)
