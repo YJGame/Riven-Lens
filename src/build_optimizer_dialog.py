@@ -17,7 +17,7 @@ from __future__ import annotations
 from typing import Dict, List, Optional, Sequence, Tuple
 
 from PyQt6.QtCore import QEvent, QPoint, Qt, QTimer, pyqtSignal
-from PyQt6.QtGui import QColor, QFont
+from PyQt6.QtGui import QColor, QFont, QGuiApplication
 from PyQt6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -31,6 +31,8 @@ from PyQt6.QtWidgets import (
     QListWidgetItem,
     QMenu,
     QPushButton,
+    QScrollArea,
+    QSizePolicy,
     QToolButton,
     QVBoxLayout,
     QWidget,
@@ -59,7 +61,13 @@ from src.build_optimizer import (
 from src.evaluator import RivenEvaluation, StatEvaluation
 from src.i18n import I18N, SUPPORTED_LANGS
 from src.riven_parser import RivenData
-from src.settings_manager import DEFAULT_THEME_PRESET, UserSettings, resolve_theme_colors
+from src.settings_manager import (
+    DEFAULT_OVERLAY_FONT_PX,
+    DEFAULT_THEME_PRESET,
+    UserSettings,
+    clamp_overlay_font_size,
+    resolve_theme_colors,
+)
 from src.tray_manager import load_app_icon
 
 _ROLE_ITEM_ID = int(Qt.ItemDataRole.UserRole) + 1
@@ -111,11 +119,13 @@ class CategorySearchSelector(QWidget):
         *,
         weapon_class: str = "rifle",
         theme_colors: Optional[Dict[str, str]] = None,
+        font_px: int = 12,
         parent: Optional[QWidget] = None,
     ) -> None:
         super().__init__(parent)
         self._weapon_class = weapon_class
         self._theme_colors = theme_colors or resolve_theme_colors(DEFAULT_THEME_PRESET)
+        self._font_px = max(10, min(18, int(font_px)))
         self._lang = "zh_CN"
         self._mode = "mod"  # "mod" | "arcane"
         self._mods: List[ModDef] = []
@@ -140,7 +150,7 @@ class CategorySearchSelector(QWidget):
 
         self._btn_menu = QToolButton(self)
         self._btn_menu.setText("▾")
-        self._btn_menu.setFixedWidth(24)
+        self._btn_menu.setFixedWidth(max(24, int(round(self._font_px * 2.0))))
         self._btn_menu.setCursor(Qt.CursorShape.PointingHandCursor)
         self._btn_menu.clicked.connect(self.open_category_menu)
         lay.addWidget(self._btn_menu)
@@ -168,6 +178,8 @@ class CategorySearchSelector(QWidget):
         sel_bg = _blend_hex(bg, border, 0.65)
         sel_fg = _contrast_text_hex(sel_bg)
 
+        fpx = self._font_px
+        self._btn_menu.setFixedWidth(max(24, int(round(fpx * 2.0))))
         self._edit.setStyleSheet(
             f"""
             QLineEdit {{
@@ -176,7 +188,7 @@ class CategorySearchSelector(QWidget):
                 border: 1px solid {border_soft};
                 border-radius: 5px;
                 padding: 4px 7px;
-                font-size: 12px;
+                font-size: {fpx}px;
                 font-weight: 600;
             }}
             QLineEdit:hover, QLineEdit:focus {{
@@ -192,7 +204,7 @@ class CategorySearchSelector(QWidget):
                 border: 1px solid {border_soft};
                 border-radius: 5px;
                 padding: 3px 2px;
-                font-size: 12px;
+                font-size: {fpx}px;
                 font-weight: bold;
             }}
             QToolButton:hover {{
@@ -209,7 +221,7 @@ class CategorySearchSelector(QWidget):
                 border: 1.5px solid {accent};
                 border-radius: 6px;
                 padding: 3px;
-                font-size: 12px;
+                font-size: {fpx}px;
             }}
             QListWidget::item {{
                 padding: 5px 8px;
@@ -224,6 +236,10 @@ class CategorySearchSelector(QWidget):
 
     def set_theme_colors(self, colors: Dict[str, str]) -> None:
         self._theme_colors = colors
+        self._apply_selector_style()
+
+    def set_font_px(self, px: int) -> None:
+        self._font_px = max(10, min(18, int(px)))
         self._apply_selector_style()
 
     def populate_mods(
@@ -331,7 +347,7 @@ class CategorySearchSelector(QWidget):
                 border-radius: 6px;
                 padding: 4px;
                 font-family: "Microsoft YaHei UI", "Segoe UI";
-                font-size: 12px;
+                font-size: {self._font_px}px;
             }}
             QMenu::item {{
                 padding: 5px 22px 5px 10px;
@@ -435,9 +451,9 @@ class CategorySearchSelector(QWidget):
                 self._popup.addItem(item)
 
         self._popup.setCurrentRow(0)
-        popup_w = max(self.width() + 120, 320)
-        row_h = 28
-        popup_h = min(320, max(44, self._popup.count() * row_h + 10))
+        popup_w = max(self.width() + 130, int(round(320 * (self._font_px / 12.0))))
+        row_h = max(26, int(round(self._font_px * 2.3)))
+        popup_h = min(360, max(44, self._popup.count() * row_h + 10))
         self._popup.resize(popup_w, popup_h)
         pos = self._edit.mapToGlobal(QPoint(0, self._edit.height() + 2))
         self._popup.move(pos)
@@ -515,9 +531,10 @@ class CategorySearchSelector(QWidget):
 
 
 class BuildOptimizerDialog(QDialog):
-    """Interactive local Riven-aware 7-Mod + Arcane optimizer with cascading categories & live search."""
+    """Interactive local Riven-aware 7-Mod + Exilus (#9) + Arcane optimizer with built-in WFSim export."""
 
     send_optimized_to_wfsim = pyqtSignal(object, object, object)  # (RivenEvaluation, RivenData, BuildOptimizationResult)
+    send_riven_only_to_wfsim = pyqtSignal(object, object)         # (RivenEvaluation, RivenData)
 
     def __init__(
         self,
@@ -529,6 +546,7 @@ class BuildOptimizerDialog(QDialog):
         self._settings = settings
         self._lang = lang if lang in SUPPORTED_LANGS else "en_US"
         self._theme_colors = resolve_theme_colors(settings.theme_preset, settings.theme_colors)
+        self._font_px: int = self._derive_dialog_font_px(getattr(settings, "overlay_font_size", DEFAULT_OVERLAY_FONT_PX))
         self._scenario: str = SCENARIO_STEEL_PATH
         self._archetype: str = ARCHETYPE_AUTO
         self._no_bane: bool = False
@@ -549,36 +567,74 @@ class BuildOptimizerDialog(QDialog):
         self._stat_pills: List[QLabel] = []
 
         self.setWindowIcon(load_app_icon())
-        self.setMinimumSize(840, 690)
-        self.resize(910, 750)
+        self._apply_responsive_window_bounds()
         self.setModal(False)
 
         self._build_ui()
         self._apply_stylesheet()
         self.retranslate_ui(self._lang)
 
+    @staticmethod
+    def _derive_dialog_font_px(overlay_px: int) -> int:
+        """Map overlay font size (10~24px) to a balanced dialog font size (10~18px) that never breaks layout."""
+        clamped = clamp_overlay_font_size(overlay_px)
+        # 10->10, 13->12, 16->14, 20->16, 24->18
+        scaled = int(round(12 + (clamped - DEFAULT_OVERLAY_FONT_PX) * 0.55))
+        return max(10, min(18, scaled))
+
+    def _apply_responsive_window_bounds(self) -> None:
+        screen = QGuiApplication.primaryScreen()
+        avail = screen.availableGeometry() if screen is not None else None
+        scale = self._font_px / 12.0
+        target_w = int(round(920 * max(1.0, min(1.25, scale))))
+        target_h = int(round(760 * max(1.0, min(1.22, scale))))
+        if avail is not None:
+            max_w = max(680, avail.width() - 48)
+            max_h = max(540, avail.height() - 60)
+            self.setMinimumSize(min(740, max_w), min(540, max_h))
+            self.resize(min(target_w, max_w), min(target_h, max_h))
+        else:
+            self.setMinimumSize(740, 540)
+            self.resize(target_w, target_h)
+
     def _build_ui(self) -> None:
         root = QVBoxLayout(self)
-        root.setContentsMargins(16, 14, 16, 14)
-        root.setSpacing(10)
+        root.setContentsMargins(14, 12, 14, 12)
+        root.setSpacing(9)
 
-        # Header
+        # Header (pinned at top)
         self._hdr_frame = QFrame()
         self._hdr_frame.setObjectName("HdrFrame")
         hdr_lay = QVBoxLayout(self._hdr_frame)
-        hdr_lay.setContentsMargins(14, 10, 14, 10)
+        hdr_lay.setContentsMargins(14, 9, 14, 9)
         hdr_lay.setSpacing(3)
         self._lbl_title = QLabel("")
-        self._lbl_title.setFont(QFont("Microsoft YaHei UI", 12, QFont.Weight.Bold))
+        self._lbl_title.setWordWrap(True)
         self._lbl_weapon_meta = QLabel("")
         self._lbl_weapon_meta.setWordWrap(True)
         hdr_lay.addWidget(self._lbl_title)
         hdr_lay.addWidget(self._lbl_weapon_meta)
         root.addWidget(self._hdr_frame)
 
-        # Scenario selector bar + Hot Meta Archetype selector + No-Bane toggle + Reset button
-        ctrl_row = QHBoxLayout()
-        ctrl_row.setSpacing(8)
+        # Scrollable middle body so large font sizes (10px~24px) or small screens NEVER clip content!
+        self._scroll_area = QScrollArea()
+        self._scroll_area.setObjectName("OptScrollArea")
+        self._scroll_area.setWidgetResizable(True)
+        self._scroll_area.setFrameShape(QFrame.Shape.NoFrame)
+        self._scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self._scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
+        self._scroll_body = QWidget()
+        self._scroll_body.setObjectName("OptScrollBody")
+        body_lay = QVBoxLayout(self._scroll_body)
+        body_lay.setContentsMargins(0, 0, 4, 4)
+        body_lay.setSpacing(9)
+        self._scroll_area.setWidget(self._scroll_body)
+        root.addWidget(self._scroll_area, stretch=1)
+
+        # Control Bar Row 1: Scenario selector pills
+        ctrl_row_1 = QHBoxLayout()
+        ctrl_row_1.setSpacing(8)
         for skey in SCENARIO_KEYS:
             btn = QPushButton("")
             btn.setObjectName("ScenarioPillBtn")
@@ -586,26 +642,31 @@ class BuildOptimizerDialog(QDialog):
             btn.setCursor(Qt.CursorShape.PointingHandCursor)
             btn.clicked.connect(lambda _chk=False, k=skey: self._set_scenario(k))
             self._scenario_btns[skey] = btn
-            ctrl_row.addWidget(btn)
+            ctrl_row_1.addWidget(btn)
+        ctrl_row_1.addStretch(1)
+        body_lay.addLayout(ctrl_row_1)
 
+        # Control Bar Row 2: Hot Meta Archetype + No-Bane toggle + Reset button (never overflows horizontally!)
+        ctrl_row_2 = QHBoxLayout()
+        ctrl_row_2.setSpacing(10)
         self._lbl_archetype = QLabel("")
         self._cmb_archetype = QComboBox()
-        self._cmb_archetype.setMinimumWidth(135)
+        self._cmb_archetype.setMinimumWidth(145)
         self._cmb_archetype.currentIndexChanged.connect(self._on_archetype_combo_changed)
-        ctrl_row.addWidget(self._lbl_archetype)
-        ctrl_row.addWidget(self._cmb_archetype)
-        ctrl_row.addStretch(1)
+        ctrl_row_2.addWidget(self._lbl_archetype)
+        ctrl_row_2.addWidget(self._cmb_archetype)
 
         self._chk_no_bane = QCheckBox("")
         self._chk_no_bane.toggled.connect(self._on_no_bane_toggled)
-        ctrl_row.addWidget(self._chk_no_bane)
+        ctrl_row_2.addWidget(self._chk_no_bane)
+        ctrl_row_2.addStretch(1)
 
         self._btn_reset_rec = QPushButton("")
         self._btn_reset_rec.setObjectName("SecondaryBtn")
         self._btn_reset_rec.setEnabled(False)
         self._btn_reset_rec.clicked.connect(self._on_reset_recommended_clicked)
-        ctrl_row.addWidget(self._btn_reset_rec)
-        root.addLayout(ctrl_row)
+        ctrl_row_2.addWidget(self._btn_reset_rec)
+        body_lay.addLayout(ctrl_row_2)
 
         # 2 x 4 Mod Grid (7 cascading-category searchable Mod cards + Slot 8 Purple Riven card)
         self._grid_container = QFrame()
@@ -614,44 +675,49 @@ class BuildOptimizerDialog(QDialog):
         self._mod_grid.setContentsMargins(10, 10, 10, 10)
         self._mod_grid.setHorizontalSpacing(10)
         self._mod_grid.setVerticalSpacing(10)
-        root.addWidget(self._grid_container, stretch=1)
+        for col_i in range(4):
+            self._mod_grid.setColumnStretch(col_i, 1)
+        body_lay.addWidget(self._grid_container)
 
-        # Arcane & Slot #9 Exilus selector bar (redundant "成型元素" label removed; shown in Analysis pills)
+        # Arcane & Slot #9 Exilus selector bar (responsive grid so large fonts never squeeze!)
         self._summary_frame = QFrame()
         self._summary_frame.setObjectName("SummaryFrame")
         sum_outer = QVBoxLayout(self._summary_frame)
         sum_outer.setContentsMargins(12, 8, 12, 8)
-        sum_outer.setSpacing(4)
+        sum_outer.setSpacing(5)
 
-        sum_row = QHBoxLayout()
-        sum_row.setSpacing(10)
+        sum_grid = QGridLayout()
+        sum_grid.setHorizontalSpacing(10)
+        sum_grid.setVerticalSpacing(6)
         self._lbl_arcane = QLabel("")
-        self._lbl_arcane.setFont(QFont("Microsoft YaHei UI", 10, QFont.Weight.Bold))
-        self._cmb_arcane = CategorySearchSelector(weapon_class="rifle", theme_colors=self._theme_colors, parent=self)
-        self._cmb_arcane.setMinimumWidth(250)
+        self._cmb_arcane = CategorySearchSelector(
+            weapon_class="rifle", theme_colors=self._theme_colors, font_px=self._font_px, parent=self
+        )
+        self._cmb_arcane.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         self._cmb_arcane.item_id_selected.connect(self._on_arcane_selected)
         self._lbl_arcane_none = QLabel("")
         self._lbl_arcane_none.hide()
 
         self._lbl_exilus = QLabel("")
-        self._lbl_exilus.setFont(QFont("Microsoft YaHei UI", 10, QFont.Weight.Bold))
-        self._cmb_exilus = CategorySearchSelector(weapon_class="rifle", theme_colors=self._theme_colors, parent=self)
-        self._cmb_exilus.setMinimumWidth(230)
+        self._cmb_exilus = CategorySearchSelector(
+            weapon_class="rifle", theme_colors=self._theme_colors, font_px=self._font_px, parent=self
+        )
+        self._cmb_exilus.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         self._cmb_exilus.item_id_selected.connect(self._on_exilus_selected)
 
-        sum_row.addWidget(self._lbl_arcane)
-        sum_row.addWidget(self._cmb_arcane)
-        sum_row.addWidget(self._lbl_arcane_none)
-        sum_row.addSpacing(12)
-        sum_row.addWidget(self._lbl_exilus)
-        sum_row.addWidget(self._cmb_exilus)
-        sum_row.addStretch(1)
-        sum_outer.addLayout(sum_row)
+        sum_grid.addWidget(self._lbl_arcane, 0, 0)
+        sum_grid.addWidget(self._cmb_arcane, 0, 1)
+        sum_grid.addWidget(self._lbl_arcane_none, 0, 1)
+        sum_grid.addWidget(self._lbl_exilus, 0, 2)
+        sum_grid.addWidget(self._cmb_exilus, 0, 3)
+        sum_grid.setColumnStretch(1, 1)
+        sum_grid.setColumnStretch(3, 1)
+        sum_outer.addLayout(sum_grid)
 
         self._lbl_arcane_desc = QLabel("")
         self._lbl_arcane_desc.setWordWrap(True)
         sum_outer.addWidget(self._lbl_arcane_desc)
-        root.addWidget(self._summary_frame)
+        body_lay.addWidget(self._summary_frame)
 
         # Overall Build Stats + Smart Rationale Frame
         self._rationale_frame = QFrame()
@@ -661,7 +727,7 @@ class BuildOptimizerDialog(QDialog):
         rat_lay.setSpacing(6)
 
         self._lbl_rationale_hdr = QLabel("")
-        self._lbl_rationale_hdr.setFont(QFont("Microsoft YaHei UI", 10, QFont.Weight.Bold))
+        self._lbl_rationale_hdr.setWordWrap(True)
         rat_lay.addWidget(self._lbl_rationale_hdr)
 
         self._stats_grid_widget = QWidget()
@@ -675,25 +741,43 @@ class BuildOptimizerDialog(QDialog):
         self._lbl_rationale_body = QLabel("")
         self._lbl_rationale_body.setWordWrap(True)
         rat_lay.addWidget(self._lbl_rationale_body)
-        root.addWidget(self._rationale_frame)
+        body_lay.addWidget(self._rationale_frame)
+        body_lay.addStretch(1)
 
-        # Footer action row
-        footer = QHBoxLayout()
-        footer.setSpacing(8)
+        # Inline WFSim feedback notice (pinned above footer buttons)
+        self._lbl_wfsim_feedback = QLabel("")
+        self._lbl_wfsim_feedback.setWordWrap(True)
+        self._lbl_wfsim_feedback.hide()
+        root.addWidget(self._lbl_wfsim_feedback)
+
+        # Footer action row (pinned at bottom — unified WFSim build export + Riven-only export!)
+        footer_outer = QVBoxLayout()
+        footer_outer.setSpacing(5)
         self._lbl_disclaimer = QLabel("")
         self._lbl_disclaimer.setWordWrap(True)
-        footer.addWidget(self._lbl_disclaimer, stretch=1)
+        footer_outer.addWidget(self._lbl_disclaimer)
+
+        footer_btns = QHBoxLayout()
+        footer_btns.setSpacing(8)
+        footer_btns.addStretch(1)
+
+        self._btn_send_riven_only = QPushButton("")
+        self._btn_send_riven_only.setObjectName("SecondaryBtn")
+        self._btn_send_riven_only.setEnabled(False)
+        self._btn_send_riven_only.clicked.connect(self._on_send_riven_only_clicked)
+        footer_btns.addWidget(self._btn_send_riven_only)
 
         self._btn_send_wfsim = QPushButton("")
         self._btn_send_wfsim.setEnabled(False)
         self._btn_send_wfsim.clicked.connect(self._on_send_wfsim_clicked)
-        footer.addWidget(self._btn_send_wfsim)
+        footer_btns.addWidget(self._btn_send_wfsim)
 
         self._btn_close = QPushButton("")
         self._btn_close.setObjectName("SecondaryBtn")
         self._btn_close.clicked.connect(self.hide)
-        footer.addWidget(self._btn_close)
-        root.addLayout(footer)
+        footer_btns.addWidget(self._btn_close)
+        footer_outer.addLayout(footer_btns)
+        root.addLayout(footer_outer)
 
     def _apply_stylesheet(self) -> None:
         colors = self._theme_colors or resolve_theme_colors(DEFAULT_THEME_PRESET)
@@ -714,19 +798,52 @@ class BuildOptimizerDialog(QDialog):
         sec_hover = _blend_hex(bg, border, 0.30)
         pill_fg = _contrast_text_hex(accent)
 
+        fpx = self._font_px
+        small_px = max(9, fpx - 1)
+        tiny_px = max(9, fpx - 2)
+        title_px = fpx + 4
+        hdr_px = fpx + 1
+
         self.setStyleSheet(
             f"""
             QDialog, QWidget {{
                 background-color: {bg};
                 color: {text};
                 font-family: "Microsoft YaHei UI", "Segoe UI";
+                font-size: {fpx}px;
+            }}
+            QScrollArea#OptScrollArea {{
+                background: transparent;
+                border: none;
+            }}
+            QWidget#OptScrollBody {{
+                background-color: {bg};
+            }}
+            QScrollBar:vertical {{
+                background: {bg};
+                width: 8px;
+                margin: 2px 0;
+                border-radius: 4px;
+            }}
+            QScrollBar::handle:vertical {{
+                background: {border_soft};
+                min-height: 28px;
+                border-radius: 4px;
+            }}
+            QScrollBar::handle:vertical:hover {{
+                background: {border};
+            }}
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
+                height: 0px;
+                background: none;
             }}
             QPushButton {{
                 background-color: {btn_bg};
                 color: {btn_fg};
                 border: 1px solid {border};
                 border-radius: 6px;
-                padding: 7px 14px;
+                padding: 6px 13px;
+                font-size: {fpx}px;
                 font-weight: bold;
             }}
             QPushButton:hover {{
@@ -751,7 +868,7 @@ class BuildOptimizerDialog(QDialog):
                 border: 1px solid {border_soft};
                 border-radius: 13px;
                 padding: 5px 12px;
-                font-size: 12px;
+                font-size: {fpx}px;
                 font-weight: 600;
             }}
             QPushButton#ScenarioPillBtn:hover {{
@@ -765,7 +882,7 @@ class BuildOptimizerDialog(QDialog):
             QCheckBox {{
                 spacing: 7px;
                 color: {text};
-                font-size: 12px;
+                font-size: {fpx}px;
             }}
             QCheckBox::indicator {{
                 width: 15px;
@@ -792,23 +909,26 @@ class BuildOptimizerDialog(QDialog):
         self._rationale_frame.setStyleSheet(
             f"QFrame#RationaleFrame {{ background-color: {surface}; border: 1px solid {border_soft}; border-radius: 8px; }}"
         )
-        self._lbl_title.setStyleSheet(f"color: {accent}; background: transparent; border: none;")
-        self._lbl_weapon_meta.setStyleSheet(f"color: {muted}; font-size: 12px; background: transparent; border: none;")
-        self._lbl_archetype.setStyleSheet(f"color: {muted}; font-size: 12px; background: transparent; border: none;")
+        self._lbl_title.setStyleSheet(f"color: {accent}; font-size: {title_px}px; font-weight: bold; background: transparent; border: none;")
+        self._lbl_weapon_meta.setStyleSheet(f"color: {muted}; font-size: {fpx}px; background: transparent; border: none;")
+        self._lbl_archetype.setStyleSheet(f"color: {muted}; font-size: {fpx}px; background: transparent; border: none;")
         self._cmb_archetype.setStyleSheet(
-            f"QComboBox {{ background-color: {input_bg}; color: {text}; border: 1px solid {border_soft}; border-radius: 5px; padding: 3px 8px; font-size: 12px; font-weight: 600; }}"
+            f"QComboBox {{ background-color: {input_bg}; color: {text}; border: 1px solid {border_soft}; border-radius: 5px; padding: 3px 8px; font-size: {fpx}px; font-weight: 600; }}"
             f"QComboBox:hover {{ border-color: {accent}; }}"
-            f"QComboBox QAbstractItemView {{ background-color: {bg}; color: {text}; selection-background-color: {btn_bg}; selection-color: {btn_fg}; border: 1px solid {border}; }}"
+            f"QComboBox QAbstractItemView {{ background-color: {bg}; color: {text}; selection-background-color: {btn_bg}; selection-color: {btn_fg}; border: 1px solid {border}; font-size: {fpx}px; }}"
         )
-        self._lbl_arcane.setStyleSheet(f"color: {accent}; background: transparent; border: none;")
-        self._lbl_arcane_none.setStyleSheet(f"color: {muted}; font-size: 12px; background: transparent; border: none;")
-        self._lbl_arcane_desc.setStyleSheet(f"color: {muted}; font-size: 11px; background: transparent; border: none;")
-        self._lbl_exilus.setStyleSheet(f"color: {accent}; background: transparent; border: none;")
-        self._lbl_rationale_hdr.setStyleSheet(f"color: {accent}; background: transparent; border: none;")
-        self._lbl_rationale_body.setStyleSheet(f"color: {text}; font-size: 12px; background: transparent; border: none;")
-        self._lbl_disclaimer.setStyleSheet(f"color: {muted}; font-size: 11px; border: none;")
+        self._lbl_arcane.setStyleSheet(f"color: {accent}; font-size: {hdr_px}px; font-weight: bold; background: transparent; border: none;")
+        self._lbl_arcane_none.setStyleSheet(f"color: {muted}; font-size: {fpx}px; background: transparent; border: none;")
+        self._lbl_arcane_desc.setStyleSheet(f"color: {muted}; font-size: {small_px}px; background: transparent; border: none;")
+        self._lbl_exilus.setStyleSheet(f"color: {accent}; font-size: {hdr_px}px; font-weight: bold; background: transparent; border: none;")
+        self._lbl_rationale_hdr.setStyleSheet(f"color: {accent}; font-size: {hdr_px}px; font-weight: bold; background: transparent; border: none;")
+        self._lbl_rationale_body.setStyleSheet(f"color: {text}; font-size: {fpx}px; background: transparent; border: none;")
+        self._lbl_disclaimer.setStyleSheet(f"color: {muted}; font-size: {tiny_px}px; border: none;")
+        self._lbl_wfsim_feedback.setStyleSheet(f"color: #6EE7B7; font-size: {small_px}px; background: transparent; border: none;")
         self._cmb_arcane.set_theme_colors(colors)
+        self._cmb_arcane.set_font_px(fpx)
         self._cmb_exilus.set_theme_colors(colors)
+        self._cmb_exilus.set_font_px(fpx)
 
         if self._last_result is not None:
             self._render_result(self._last_result)
@@ -818,6 +938,26 @@ class BuildOptimizerDialog(QDialog):
     def set_theme_colors(self, colors: Dict[str, str]) -> None:
         self._theme_colors = resolve_theme_colors("custom", colors)
         self._apply_stylesheet()
+
+    def set_font_size(self, overlay_font_px: int) -> None:
+        """Respond smoothly to global font-size slider changes (10px~24px) with zero clipping."""
+        new_px = self._derive_dialog_font_px(overlay_font_px)
+        if new_px == self._font_px:
+            return
+        self._font_px = new_px
+        self._apply_responsive_window_bounds()
+        self._apply_stylesheet()
+
+    def set_wfsim_feedback(self, message: str, is_error: bool = False) -> None:
+        txt = (message or "").strip()
+        if not txt:
+            self._lbl_wfsim_feedback.hide()
+            return
+        col = "#FCD34D" if is_error else "#6EE7B7"
+        small_px = max(9, self._font_px - 1)
+        self._lbl_wfsim_feedback.setStyleSheet(f"color: {col}; font-size: {small_px}px; background: transparent; border: none;")
+        self._lbl_wfsim_feedback.setText(txt)
+        self._lbl_wfsim_feedback.show()
 
     def set_language(self, lang: str) -> None:
         self.retranslate_ui(lang)
@@ -835,6 +975,8 @@ class BuildOptimizerDialog(QDialog):
         self._lbl_rationale_hdr.setText(I18N.t("panel.opt_rationale_hdr", self._lang))
         self._lbl_disclaimer.setText(I18N.t("panel.opt_disclaimer", self._lang))
         self._btn_send_wfsim.setText(I18N.t("panel.opt_send_wfsim_btn", self._lang))
+        self._btn_send_riven_only.setText(I18N.t("panel.opt_send_riven_only_btn", self._lang))
+        self._btn_send_riven_only.setToolTip(I18N.t("panel.wfsim_open_tooltip", self._lang))
         self._btn_close.setText(I18N.t("panel.fav_close_btn", self._lang))
 
         for skey, btn in self._scenario_btns.items():
@@ -968,6 +1110,7 @@ class BuildOptimizerDialog(QDialog):
     def _recompute_recommended(self) -> None:
         if self._current_eval is None:
             self._btn_send_wfsim.setEnabled(False)
+            self._btn_send_riven_only.setEnabled(False)
             self._btn_reset_rec.setEnabled(False)
             return
         rec = optimize_build_for_riven(
@@ -985,7 +1128,9 @@ class BuildOptimizerDialog(QDialog):
         self._is_customized = False
         self._conflict_notice = None
         self._last_result = rec
+        self._lbl_wfsim_feedback.hide()
         self._btn_send_wfsim.setEnabled(True)
+        self._btn_send_riven_only.setEnabled(True)
         self._btn_reset_rec.setEnabled(False)
         self._render_result(rec)
 
@@ -1146,18 +1291,20 @@ class BuildOptimizerDialog(QDialog):
         if abs(summary.status_damage_pct) >= 0.5:
             pills_data.append(("异伤" if is_zh else "Status DMG", _fmt_pct(summary.status_damage_pct), "#F9A8D4"))
         if abs(summary.faction_pct) >= 0.5:
-            pills_data.append(("歧视" if is_zh else "Faction", f"x{1.0 + summary.faction_pct / 100.0:.2f}", "#FCA5A5"))
+            pills_data.append(("派系" if is_zh else "Faction", f"x{1.0 + summary.faction_pct / 100.0:.2f}", "#FCA5A5"))
         if not is_melee and abs(summary.punch_through_m) >= 0.05:
             pills_data.append(("穿透" if is_zh else "Punch", f"{summary.punch_through_m:+.1f}m", "#DDD6FE"))
         if not is_melee and abs(summary.reload_pct) >= 0.5:
             pills_data.append(("装填" if is_zh else "Reload", _fmt_pct(summary.reload_pct), "#CBD5E1"))
 
-        cols = 4
+        pill_px = max(10, self._font_px - 1)
+        cols = 2 if self._font_px >= 17 else (3 if self._font_px >= 14 else 4)
         for idx, (label, val_txt, val_color) in enumerate(pills_data):
             pill = QLabel(f"<span style='color:{text};'>{label}：</span><b style='color:{val_color};'>{val_txt}</b>")
             pill.setTextFormat(Qt.TextFormat.RichText)
+            pill.setWordWrap(True)
             pill.setStyleSheet(
-                f"QLabel {{ background-color: {pill_bg}; border: 1px solid {pill_bd}; border-radius: 6px; padding: 4px 8px; font-size: 11px; }}"
+                f"QLabel {{ background-color: {pill_bg}; border: 1px solid {pill_bd}; border-radius: 6px; padding: 4px 8px; font-size: {pill_px}px; }}"
             )
             self._stat_pills.append(pill)
             self._stats_grid.addWidget(pill, idx // cols, idx % cols)
@@ -1223,6 +1370,9 @@ class BuildOptimizerDialog(QDialog):
 
             search_ph = I18N.t("panel.opt_search_mod_ph", lang)
             empty_lbl = I18N.t("panel.opt_empty_slot", lang)
+            fpx = self._font_px
+            sub_px = max(9, fpx - 2)
+            stat_px = max(10, fpx - 1)
             for idx in range(7):
                 cur_mid = self._slot_mod_ids[idx]
                 cur_mod = mod_by_id.get(cur_mid) if cur_mid else None
@@ -1242,20 +1392,20 @@ class BuildOptimizerDialog(QDialog):
                 top_row = QHBoxLayout()
                 top_row.setContentsMargins(0, 0, 0, 0)
                 idx_lbl = QLabel(f"#{idx + 1}")
-                idx_lbl.setStyleSheet(f"color: {muted}; font-size: 10px; background: transparent; border: none;")
+                idx_lbl.setStyleSheet(f"color: {muted}; font-size: {sub_px}px; background: transparent; border: none;")
                 top_row.addWidget(idx_lbl)
                 top_row.addStretch(1)
                 if cur_mod is not None and cur_mod.compat_weapon:
                     ex_lbl = QLabel("★专属" if is_zh else "★Excl")
-                    ex_lbl.setStyleSheet("color: #C084FC; font-size: 10px; font-weight: bold; background: transparent; border: none;")
+                    ex_lbl.setStyleSheet(f"color: #C084FC; font-size: {sub_px}px; font-weight: bold; background: transparent; border: none;")
                     top_row.addWidget(ex_lbl)
                 if slot_edited:
                     ed_lbl = QLabel(I18N.t("panel.opt_slot_modified_tag", lang))
-                    ed_lbl.setStyleSheet(f"color: {accent}; font-size: 10px; font-weight: bold; background: transparent; border: none;")
+                    ed_lbl.setStyleSheet(f"color: {accent}; font-size: {sub_px}px; font-weight: bold; background: transparent; border: none;")
                     top_row.addWidget(ed_lbl)
                 lay.addLayout(top_row)
 
-                sel = CategorySearchSelector(weapon_class=res.weapon_class, theme_colors=colors, parent=card)
+                sel = CategorySearchSelector(weapon_class=res.weapon_class, theme_colors=colors, font_px=fpx, parent=card)
                 sel.populate_mods(
                     pool,
                     empty_label=empty_lbl,
@@ -1280,19 +1430,19 @@ class BuildOptimizerDialog(QDialog):
 
                 if secondary:
                     sub_lbl = QLabel(secondary)
-                    sub_lbl.setStyleSheet(f"color: {muted}; font-size: 10px; background: transparent; border: none;")
+                    sub_lbl.setStyleSheet(f"color: {muted}; font-size: {sub_px}px; background: transparent; border: none;")
                     sub_lbl.setWordWrap(True)
                     lay.addWidget(sub_lbl)
 
                 stat_lbl = QLabel(stat_txt)
-                stat_lbl.setStyleSheet("color: #BAE6FD; font-size: 11px; background: transparent; border: none;")
+                stat_lbl.setStyleSheet(f"color: #BAE6FD; font-size: {stat_px}px; background: transparent; border: none;")
                 stat_lbl.setWordWrap(True)
                 lay.addWidget(stat_lbl)
 
                 lay.addStretch(1)
                 if gain_txt:
                     gain_lbl = QLabel(gain_txt)
-                    gain_lbl.setStyleSheet(f"color: {gain_color}; font-size: 11px; font-weight: bold; background: transparent; border: none;")
+                    gain_lbl.setStyleSheet(f"color: {gain_color}; font-size: {stat_px}px; font-weight: bold; background: transparent; border: none;")
                     lay.addWidget(gain_lbl)
 
                 self._slot_frames.append(card)
@@ -1310,12 +1460,11 @@ class BuildOptimizerDialog(QDialog):
             rlay.setSpacing(3)
 
             r_tag = QLabel(I18N.t("panel.opt_riven_slot_tag", lang))
-            r_tag.setStyleSheet("color: #D8B4FE; font-size: 10px; font-weight: bold; background: transparent; border: none;")
+            r_tag.setStyleSheet(f"color: #D8B4FE; font-size: {sub_px}px; font-weight: bold; background: transparent; border: none;")
             r_title = QLabel(
                 (self._current_riven.riven_name if self._current_riven and self._current_riven.riven_name else res.weapon_name)
             )
-            r_title.setFont(QFont("Microsoft YaHei UI", 10, QFont.Weight.Bold))
-            r_title.setStyleSheet("color: #F5D0FE; background: transparent; border: none;")
+            r_title.setStyleSheet(f"color: #F5D0FE; font-size: {fpx + 1}px; font-weight: bold; background: transparent; border: none;")
             r_title.setWordWrap(True)
 
             rlay.addWidget(r_tag)
@@ -1326,13 +1475,13 @@ class BuildOptimizerDialog(QDialog):
                     line_txt = _format_riven_stat_line(se, lang)
                     s_col = "#FCA5A5" if se.is_negative else "#E9D5FF"
                     sl = QLabel(line_txt)
-                    sl.setStyleSheet(f"color: {s_col}; font-size: 11px; background: transparent; border: none;")
+                    sl.setStyleSheet(f"color: {s_col}; font-size: {stat_px}px; background: transparent; border: none;")
                     sl.setWordWrap(True)
                     rlay.addWidget(sl)
 
             rlay.addStretch(1)
             r_gain = QLabel(I18N.t("panel.opt_mod_gain", lang, gain=res.riven_gain_pct))
-            r_gain.setStyleSheet("color: #86EFAC; font-size: 11px; font-weight: bold; background: transparent; border: none;")
+            r_gain.setStyleSheet(f"color: #86EFAC; font-size: {stat_px}px; font-weight: bold; background: transparent; border: none;")
             rlay.addWidget(r_gain)
             self._slot_frames.append(rcard)
             self._mod_grid.addWidget(rcard, 1, 3)
@@ -1391,6 +1540,10 @@ class BuildOptimizerDialog(QDialog):
     def _on_send_wfsim_clicked(self) -> None:
         if self._current_eval is not None and self._last_result is not None:
             self.send_optimized_to_wfsim.emit(self._current_eval, self._current_riven, self._last_result)
+
+    def _on_send_riven_only_clicked(self) -> None:
+        if self._current_eval is not None and self._current_riven is not None:
+            self.send_riven_only_to_wfsim.emit(self._current_eval, self._current_riven)
 
     def hideEvent(self, event) -> None:  # noqa: N802
         for sel in self._slot_combos:

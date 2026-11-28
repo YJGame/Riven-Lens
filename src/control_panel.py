@@ -201,7 +201,6 @@ class RivenControlPanel(QWidget):
     export_card_requested = pyqtSignal()
     user_manual_requested = pyqtSignal()
     favorite_stats_requested = pyqtSignal()
-    open_wfsim_requested = pyqtSignal()
     open_build_optimizer_requested = pyqtSignal()
     theme_changed = pyqtSignal(str, dict)                # (preset_key, colors_dict)
     panel_geometry_changed = pyqtSignal(int, int, int, int)  # x, y, width, height
@@ -655,11 +654,6 @@ class RivenControlPanel(QWidget):
         self._btn_build_optimizer.setObjectName("AccentBtn")
         self._btn_build_optimizer.clicked.connect(self.open_build_optimizer_requested.emit)
         wfsim_row.addWidget(self._btn_build_optimizer)
-
-        self._btn_open_wfsim = QPushButton("")
-        self._btn_open_wfsim.setObjectName("SecondaryBtn")
-        self._btn_open_wfsim.clicked.connect(self.open_wfsim_requested.emit)
-        wfsim_row.addWidget(self._btn_open_wfsim)
         wfsim_row.addStretch(1)
         data_lay.addLayout(wfsim_row)
 
@@ -1215,8 +1209,7 @@ class RivenControlPanel(QWidget):
         self._btn_open_wm_browser.setText(I18N.t("panel.wm_open_browser_btn", lang))
         self.refresh_favorite_stats_count()
         self._btn_build_optimizer.setText(I18N.t("panel.opt_open_btn", lang))
-        self._btn_open_wfsim.setText(I18N.t("panel.wfsim_open_btn", lang))
-        self._btn_open_wfsim.setToolTip(I18N.t("panel.wfsim_open_tooltip", lang))
+        self._btn_build_optimizer.setToolTip(I18N.t("panel.opt_open_tooltip", lang))
         self._btn_update_db.setText(I18N.t("panel.db_update_btn", lang))
         self.refresh_db_timestamp()
 

@@ -624,16 +624,19 @@ def get_mod_pool(
     *,
     allow_bane_mods: bool = True,
     optimizer_only: bool = False,
+    include_exilus: bool = False,
     weapon_slug: str = "",
     weapon_name_en: str = "",
 ) -> List[ModDef]:
-    """Return candidate Mods for `weapon_class`, filtering weapon-exclusive Mods to the active weapon."""
+    """Return candidate Mods for `weapon_class`, filtering weapon-exclusive Mods and Exilus Mods."""
     w_cls = (weapon_class or "rifle").strip().lower()
     mods_map, _, _ = _load_catalog()
     raw_pool = mods_map.get(w_cls, mods_map.get("rifle", RIFLE_MODS))
     has_weapon_ctx = bool((weapon_slug or "").strip() or (weapon_name_en or "").strip())
     out: List[ModDef] = []
     for m in raw_pool:
+        if not include_exilus and m.is_exilus:
+            continue
         if not allow_bane_mods and m.is_bane:
             continue
         if optimizer_only and not m.optimizer_core:
@@ -658,6 +661,7 @@ def get_exilus_pool(
         weapon_class,
         allow_bane_mods=True,
         optimizer_only=False,
+        include_exilus=True,
         weapon_slug=weapon_slug,
         weapon_name_en=weapon_name_en,
     )
@@ -797,7 +801,7 @@ def categorize_mods_for_menu(
         "elemental": "🧪 元素伤害",
         "physical": "🗡 物理伤害（冲/穿/切）",
         "status_slash": "🩸 触发 / 异常 / 切割",
-        "bane": "🛡 种族歧视",
+        "bane": "🛡 派系歧视",
         "combat_util": "🔧 重击 / 震地 / 连击" if is_melee else "🔧 装填 / 穿透 / 弹药",
         "exilus": "⚙ 特殊功能（第 9 格）",
     }
@@ -888,6 +892,11 @@ _COMPOUND_QUERY_EXPANSION: Dict[str, Tuple[str, ...]] = {
 def format_mod_stats(mod: ModDef, weapon_class: str = "rifle", lang: str = "zh_CN") -> str:
     """Format concise official in-game stat lines (with min~max conditional ranges) for Mod cards & menus."""
     is_zh = lang in ("zh_CN", "zh_TW")
+    # Faction Bane mods already specify the exact faction in their name -> show pure numeric multiplier only!
+    if mod.is_bane and mod.faction > 0 and not (
+        mod.damage or mod.multishot or mod.crit_chance or mod.crit_damage or mod.element_value or mod.status_chance
+    ):
+        return f"x{1.0 + mod.faction:.2f}"
     if is_zh:
         if mod.stat_display_zh:
             return mod.stat_display_zh
@@ -973,7 +982,7 @@ def match_mod_search(mod: ModDef, query: str, weapon_class: str = "rifle") -> bo
             stat_zh,
             stat_en,
             " ".join(mod.raw_stats_en).lower(),
-            "歧视 种族" if mod.is_bane else "",
+            "派系 歧视 种族" if mod.is_bane else "",
             "爆伤 暴伤" if mod.crit_damage else "",
             "暴击 双暴" if (mod.crit_chance or mod.blood_rush_cc) else "",
             "多重" if mod.multishot else "",
@@ -1798,6 +1807,7 @@ def evaluate_custom_build_for_riven(
         w_cls,
         allow_bane_mods=True,
         optimizer_only=False,
+        include_exilus=True,
         weapon_slug=ev.weapon_slug,
         weapon_name_en=ev.weapon_name_en,
     )

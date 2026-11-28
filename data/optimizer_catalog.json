@@ -8121,6 +8121,47 @@
         ]
       },
       {
+        "id": "hells_chamber",
+        "name_zh": "地狱弹膛",
+        "name_en": "Hell's Chamber",
+        "exclusive_group": "ms",
+        "compat_weapon": "",
+        "optimizer_core": false,
+        "stat_display_zh": "",
+        "stat_display_en": "",
+        "raw_stats_zh": [
+          "+120% 多重射击"
+        ],
+        "damage": 0.0,
+        "multishot": 1.2,
+        "crit_chance": 0.0,
+        "crit_damage": 0.0,
+        "fire_rate": 0.0,
+        "status_chance": 0.0,
+        "status_damage": 0.0,
+        "faction": 0.0,
+        "weakpoint": 0.0,
+        "punch_through": 0.0,
+        "range_m": 0.0,
+        "reload": 0.0,
+        "initial_combo": 0.0,
+        "heavy_dmg": 0.0,
+        "slam_dmg": 0.0,
+        "element": null,
+        "element_value": 0.0,
+        "ips_type": "",
+        "ips_value": 0.0,
+        "co_per_status": 0.0,
+        "blood_rush_cc": 0.0,
+        "weeping_sc": 0.0,
+        "hunter_munitions": false,
+        "is_bane": false,
+        "is_exilus": false,
+        "raw_stats_en": [
+          "+120% Multishot"
+        ]
+      },
+      {
         "id": "hunter_munitions",
         "name_zh": "猎人 战备",
         "name_en": "Hunter Munitions",
@@ -16264,6 +16305,47 @@
         ]
       },
       {
+        "id": "conditions_perfection",
+        "name_zh": "极致境地",
+        "name_en": "Condition's Perfection",
+        "exclusive_group": "",
+        "compat_weapon": "",
+        "optimizer_core": false,
+        "stat_display_zh": "",
+        "stat_display_en": "",
+        "raw_stats_zh": [
+          "启用 Tenno 气解。Tenno 气解攻击的触发几率提升 +100%。"
+        ],
+        "damage": 0.0,
+        "multishot": 0.0,
+        "crit_chance": 0.0,
+        "crit_damage": 0.0,
+        "fire_rate": 0.0,
+        "status_chance": 0.0,
+        "status_damage": 0.0,
+        "faction": 0.0,
+        "weakpoint": 0.0,
+        "punch_through": 0.0,
+        "range_m": 0.0,
+        "reload": 0.0,
+        "initial_combo": 0.0,
+        "heavy_dmg": 0.0,
+        "slam_dmg": 0.0,
+        "element": null,
+        "element_value": 0.0,
+        "ips_type": "",
+        "ips_value": 0.0,
+        "co_per_status": 0.0,
+        "blood_rush_cc": 0.0,
+        "weeping_sc": 0.0,
+        "hunter_munitions": false,
+        "is_bane": false,
+        "is_exilus": true,
+        "raw_stats_en": [
+          "Enables Tennokai. Increases status chance by +100% on Tennokai attacks."
+        ]
+      },
+      {
         "id": "corrupt_charge",
         "name_zh": "邪恶蓄力",
         "name_en": "Corrupt Charge",
@@ -16350,6 +16432,47 @@
         ]
       },
       {
+        "id": "disciplines_merit",
+        "name_zh": "纪律之功",
+        "name_en": "Discipline's Merit",
+        "exclusive_group": "",
+        "compat_weapon": "",
+        "optimizer_core": false,
+        "stat_display_zh": "",
+        "stat_display_en": "",
+        "raw_stats_zh": [
+          "启用 Tenno 气解。每 4 次近战攻击显现机遇，而非随机出现。"
+        ],
+        "damage": 0.0,
+        "multishot": 0.0,
+        "crit_chance": 0.0,
+        "crit_damage": 0.0,
+        "fire_rate": 0.0,
+        "status_chance": 0.0,
+        "status_damage": 0.0,
+        "faction": 0.0,
+        "weakpoint": 0.0,
+        "punch_through": 0.0,
+        "range_m": 0.0,
+        "reload": 0.0,
+        "initial_combo": 0.0,
+        "heavy_dmg": 0.0,
+        "slam_dmg": 0.0,
+        "element": null,
+        "element_value": 0.0,
+        "ips_type": "",
+        "ips_value": 0.0,
+        "co_per_status": 0.0,
+        "blood_rush_cc": 0.0,
+        "weeping_sc": 0.0,
+        "hunter_munitions": false,
+        "is_bane": false,
+        "is_exilus": true,
+        "raw_stats_en": [
+          "Enables Tennokai. Opportunities occur every 4 melee hits instead of at random."
+        ]
+      },
+      {
         "id": "dispatch_overdrive",
         "name_zh": "超速击杀",
         "name_en": "Dispatch Overdrive",
@@ -16388,6 +16511,47 @@
         "is_exilus": true,
         "raw_stats_en": [
           "On Heavy Attack Hit: +60% Movement Speed for 15s"
+        ]
+      },
+      {
+        "id": "dreamers_wrath",
+        "name_zh": "梦者之怒",
+        "name_en": "Dreamer's Wrath",
+        "exclusive_group": "",
+        "compat_weapon": "",
+        "optimizer_core": false,
+        "stat_display_zh": "",
+        "stat_display_en": "",
+        "raw_stats_zh": [
+          "启用 Tenno 气解。机遇几率增加 50%，Tenno 气解的暴击伤害提升 32%。"
+        ],
+        "damage": 0.0,
+        "multishot": 0.0,
+        "crit_chance": 0.0,
+        "crit_damage": 0.0,
+        "fire_rate": 0.0,
+        "status_chance": 0.0,
+        "status_damage": 0.0,
+        "faction": 0.0,
+        "weakpoint": 0.0,
+        "punch_through": 0.0,
+        "range_m": 0.0,
+        "reload": 0.0,
+        "initial_combo": 0.0,
+        "heavy_dmg": 0.0,
+        "slam_dmg": 0.0,
+        "element": null,
+        "element_value": 0.0,
+        "ips_type": "",
+        "ips_value": 0.0,
+        "co_per_status": 0.0,
+        "blood_rush_cc": 0.0,
+        "weeping_sc": 0.0,
+        "hunter_munitions": false,
+        "is_bane": false,
+        "is_exilus": true,
+        "raw_stats_en": [
+          "Enables Tennokai. Increases opportunity chance by 50% and critical damage by 32% for Tennokai attacks."
         ]
       },
       {
@@ -17186,6 +17350,47 @@
         ]
       },
       {
+        "id": "hunters_bonesaw",
+        "name_zh": "猎人骨锯",
+        "name_en": "Hunter's Bonesaw",
+        "exclusive_group": "",
+        "compat_weapon": "ripkas",
+        "optimizer_core": false,
+        "stat_display_zh": "",
+        "stat_display_en": "",
+        "raw_stats_zh": [
+          "对倒地的敌人的处决伤害提高 120%。"
+        ],
+        "damage": 0.0,
+        "multishot": 0.0,
+        "crit_chance": 0.0,
+        "crit_damage": 0.0,
+        "fire_rate": 0.0,
+        "status_chance": 0.0,
+        "status_damage": 0.0,
+        "faction": 0.0,
+        "weakpoint": 0.0,
+        "punch_through": 0.0,
+        "range_m": 0.0,
+        "reload": 0.0,
+        "initial_combo": 0.0,
+        "heavy_dmg": 0.0,
+        "slam_dmg": 0.0,
+        "element": null,
+        "element_value": 0.0,
+        "ips_type": "",
+        "ips_value": 0.0,
+        "co_per_status": 0.0,
+        "blood_rush_cc": 0.0,
+        "weeping_sc": 0.0,
+        "hunter_munitions": false,
+        "is_bane": false,
+        "is_exilus": false,
+        "raw_stats_en": [
+          "Increase Finisher Damage by 120% against prone enemies."
+        ]
+      },
+      {
         "id": "jagged_edge",
         "name_zh": "锯刃",
         "name_en": "Jagged Edge",
@@ -17520,6 +17725,47 @@
         ]
       },
       {
+        "id": "masters_edge",
+        "name_zh": "宗师锐势",
+        "name_en": "Master's Edge",
+        "exclusive_group": "",
+        "compat_weapon": "",
+        "optimizer_core": false,
+        "stat_display_zh": "",
+        "stat_display_en": "",
+        "raw_stats_zh": [
+          "启用 Tenno 气解。Tenno 气解伤害增加 60%。"
+        ],
+        "damage": 0.0,
+        "multishot": 0.0,
+        "crit_chance": 0.0,
+        "crit_damage": 0.0,
+        "fire_rate": 0.0,
+        "status_chance": 0.0,
+        "status_damage": 0.0,
+        "faction": 0.0,
+        "weakpoint": 0.0,
+        "punch_through": 0.0,
+        "range_m": 0.0,
+        "reload": 0.0,
+        "initial_combo": 0.0,
+        "heavy_dmg": 0.0,
+        "slam_dmg": 0.0,
+        "element": null,
+        "element_value": 0.0,
+        "ips_type": "",
+        "ips_value": 0.0,
+        "co_per_status": 0.0,
+        "blood_rush_cc": 0.0,
+        "weeping_sc": 0.0,
+        "hunter_munitions": false,
+        "is_bane": false,
+        "is_exilus": true,
+        "raw_stats_en": [
+          "Enables Tennokai. Increases Tennokai damage by 60%."
+        ]
+      },
+      {
         "id": "melee_elementalist",
         "name_zh": "近战元素师",
         "name_en": "Melee Elementalist",
@@ -17602,6 +17848,45 @@
         "raw_stats_en": [
           "+90% Status Chance"
         ]
+      },
+      {
+        "id": "mentors_legacy",
+        "name_zh": "导师之遗",
+        "name_en": "Mentor's Legacy",
+        "exclusive_group": "",
+        "compat_weapon": "",
+        "optimizer_core": false,
+        "stat_display_zh": "",
+        "stat_display_en": "",
+        "raw_stats_zh": [
+          "启用 Tenno 气解。"
+        ],
+        "damage": 0.0,
+        "multishot": 0.0,
+        "crit_chance": 0.0,
+        "crit_damage": 0.0,
+        "fire_rate": 0.0,
+        "status_chance": 0.0,
+        "status_damage": 0.0,
+        "faction": 0.0,
+        "weakpoint": 0.0,
+        "punch_through": 0.0,
+        "range_m": 0.0,
+        "reload": 0.0,
+        "initial_combo": 0.0,
+        "heavy_dmg": 0.0,
+        "slam_dmg": 0.0,
+        "element": null,
+        "element_value": 0.0,
+        "ips_type": "",
+        "ips_value": 0.0,
+        "co_per_status": 0.0,
+        "blood_rush_cc": 0.0,
+        "weeping_sc": 0.0,
+        "hunter_munitions": false,
+        "is_bane": false,
+        "is_exilus": true,
+        "raw_stats_en": []
       },
       {
         "id": "molten_impact",
@@ -17724,6 +18009,47 @@
         "is_exilus": false,
         "raw_stats_en": [
           "+90% Cold"
+        ]
+      },
+      {
+        "id": "opportunitys_reach",
+        "name_zh": "机遇所至",
+        "name_en": "Opportunity's Reach",
+        "exclusive_group": "",
+        "compat_weapon": "",
+        "optimizer_core": false,
+        "stat_display_zh": "",
+        "stat_display_en": "",
+        "raw_stats_zh": [
+          "启用 Tenno 气解。机遇窗口增加至 4.0 秒，Tenno 气解的近战范围提升 3 米。"
+        ],
+        "damage": 0.0,
+        "multishot": 0.0,
+        "crit_chance": 0.0,
+        "crit_damage": 0.0,
+        "fire_rate": 0.0,
+        "status_chance": 0.0,
+        "status_damage": 0.0,
+        "faction": 0.0,
+        "weakpoint": 0.0,
+        "punch_through": 0.0,
+        "range_m": 0.0,
+        "reload": 0.0,
+        "initial_combo": 0.0,
+        "heavy_dmg": 0.0,
+        "slam_dmg": 0.0,
+        "element": null,
+        "element_value": 0.0,
+        "ips_type": "",
+        "ips_value": 0.0,
+        "co_per_status": 0.0,
+        "blood_rush_cc": 0.0,
+        "weeping_sc": 0.0,
+        "hunter_munitions": false,
+        "is_bane": false,
+        "is_exilus": true,
+        "raw_stats_en": [
+          "Enables Tennokai. Increases opportunity window to 4.0s and melee range by 3m for Tennokai attacks."
         ]
       },
       {
@@ -19095,6 +19421,49 @@
         "is_exilus": false,
         "raw_stats_en": [
           "+120% Critical Chance (x2 for Heavy Attacks)"
+        ]
+      },
+      {
+        "id": "truths_flame",
+        "name_zh": "真相之焰",
+        "name_en": "Truth's Flame",
+        "exclusive_group": "",
+        "compat_weapon": "",
+        "optimizer_core": false,
+        "stat_display_zh": "",
+        "stat_display_en": "",
+        "raw_stats_zh": [
+          "启用 Tenno 气解。 使用 Tenno 气解进行击杀可获得额外 4 秒 Tenno 气解机遇窗口，并使 Tenno 气解伤害提高 120%。 诅咒：每秒承受 100 火焰伤害，持续 6 秒。",
+          "+1 '真相'"
+        ],
+        "damage": 0.0,
+        "multishot": 0.0,
+        "crit_chance": 0.0,
+        "crit_damage": 0.0,
+        "fire_rate": 0.0,
+        "status_chance": 0.0,
+        "status_damage": 0.0,
+        "faction": 0.0,
+        "weakpoint": 0.0,
+        "punch_through": 0.0,
+        "range_m": 0.0,
+        "reload": 0.0,
+        "initial_combo": 0.0,
+        "heavy_dmg": 0.0,
+        "slam_dmg": 0.0,
+        "element": null,
+        "element_value": 0.0,
+        "ips_type": "",
+        "ips_value": 0.0,
+        "co_per_status": 0.0,
+        "blood_rush_cc": 0.0,
+        "weeping_sc": 0.0,
+        "hunter_munitions": false,
+        "is_bane": false,
+        "is_exilus": true,
+        "raw_stats_en": [
+          "Enables Tennokai. Tennokai kills grant an additional 4s Tennokai opportunity and increase Tennokai damage by 120%. CURSE: Suffer 100 Heat Damage/s for 6s.",
+          "+1 'Truth'"
         ]
       },
       {

@@ -132,7 +132,7 @@ class TestBuildOptimizer(unittest.TestCase):
         dlg = BuildOptimizerDialog(settings=settings, lang="zh_CN")
         try:
             self.assertIsNotNone(panel._btn_build_optimizer)
-            self.assertIsNotNone(panel._btn_open_wfsim)
+            self.assertFalse(hasattr(panel, "_btn_open_wfsim"))
 
             dlg.show_for_card(ev, r_ichor)
             self.assertEqual(len(dlg._slot_frames), 8)  # 7 mods + 1 Riven
@@ -192,6 +192,7 @@ class TestBuildOptimizer(unittest.TestCase):
             self.assertFalse(dlg._btn_reset_rec.isEnabled())
         finally:
             dlg.close()
+            self.app.processEvents()
             panel.close()
 
     def test_official_simplified_chinese_mod_and_arcane_names(self) -> None:
@@ -306,7 +307,7 @@ class TestBuildOptimizer(unittest.TestCase):
         chamber = next(m for m in rifle_mods if m.id == "galvanized_chamber")
         self.assertIn("80%~230%", format_mod_stats(chamber, "rifle", "zh_CN"))
         self.assertIn("多重射击", format_mod_stats(chamber, "rifle", "zh_CN"))
-        sinister = next(m for m in rifle_mods if m.id == "sinister_reach")
+        sinister = next(m for m in get_exilus_pool("rifle") if m.id == "sinister_reach")
         self.assertIn("光束范围", format_mod_stats(sinister, "rifle", "zh_CN"))
         fanged = next(m for m in rifle_mods if m.id == "fanged_fusillade")
         self.assertIn("切割伤害", format_mod_stats(fanged, "rifle", "zh_CN"))
@@ -348,7 +349,9 @@ class TestBuildOptimizer(unittest.TestCase):
             submenu_titles = [act.text() for act in cat_menu.actions() if act.menu() is not None]
             self.assertEqual(sum(1 for t in submenu_titles if "元素伤害" in t), 1)
             self.assertTrue(any("物理伤害" in t for t in submenu_titles))
-            self.assertTrue(any("特殊功能" in t for t in submenu_titles))
+            # Exilus mods MUST NOT appear in normal slot dropdowns (#1~#7)
+            self.assertFalse(any("特殊功能" in t for t in submenu_titles))
+            self.assertTrue(any("派系歧视" in t for t in submenu_titles))
             self.assertTrue(any("暴击" in t for t in submenu_titles))
 
             # Overall build stat summary populated & melee displays Range pill
@@ -362,6 +365,7 @@ class TestBuildOptimizer(unittest.TestCase):
             self.assertIn("触发", pill_texts)
         finally:
             dlg.close()
+            self.app.processEvents()
 
     def test_weapon_exclusive_mods_only_appear_for_matching_weapon_in_dedicated_category(self) -> None:
         # 1. Higasa Serration (晴日伞 膛线) MUST NOT appear for Torid / Amprex
@@ -428,21 +432,41 @@ class TestBuildOptimizer(unittest.TestCase):
         self.assertGreater(gas_res.stat_summary.eff_fire_rate, 0.5)
 
     def test_primed_firestorm_exilus_slot9_physical_category_thousands_sep_and_heavy_meta(self) -> None:
-        # 1. Primed Firestorm (烈焰风暴 Prime) & Exilus & Physical (IPS) Mods present in catalog
+        # 1. Primed Firestorm (烈焰风暴 Prime) present in normal pool; Exilus mods excluded from normal pool!
         rifle_pool = get_mod_pool("rifle", weapon_slug="kuva_bramma", weapon_name_en="Kuva Bramma")
         rifle_ids = {m.id for m in rifle_pool}
         self.assertIn("primed_firestorm", rifle_ids)
-        self.assertIn("primed_rifle_ammo_mutation", rifle_ids)
+        self.assertNotIn("primed_rifle_ammo_mutation", rifle_ids)
+        self.assertNotIn("stabilizer", rifle_ids)
 
         rifle_exilus = get_exilus_pool("rifle", weapon_slug="kuva_bramma", weapon_name_en="Kuva Bramma")
         self.assertIn("primed_rifle_ammo_mutation", [m.id for m in rifle_exilus])
         self.assertIn("stabilizer", [m.id for m in rifle_exilus])
 
+        # Melee Exilus MUST include all Tennokai (气解) mods, and normal melee pool MUST exclude them!
+        melee_pool = get_mod_pool("melee", weapon_slug="glaive_prime", weapon_name_en="Glaive Prime")
+        melee_ids = {m.id for m in melee_pool}
+        self.assertNotIn("disciplines_merit", melee_ids)
+        self.assertNotIn("dreamers_wrath", melee_ids)
+
+        melee_exilus = get_exilus_pool("melee", weapon_slug="glaive_prime", weapon_name_en="Glaive Prime")
+        melee_ex_ids = {m.id for m in melee_exilus}
+        for tk in ("disciplines_merit", "dreamers_wrath", "opportunitys_reach", "masters_edge", "conditions_perfection", "mentors_legacy"):
+            self.assertIn(tk, melee_ex_ids, msg=f"Missing melee Tennokai mod {tk}")
+
         cats = categorize_mods_for_menu(rifle_pool, "rifle", "zh_CN")
         cat_names = [title for title, _ in cats]
         self.assertEqual(sum(1 for n in cat_names if "元素伤害" in n), 1)
         self.assertTrue(any("物理伤害" in n for n in cat_names))
-        self.assertTrue(any("特殊功能" in n for n in cat_names))
+        self.assertTrue(any("派系歧视" in n for n in cat_names))
+        self.assertFalse(any("种族歧视" in n for n in cat_names))
+        self.assertFalse(any("特殊功能" in n for n in cat_names))
+
+        # Faction Bane mod description MUST show numeric multiplier only (e.g. "x1.55", "x1.30")
+        bane_prime = next(m for m in rifle_pool if m.id == "primed_bane_of_grineer")
+        self.assertEqual(format_mod_stats(bane_prime, "rifle", "zh_CN"), "x1.55")
+        bane_reg = next(m for m in rifle_pool if m.id == "bane_of_corpus")
+        self.assertEqual(format_mod_stats(bane_reg, "rifle", "zh_CN"), "x1.30")
 
         # 2. Heavy Attack meta archetype auto-detection for Glaive Prime + Heavy Riven
         r_glaive = self.parser.parse(
@@ -465,7 +489,7 @@ class TestBuildOptimizer(unittest.TestCase):
             msg=f"Expected heavy attack core mods, got {heavy_res.mod_ids}",
         )
 
-        # 3. Dialog Slot #9 Exilus selection exports to WFSim slots9[8] + thousands comma separator shown
+        # 3. Dialog Slot #9 Exilus selection exports to WFSim slots9[8] + thousands comma + font scaling resilience
         r_bramma = self.parser.parse(["赤毒·布拉玛 Parciata", "+258.6% 伤害", "+73.1% 弹药效率", "段位 15 O 8"])
         ev_b = self.evaluator.evaluate(r_bramma)
         settings = UserSettings()
@@ -473,9 +497,17 @@ class TestBuildOptimizer(unittest.TestCase):
         try:
             dlg.show_for_card(ev_b, r_bramma)
             self.assertFalse(hasattr(dlg, "_lbl_elements"))
+            self.assertIn("派系歧视", dlg._chk_no_bane.text())
+            self.assertNotIn("种族", dlg._chk_no_bane.text())
             # Verify comma-formatted big number on Bramma (base 1026 * >7x > 1,000)
             pill_texts = " ".join(p.text() for p in dlg._stat_pills)
             self.assertIn(",", pill_texts)
+
+            # Font scaling from min (10px) to max (24px) must smoothly rescale without crashing or clipping
+            for test_px in (10, 13, 18, 24):
+                dlg.set_font_size(test_px)
+                self.assertGreaterEqual(dlg._font_px, 10)
+                self.assertLessEqual(dlg._font_px, 18)
 
             # Pick Exilus mod in Slot #9 and verify WFSim export puts it into slots9[8]!
             dlg.set_selected_exilus("primed_rifle_ammo_mutation")
@@ -493,6 +525,7 @@ class TestBuildOptimizer(unittest.TestCase):
             self.assertEqual(payload[3][8], ["primed_rifle_ammo_mutation"])
         finally:
             dlg.close()
+            self.app.processEvents()
 
 
 if __name__ == "__main__":

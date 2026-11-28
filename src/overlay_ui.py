@@ -602,14 +602,17 @@ class SingleRivenCardWidget(QFrame):
             warn_lbl.setWordWrap(True)
             layout.addWidget(warn_lbl)
 
-        # Tags row
+        # Tags rows (auto-wrap cleanly so large font sizes 18px~24px never overflow card width)
         if ev.tags:
-            tags_row = QHBoxLayout()
-            tags_row.setSpacing(5)
-            for tag in ev.tags[:5]:
-                tags_row.addWidget(_make_tag_pill(tag, lang, font_px=tag_px))
-            tags_row.addStretch(1)
-            layout.addLayout(tags_row)
+            tags_per_row = 2 if base_px >= 19 else (3 if base_px >= 15 else 4)
+            tags_list = list(ev.tags[:5])
+            for start_i in range(0, len(tags_list), tags_per_row):
+                tags_row = QHBoxLayout()
+                tags_row.setSpacing(5)
+                for tag in tags_list[start_i : start_i + tags_per_row]:
+                    tags_row.addWidget(_make_tag_pill(tag, lang, font_px=tag_px))
+                tags_row.addStretch(1)
+                layout.addLayout(tags_row)
 
         # Divider
         divider = QFrame()

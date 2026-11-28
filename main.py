@@ -1661,6 +1661,8 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
         settings.overlay_font_size = int(px)
         _schedule_settings_save()
         window.set_font_size(settings.overlay_font_size)
+        if build_optimizer_dialog is not None:
+            build_optimizer_dialog.set_font_size(settings.overlay_font_size)
         # If overlay is hidden while user adjusts font size in panel, show live preview card
         if not window.isVisible() and control_panel.isVisible():
             window.show_preview_card()
@@ -1797,6 +1799,8 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
             custom_build_label="本地优化配装",
         )
         if not res.ok:
+            if build_optimizer_dialog is not None:
+                build_optimizer_dialog.set_wfsim_feedback(f"⚠ {res.error}", is_error=True)
             control_panel.set_wfsim_feedback(f"⚠ {res.error}", is_error=True)
             window.show_toast(res.error, duration_ms=2400)
             return
@@ -1809,6 +1813,8 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
             build=res.build_label,
             count=len(res.included_stats),
         )
+        if build_optimizer_dialog is not None:
+            build_optimizer_dialog.set_wfsim_feedback(msg, is_error=False)
         control_panel.set_wfsim_feedback(msg, is_error=False)
         window.show_toast(msg, duration_ms=2800)
         _debug_log(
@@ -1816,21 +1822,17 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
             f"mods={getattr(opt_res, 'mod_ids', [])}, arcane={getattr(opt_res, 'arcane_ids', [])})"
         )
 
-    def handle_open_wfsim(source: str) -> None:
-        """Build a Riven-only WFSim v2 share link and open `https://wfsim.app` in browser."""
-        _pause_mode_on_leaving_game(f"WFSimOpened:{source}")
+    def handle_send_riven_only_to_wfsim(ev_obj: object, riven_obj: object) -> None:
+        """Build a Riven-only WFSim v2 share link from inside the Build Optimizer dialog."""
+        _pause_mode_on_leaving_game("WFSimOpened:OptimizerRivenOnly")
         ui_lang = state["active_lang"]
-        if not state["last_cards"]:
-            msg = I18N.t("panel.wfsim_need_card", ui_lang)
-            control_panel.set_wfsim_feedback(msg, is_error=True)
-            window.show_toast(msg, duration_ms=2200)
-            return
-        target_card = state["last_cards"][-1]
-        res = build_wfsim_url(target_card.evaluation, target_card.riven, include_baseline_build=False)
+        res = build_wfsim_url(ev_obj, riven_obj, include_baseline_build=False)  # type: ignore[arg-type]
         if not res.ok:
+            if build_optimizer_dialog is not None:
+                build_optimizer_dialog.set_wfsim_feedback(f"⚠ {res.error}", is_error=True)
             control_panel.set_wfsim_feedback(f"⚠ {res.error}", is_error=True)
             window.show_toast(res.error, duration_ms=2400)
-            _debug_log(f"WFSim link build failed (source={source}): {res.error}")
+            _debug_log(f"WFSim Riven-only link build failed: {res.error}")
             return
         webbrowser.open(res.url)
         w_disp = _display_weapon_for_lang(ui_lang) or res.weapon_id
@@ -1841,10 +1843,12 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
             build=res.build_label,
             count=len(res.included_stats),
         )
+        if build_optimizer_dialog is not None:
+            build_optimizer_dialog.set_wfsim_feedback(msg, is_error=False)
         control_panel.set_wfsim_feedback(msg, is_error=False)
         window.show_toast(msg, duration_ms=2800)
         _debug_log(
-            f"Opened WFSim deep-link (source={source}, weapon={res.weapon_id}, "
+            f"Opened WFSim Riven-only deep-link (weapon={res.weapon_id}, "
             f"stats={len(res.included_stats)}, url_len={len(res.url)})"
         )
 
@@ -1995,9 +1999,10 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
     control_panel.export_card_requested.connect(lambda: handle_export_card("ControlPanel"))
     control_panel.user_manual_requested.connect(open_user_manual)
     control_panel.favorite_stats_requested.connect(open_favorite_stats_dialog)
-    control_panel.open_wfsim_requested.connect(lambda: handle_open_wfsim("ControlPanel"))
     control_panel.open_build_optimizer_requested.connect(lambda: handle_open_build_optimizer("ControlPanel"))
-    build_optimizer_dialog.send_optimized_to_wfsim.connect(handle_send_optimized_to_wfsim)
+    if build_optimizer_dialog is not None:
+        build_optimizer_dialog.send_optimized_to_wfsim.connect(handle_send_optimized_to_wfsim)
+        build_optimizer_dialog.send_riven_only_to_wfsim.connect(handle_send_riven_only_to_wfsim)
     favorite_stats_dialog.favorites_saved.connect(handle_favorites_saved)
     control_panel.theme_changed.connect(handle_theme_changed)
     control_panel.panel_geometry_changed.connect(handle_panel_geometry_changed)

@@ -710,6 +710,13 @@ class WMPriceOverlayWindow(DraggableOverlayBase):
         fam = _ui_font_family(self._lang)
         base_px = self._font_size_px
         note_px = max(9, base_px - 1)
+        scale = base_px / float(DEFAULT_OVERLAY_FONT_PX)
+        screen = self.screen()
+        avail_w = screen.availableGeometry().width() if screen is not None else 1920
+        max_w = max(320, min(int(round(520 * scale)), avail_w - 48))
+        min_w = max(280, min(int(round(360 * scale)), max_w))
+        self._wm_panel.setMinimumWidth(min_w)
+        self._wm_panel.setMaximumWidth(max_w)
         self._drag_banner.setFont(_make_px_font(fam, note_px, QFont.Weight.Bold))
         self._wm_title.setFont(_make_px_font(fam, base_px, QFont.Weight.Bold))
         self._wm_body.setFont(_make_px_font(fam, note_px))
@@ -1031,6 +1038,13 @@ class RerollSynergyPopupWindow(DraggableOverlayBase):
         fam = _ui_font_family(self._lang)
         base_px = self._font_size_px
         note_px = max(9, base_px - 1)
+        scale = base_px / float(DEFAULT_OVERLAY_FONT_PX)
+        screen = self.screen()
+        avail_w = screen.availableGeometry().width() if screen is not None else 1920
+        max_w = max(300, min(int(round(450 * scale)), avail_w - 48))
+        min_w = max(260, min(int(round(320 * scale)), max_w))
+        self._card.setMinimumWidth(min_w)
+        self._card.setMaximumWidth(max_w)
         self._drag_banner.setFont(_make_px_font(fam, note_px, QFont.Weight.Bold))
         self._title_lbl.setFont(_make_px_font(fam, base_px + 1, QFont.Weight.Bold))
         self._meta_lbl.setFont(_make_px_font(fam, note_px, QFont.Weight.Bold))
@@ -1306,7 +1320,7 @@ class RelicRewardsOverlayWindow(DraggableOverlayBase):
 
         if matches:
             self._box.setMinimumWidth(target_strip_w if target_strip_w else 0)
-            self._box.setMaximumWidth(target_strip_w if target_strip_w else 16777215)
+            self._box.setMaximumWidth(16777215)
 
             # Determine effective Rank 1 (Gold) & Rank 2 (Silver) if caller did not pre-assign ranks
             top_matches = matches[:4]
@@ -1425,9 +1439,9 @@ class RelicRewardsOverlayWindow(DraggableOverlayBase):
                 duc_icon.setObjectName("RelicDucatIcon")
                 c_lay.addWidget(duc_icon)
 
-                # Slot 4: Vaulted closed chest icon 18x18 (ONLY if vaulted; omitted when unvaulted)
+                # Slot 4: Vaulted closed chest icon (18x18 at default font, scales up cleanly with larger fonts)
                 if not m.is_forma and m.is_vaulted:
-                    c_lay.addWidget(make_vaulted_chest_label(18))
+                    c_lay.addWidget(make_vaulted_chest_label(max(18, base_px + 5)))
 
                 c_lay.addStretch(1)
                 self._rows_container.addWidget(card, stretch=1)

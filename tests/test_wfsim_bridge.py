@@ -10,6 +10,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PyQt6.QtWidgets import QApplication
 
+from src.build_optimizer_dialog import BuildOptimizerDialog
 from src.control_panel import RivenControlPanel
 from src.evaluator import RivenEvaluator
 from src.focus_watcher import SmartFocusWatcher, is_warframe_game_title
@@ -161,28 +162,38 @@ class TestWFSimShareLinkCompliance(unittest.TestCase):
     def test_trademark_compliant_panel_branding_and_no_wfsim_hotkey(self) -> None:
         settings = UserSettings()
         panel = RivenControlPanel(settings=settings, initial_ui_lang="zh_CN")
+        dlg = BuildOptimizerDialog(settings=settings, lang="zh_CN")
         try:
             # Window title MUST remain plain "裂罅透镜" (never "WFSim 联动版" / "WFSim Edition")
             self.assertEqual(panel.windowTitle(), "裂罅透镜")
             self.assertNotIn("WFSim", panel.windowTitle())
 
-            # Panel button uses referential phrasing & has no global hotkey
-            self.assertIsNotNone(panel._btn_open_wfsim)
+            # WFSim export is integrated inside BuildOptimizerDialog (not duplicated on Control Panel)
+            self.assertFalse(hasattr(panel, "_btn_open_wfsim"))
             self.assertFalse(hasattr(panel, "_inp_hk_wfsim"))
-            self.assertIn("在 WFSim 中打开", panel._btn_open_wfsim.text())
-            self.assertIn("wfsim.app", panel._btn_open_wfsim.text())
-            self.assertNotIn("Ctrl+Alt+W", panel._btn_open_wfsim.text())
-            self.assertIn("非官方独立项目", panel._btn_open_wfsim.toolTip())
+            self.assertIn("配装优化", panel._btn_build_optimizer.text())
+            self.assertIn("wfsim.app", panel._btn_build_optimizer.toolTip())
+            self.assertIn("非官方独立项目", panel._btn_build_optimizer.toolTip())
 
+            # Inside BuildOptimizerDialog: both full-build and Riven-only WFSim buttons exist with compliant text
+            self.assertIn("在 WFSim 中打开", dlg._btn_send_wfsim.text())
+            self.assertIn("wfsim.app", dlg._btn_send_wfsim.text())
+            self.assertIn("仅导入紫卡", dlg._btn_send_riven_only.text())
+            self.assertIn("非官方独立项目", dlg._btn_send_riven_only.toolTip())
+
+            riven = self.parser.parse(["托里德 Crita-acrican", "+185.0% 暴击几率", "+148.0% 暴击伤害", "段位 16 O 12"])
+            ev = self.evaluator.evaluate(riven)
+            dlg.show_for_card(ev, riven)
             fired = []
-            panel.open_wfsim_requested.connect(lambda: fired.append("btn"))
-            panel._btn_open_wfsim.click()
-            self.assertEqual(fired, ["btn"])
+            dlg.send_riven_only_to_wfsim.connect(lambda _ev, _rv: fired.append("riven_only"))
+            dlg._btn_send_riven_only.click()
+            self.assertEqual(fired, ["riven_only"])
 
             hm = DynamicHotkeyManager()
             self.assertFalse(hasattr(hm, "wfsim_triggered"))
             self.assertFalse(hm.dispatch_action_name("wfsim", "test"))
         finally:
+            dlg.close()
             panel.close()
 
     def test_leaving_warframe_game_including_control_panel_triggers_standby(self) -> None:
