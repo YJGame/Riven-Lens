@@ -229,6 +229,38 @@ class TestBuildOptimizer(unittest.TestCase):
         self.assertIn("病毒", custom.active_elements_zh)
         self.assertIn("火焰", custom.active_elements_zh)
 
+    def test_conditional_arcanes_never_selected_when_element_merged_into_compound(self) -> None:
+        # Regression test for Amprex Viral+Heat build: Toxin+Cold merges into Viral, leaving NO
+        # standalone Toxin or Cold -> Primary Blight / Primary Frostbite MUST NOT be selected!
+        r_amprex = self.parser.parse(
+            [
+                "安培克斯 Parci-critadex",
+                "+110.0% 暴击几率",
+                "+45.0% 弹药效率",
+                "+65.0% 触发几率",
+                "-28.0% 对 Corpus 伤害",
+                "段位 12 O 5",
+            ]
+        )
+        ev_amprex = self.evaluator.evaluate(r_amprex)
+        res = optimize_build_for_riven(ev_amprex, scenario=SCENARIO_GENERAL, allow_bane_mods=False)
+        self.assertIsNotNone(res.arcane)
+        if "毒素" not in res.active_elements_zh:
+            self.assertNotEqual(res.arcane.id, "primary_blight")
+        if "冰冻" not in res.active_elements_zh:
+            self.assertNotEqual(res.arcane.id, "primary_frostbite")
+        self.assertIn(res.arcane.id, ("primary_merciless", "primary_deadhead"))
+        self.assertIn("vital_sense", res.mod_ids)
+
+        # Manually forcing Primary Blight onto a Viral+Heat build must warn about missing standalone Toxin
+        warned = evaluate_custom_build_for_riven(
+            ev_amprex,
+            ["galvanized_chamber", "critical_delay", "vital_sense", "galvanized_aptitude", "infected_clip", "primed_cryo_rounds", "hellfire"],
+            "primary_blight",
+            scenario=SCENARIO_GENERAL,
+        )
+        self.assertTrue(any("主要·毒侵" in msg and "独立【毒素】" in msg for msg in warned.rationale_zh))
+
 
 if __name__ == "__main__":
     unittest.main()

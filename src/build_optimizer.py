@@ -78,6 +78,7 @@ class ArcaneDef:
     crit_damage: float = 0.0
     crit_chance: float = 0.0
     weakpoint: float = 0.0
+    reload: float = 0.0
     status_chance: float = 0.0
     corrosive_bonus: float = 0.0
     heat_bonus: float = 0.0
@@ -218,18 +219,18 @@ MOD_POOLS: Dict[str, Tuple[ModDef, ...]] = {
 
 ARCANE_POOLS: Dict[str, Tuple[ArcaneDef, ...]] = {
     "rifle": (
-        ArcaneDef("primary_merciless", "主要·无情", "Primary Merciless", damage=3.60),
+        ArcaneDef("primary_merciless", "主要·无情", "Primary Merciless", damage=3.60, reload=0.30),
         ArcaneDef("primary_deadhead", "主要·死首", "Primary Deadhead", damage=3.60, weakpoint=0.30),
         ArcaneDef("primary_frostbite", "主要·霜冻", "Primary Frostbite", crit_damage=1.20, multishot=0.90),
         ArcaneDef("primary_blight", "主要·毒侵", "Primary Blight", crit_damage=1.48, multishot=0.90),
     ),
     "shotgun": (
-        ArcaneDef("primary_merciless", "主要·无情", "Primary Merciless", damage=3.60),
+        ArcaneDef("primary_merciless", "主要·无情", "Primary Merciless", damage=3.60, reload=0.30),
         ArcaneDef("primary_deadhead", "主要·死首", "Primary Deadhead", damage=3.60, weakpoint=0.30),
         ArcaneDef("primary_frostbite", "主要·霜冻", "Primary Frostbite", crit_damage=1.20, multishot=0.90),
     ),
     "pistol": (
-        ArcaneDef("secondary_merciless", "次要·无情", "Secondary Merciless", damage=3.60),
+        ArcaneDef("secondary_merciless", "次要·无情", "Secondary Merciless", damage=3.60, reload=0.30),
         ArcaneDef("secondary_deadhead", "次要·死首", "Secondary Deadhead", damage=3.60, weakpoint=0.30),
         ArcaneDef("cascadia_flare", "瀑流·耀炎", "Cascadia Flare", damage=4.80),
     ),
@@ -500,7 +501,12 @@ def _score_build(
         dmg += m.damage
         if not is_melee:
             ms += m.multishot
-        cc_mod += m.crit_chance + m.blood_rush_cc
+        if m.id in ("galvanized_scope", "galvanized_crosshairs"):
+            # Requires continuous aimed headshot kills -> realistic uptime by scenario
+            hs_uptime = 0.85 if scenario == SCENARIO_BOSS_DIRECT else 0.55
+            cc_mod += m.crit_chance * hs_uptime
+        else:
+            cc_mod += m.crit_chance + m.blood_rush_cc
         cd_mod += m.crit_damage
         fr += m.fire_rate
         sc_mod += m.status_chance + m.weeping_sc
@@ -529,7 +535,8 @@ def _score_build(
             ms += arcane.multishot
         cd_mod += arcane.crit_damage
         cc_mod += arcane.crit_chance
-        weakpoint += arcane.weakpoint * (0.80 if scenario == SCENARIO_BOSS_DIRECT else 0.45)
+        weakpoint += arcane.weakpoint * (0.85 if scenario == SCENARIO_BOSS_DIRECT else 0.15)
+        reload_bonus += arcane.reload
         sc_mod += arcane.status_chance
         if arcane.corrosive_bonus > 0:
             elem += arcane.corrosive_bonus
@@ -543,16 +550,17 @@ def _score_build(
     if co_per_status > 0:
         dmg += co_per_status * min(5.0, distinct_statuses)
 
-    # Arcane conditional activation checks (e.g. Frostbite requires Cold, Blight requires Toxin, Flare requires Heat)
+    # Arcane conditional activation checks — require UNCOMBINED standalone element in `rem_elems`!
+    # (e.g. Toxin+Cold merges into Viral -> 0 standalone Toxin/Cold procs -> 0 stacks for Blight/Frostbite!)
     if arcane is not None:
-        if arcane.id == "primary_frostbite" and "cold" not in base_elems:
-            cd_mod -= arcane.crit_damage * 0.85
-            ms -= arcane.multishot * 0.85
-        elif arcane.id == "primary_blight" and "toxin" not in base_elems:
-            cd_mod -= arcane.crit_damage * 0.85
-            ms -= arcane.multishot * 0.85
+        if arcane.id == "primary_frostbite" and "cold" not in rem_elems:
+            cd_mod -= arcane.crit_damage
+            ms -= arcane.multishot
+        elif arcane.id == "primary_blight" and "toxin" not in rem_elems:
+            cd_mod -= arcane.crit_damage
+            ms -= arcane.multishot
         elif arcane.id == "cascadia_flare" and "heat" not in rem_elems:
-            dmg -= arcane.damage * 0.80
+            dmg -= arcane.damage
 
     # Clamp multiplier floors
     dmg = max(0.15, dmg)
@@ -882,24 +890,19 @@ def evaluate_custom_build_for_riven(
     rationale_zh: List[str] = []
     rationale_en: List[str] = []
 
-    all_base_elems: Set[str] = set(riven_prof["base_elements"])  # type: ignore[arg-type]
-    for m in chosen_mods:
-        if m.element:
-            all_base_elems.add(m.element)
-
     if chosen_arcane is not None:
         if chosen_arcane.id == "melee_influence" and "electricity" not in rem:
             rationale_zh.append("⚠ 当前赋能为【近战·侵染】，但配卡缺少独立【电击】元素，无法稳定触发大范围扩散")
             rationale_en.append("⚠ [Melee Influence] requires standalone [Electricity] to trigger AoE spread")
-        elif chosen_arcane.id == "primary_frostbite" and "cold" not in all_base_elems:
-            rationale_zh.append("⚠ 当前赋能为【主要·霜冻】，但配卡/紫卡缺少【冰冻】元素，建议补冰卡或更换赋能")
-            rationale_en.append("⚠ [Primary Frostbite] needs [Cold] procs to stack; add a Cold mod or switch arcane")
-        elif chosen_arcane.id == "primary_blight" and "toxin" not in all_base_elems:
-            rationale_zh.append("⚠ 当前赋能为【主要·毒侵】，但配卡/紫卡缺少【毒素】元素，建议补毒卡或更换赋能")
-            rationale_en.append("⚠ [Primary Blight] needs [Toxin] procs to stack; add a Toxin mod or switch arcane")
+        elif chosen_arcane.id == "primary_frostbite" and "cold" not in rem:
+            rationale_zh.append("⚠ 当前赋能为【主要·霜冻】，但成型元素中无独立【冰冻】（已被合成为复合元素或未装配），无法叠层")
+            rationale_en.append("⚠ [Primary Frostbite] requires uncombined standalone [Cold] procs to stack")
+        elif chosen_arcane.id == "primary_blight" and "toxin" not in rem:
+            rationale_zh.append("⚠ 当前赋能为【主要·毒侵】，但成型元素中无独立【毒素】（已被合成为病毒/腐蚀等复合元素或未装配），无法叠层")
+            rationale_en.append("⚠ [Primary Blight] requires uncombined standalone [Toxin] procs to stack")
         elif chosen_arcane.id == "cascadia_flare" and "heat" not in rem:
-            rationale_zh.append("⚠ 当前赋能为【瀑流·耀炎】，但当前配卡缺少独立【火焰】触发，建议补火卡或改用无情/死首")
-            rationale_en.append("⚠ [Cascadia Flare] requires standalone [Heat] procs; add a Heat mod or switch arcane")
+            rationale_zh.append("⚠ 当前赋能为【瀑流·耀炎】，但成型元素中无独立【火焰】触发，建议补火卡或改用无情/死首")
+            rationale_en.append("⚠ [Cascadia Flare] requires uncombined standalone [Heat] procs; add a Heat mod or switch arcane")
 
     if len(chosen_mods) < 7:
         empty_n = 7 - len(chosen_mods)

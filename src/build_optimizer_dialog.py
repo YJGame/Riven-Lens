@@ -106,6 +106,7 @@ class BuildOptimizerDialog(QDialog):
 
         # Header
         self._hdr_frame = QFrame()
+        self._hdr_frame.setObjectName("HdrFrame")
         hdr_lay = QVBoxLayout(self._hdr_frame)
         hdr_lay.setContentsMargins(14, 10, 14, 10)
         hdr_lay.setSpacing(3)
@@ -143,6 +144,7 @@ class BuildOptimizerDialog(QDialog):
 
         # 2 x 4 Mod Grid (7 editable Mod cards + Slot 8 Locked Riven)
         self._grid_container = QFrame()
+        self._grid_container.setObjectName("GridContainer")
         self._mod_grid = QGridLayout(self._grid_container)
         self._mod_grid.setContentsMargins(10, 10, 10, 10)
         self._mod_grid.setHorizontalSpacing(10)
@@ -151,6 +153,7 @@ class BuildOptimizerDialog(QDialog):
 
         # Arcane dropdown & Active Elements summary bar
         self._summary_frame = QFrame()
+        self._summary_frame.setObjectName("SummaryFrame")
         sum_lay = QHBoxLayout(self._summary_frame)
         sum_lay.setContentsMargins(12, 9, 12, 9)
         sum_lay.setSpacing(10)
@@ -172,6 +175,7 @@ class BuildOptimizerDialog(QDialog):
 
         # Smart Rationale & live analysis bullets
         self._rationale_frame = QFrame()
+        self._rationale_frame.setObjectName("RationaleFrame")
         rat_lay = QVBoxLayout(self._rationale_frame)
         rat_lay.setContentsMargins(12, 9, 12, 9)
         rat_lay.setSpacing(4)
@@ -306,16 +310,16 @@ class BuildOptimizerDialog(QDialog):
             """
         )
         self._hdr_frame.setStyleSheet(
-            f"QFrame {{ background-color: {surface_hdr}; border: 1px solid {border}; border-radius: 10px; }}"
+            f"QFrame#HdrFrame {{ background-color: {surface_hdr}; border: 1px solid {border}; border-radius: 10px; }}"
         )
         self._grid_container.setStyleSheet(
-            f"QFrame {{ background-color: {surface}; border: 1px solid {border_soft}; border-radius: 10px; }}"
+            f"QFrame#GridContainer {{ background-color: {surface}; border: 1px solid {border_soft}; border-radius: 10px; }}"
         )
         self._summary_frame.setStyleSheet(
-            f"QFrame {{ background-color: {surface_hdr}; border: 1px solid {border_soft}; border-radius: 8px; }}"
+            f"QFrame#SummaryFrame {{ background-color: {surface_hdr}; border: 1px solid {border_soft}; border-radius: 8px; }}"
         )
         self._rationale_frame.setStyleSheet(
-            f"QFrame {{ background-color: {surface}; border: 1px solid {border_soft}; border-radius: 8px; }}"
+            f"QFrame#RationaleFrame {{ background-color: {surface}; border: 1px solid {border_soft}; border-radius: 8px; }}"
         )
         self._lbl_title.setStyleSheet(f"color: {accent}; background: transparent;")
         self._lbl_weapon_meta.setStyleSheet(f"color: {muted}; font-size: 12px; background: transparent;")
