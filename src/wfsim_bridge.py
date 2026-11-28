@@ -396,6 +396,7 @@ def build_wfsim_url(
     include_baseline_build: bool = False,
     custom_mods: Optional[Sequence[str]] = None,
     custom_arcanes: Optional[Sequence[str]] = None,
+    custom_exilus: Optional[str] = None,
     custom_build_label: Optional[str] = None,
     kitgun_slot: Optional[str] = None,
     origin: str = WFSIM_ORIGIN,
@@ -452,13 +453,15 @@ def build_wfsim_url(
         while len(slots9) < 7:
             slots9.append(0)
         slots9.append(["~0"] if bonuses else 0)
-        slots9.append(0)  # Exilus
+        ex_id = (custom_exilus or "").strip()
+        slots9.append([ex_id] if ex_id else 0)  # Slot #9 Exilus
     elif include_baseline_build:
         slots9 = [[m] for m in base_mods[:7]]
         while len(slots9) < 7:
             slots9.append(0)
         slots9.append(["~0"] if bonuses else 0)
-        slots9.append(0)  # Exilus
+        ex_id = (custom_exilus or "").strip()
+        slots9.append([ex_id] if ex_id else 0)  # Slot #9 Exilus
     else:
         slots9 = [["~0"] if bonuses else 0, 0, 0, 0, 0, 0, 0, 0, 0]
         arcanes = []

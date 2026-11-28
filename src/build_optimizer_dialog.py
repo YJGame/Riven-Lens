@@ -20,6 +20,7 @@ from PyQt6.QtCore import QEvent, QPoint, Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QColor, QFont
 from PyQt6.QtWidgets import (
     QCheckBox,
+    QComboBox,
     QDialog,
     QFrame,
     QGridLayout,
@@ -36,6 +37,9 @@ from PyQt6.QtWidgets import (
 )
 
 from src.build_optimizer import (
+    ARCHETYPE_AUTO,
+    ARCHETYPE_LABELS_EN,
+    ARCHETYPE_LABELS_ZH,
     SCENARIO_KEYS,
     SCENARIO_STEEL_PATH,
     ArcaneDef,
@@ -46,6 +50,8 @@ from src.build_optimizer import (
     evaluate_custom_build_for_riven,
     format_mod_stats,
     get_arcane_pool,
+    get_available_archetypes_for_class,
+    get_exilus_pool,
     get_mod_pool,
     match_mod_search,
     optimize_build_for_riven,
@@ -352,18 +358,34 @@ class CategorySearchSelector(QWidget):
 
         if self._mode == "mod":
             categories = categorize_mods_for_menu(self._mods, self._weapon_class, self._lang)
-            for cat_title, cat_mods in categories:
-                sub = QMenu(f"{cat_title} ({len(cat_mods)})", menu)
-                sub.setStyleSheet(menu_css)
-                for m in cat_mods:
+            # If only 1 category (e.g. Slot #9 Exilus-only selector), list items directly without extra nesting!
+            if len(categories) == 1 and "特殊功能" in categories[0][0] or (len(categories) == 1 and "Exilus" in categories[0][0]):
+                for m in categories[0][1]:
                     disp = m.name_zh if is_zh else m.name_en
                     st_txt = format_mod_stats(m, self._weapon_class, self._lang)
                     prefix = "✓ " if m.id == self._current_id else "   "
                     label = f"{prefix}{disp}   [{st_txt}]" if st_txt and st_txt != "-" else f"{prefix}{disp}"
-                    act = sub.addAction(label)
+                    act = menu.addAction(label)
                     act.setData(m.id)
                     act.triggered.connect(lambda _chk=False, mid=m.id: self._commit_id(mid))
-                menu.addMenu(sub)
+            else:
+                for cat_title, cat_mods in categories:
+                    sub = QMenu(f"{cat_title} ({len(cat_mods)})", menu)
+                    sub.setStyleSheet(menu_css)
+                    prev_elem: Optional[str] = None
+                    is_elem_cat = ("元素" in cat_title) or ("Elemental" in cat_title)
+                    for m in cat_mods:
+                        if is_elem_cat and prev_elem is not None and m.element != prev_elem:
+                            sub.addSeparator()
+                        prev_elem = m.element
+                        disp = m.name_zh if is_zh else m.name_en
+                        st_txt = format_mod_stats(m, self._weapon_class, self._lang)
+                        prefix = "✓ " if m.id == self._current_id else "   "
+                        label = f"{prefix}{disp}   [{st_txt}]" if st_txt and st_txt != "-" else f"{prefix}{disp}"
+                        act = sub.addAction(label)
+                        act.setData(m.id)
+                        act.triggered.connect(lambda _chk=False, mid=m.id: self._commit_id(mid))
+                    menu.addMenu(sub)
         else:
             for a in self._arcanes:
                 disp = f"{a.name_zh} ({a.name_en})" if is_zh else a.name_en
@@ -508,6 +530,7 @@ class BuildOptimizerDialog(QDialog):
         self._lang = lang if lang in SUPPORTED_LANGS else "en_US"
         self._theme_colors = resolve_theme_colors(settings.theme_preset, settings.theme_colors)
         self._scenario: str = SCENARIO_STEEL_PATH
+        self._archetype: str = ARCHETYPE_AUTO
         self._no_bane: bool = False
         self._current_eval: Optional[RivenEvaluation] = None
         self._current_riven: Optional[RivenData] = None
@@ -515,6 +538,7 @@ class BuildOptimizerDialog(QDialog):
         self._last_result: Optional[BuildOptimizationResult] = None
         self._slot_mod_ids: List[Optional[str]] = [None] * 7
         self._selected_arcane_id: Optional[str] = None
+        self._selected_exilus_id: Optional[str] = None
         self._is_customized: bool = False
         self._conflict_notice: Optional[Tuple[str, str]] = None
         self._updating_widgets: bool = False
@@ -552,7 +576,7 @@ class BuildOptimizerDialog(QDialog):
         hdr_lay.addWidget(self._lbl_weapon_meta)
         root.addWidget(self._hdr_frame)
 
-        # Scenario selector bar + No-Bane toggle + Reset Recommended button
+        # Scenario selector bar + Hot Meta Archetype selector + No-Bane toggle + Reset button
         ctrl_row = QHBoxLayout()
         ctrl_row.setSpacing(8)
         for skey in SCENARIO_KEYS:
@@ -563,6 +587,13 @@ class BuildOptimizerDialog(QDialog):
             btn.clicked.connect(lambda _chk=False, k=skey: self._set_scenario(k))
             self._scenario_btns[skey] = btn
             ctrl_row.addWidget(btn)
+
+        self._lbl_archetype = QLabel("")
+        self._cmb_archetype = QComboBox()
+        self._cmb_archetype.setMinimumWidth(135)
+        self._cmb_archetype.currentIndexChanged.connect(self._on_archetype_combo_changed)
+        ctrl_row.addWidget(self._lbl_archetype)
+        ctrl_row.addWidget(self._cmb_archetype)
         ctrl_row.addStretch(1)
 
         self._chk_no_bane = QCheckBox("")
@@ -585,7 +616,7 @@ class BuildOptimizerDialog(QDialog):
         self._mod_grid.setVerticalSpacing(10)
         root.addWidget(self._grid_container, stretch=1)
 
-        # Arcane searchable selector & Active Elements summary bar
+        # Arcane & Slot #9 Exilus selector bar (redundant "成型元素" label removed; shown in Analysis pills)
         self._summary_frame = QFrame()
         self._summary_frame.setObjectName("SummaryFrame")
         sum_outer = QVBoxLayout(self._summary_frame)
@@ -597,17 +628,24 @@ class BuildOptimizerDialog(QDialog):
         self._lbl_arcane = QLabel("")
         self._lbl_arcane.setFont(QFont("Microsoft YaHei UI", 10, QFont.Weight.Bold))
         self._cmb_arcane = CategorySearchSelector(weapon_class="rifle", theme_colors=self._theme_colors, parent=self)
-        self._cmb_arcane.setMinimumWidth(280)
+        self._cmb_arcane.setMinimumWidth(250)
         self._cmb_arcane.item_id_selected.connect(self._on_arcane_selected)
         self._lbl_arcane_none = QLabel("")
         self._lbl_arcane_none.hide()
-        self._lbl_elements = QLabel("")
-        self._lbl_elements.setFont(QFont("Microsoft YaHei UI", 10, QFont.Weight.Bold))
+
+        self._lbl_exilus = QLabel("")
+        self._lbl_exilus.setFont(QFont("Microsoft YaHei UI", 10, QFont.Weight.Bold))
+        self._cmb_exilus = CategorySearchSelector(weapon_class="rifle", theme_colors=self._theme_colors, parent=self)
+        self._cmb_exilus.setMinimumWidth(230)
+        self._cmb_exilus.item_id_selected.connect(self._on_exilus_selected)
+
         sum_row.addWidget(self._lbl_arcane)
         sum_row.addWidget(self._cmb_arcane)
         sum_row.addWidget(self._lbl_arcane_none)
+        sum_row.addSpacing(12)
+        sum_row.addWidget(self._lbl_exilus)
+        sum_row.addWidget(self._cmb_exilus)
         sum_row.addStretch(1)
-        sum_row.addWidget(self._lbl_elements)
         sum_outer.addLayout(sum_row)
 
         self._lbl_arcane_desc = QLabel("")
@@ -756,14 +794,21 @@ class BuildOptimizerDialog(QDialog):
         )
         self._lbl_title.setStyleSheet(f"color: {accent}; background: transparent; border: none;")
         self._lbl_weapon_meta.setStyleSheet(f"color: {muted}; font-size: 12px; background: transparent; border: none;")
+        self._lbl_archetype.setStyleSheet(f"color: {muted}; font-size: 12px; background: transparent; border: none;")
+        self._cmb_archetype.setStyleSheet(
+            f"QComboBox {{ background-color: {input_bg}; color: {text}; border: 1px solid {border_soft}; border-radius: 5px; padding: 3px 8px; font-size: 12px; font-weight: 600; }}"
+            f"QComboBox:hover {{ border-color: {accent}; }}"
+            f"QComboBox QAbstractItemView {{ background-color: {bg}; color: {text}; selection-background-color: {btn_bg}; selection-color: {btn_fg}; border: 1px solid {border}; }}"
+        )
         self._lbl_arcane.setStyleSheet(f"color: {accent}; background: transparent; border: none;")
         self._lbl_arcane_none.setStyleSheet(f"color: {muted}; font-size: 12px; background: transparent; border: none;")
         self._lbl_arcane_desc.setStyleSheet(f"color: {muted}; font-size: 11px; background: transparent; border: none;")
-        self._lbl_elements.setStyleSheet(f"color: {text}; background: transparent; border: none;")
+        self._lbl_exilus.setStyleSheet(f"color: {accent}; background: transparent; border: none;")
         self._lbl_rationale_hdr.setStyleSheet(f"color: {accent}; background: transparent; border: none;")
         self._lbl_rationale_body.setStyleSheet(f"color: {text}; font-size: 12px; background: transparent; border: none;")
         self._lbl_disclaimer.setStyleSheet(f"color: {muted}; font-size: 11px; border: none;")
         self._cmb_arcane.set_theme_colors(colors)
+        self._cmb_exilus.set_theme_colors(colors)
 
         if self._last_result is not None:
             self._render_result(self._last_result)
@@ -783,8 +828,10 @@ class BuildOptimizerDialog(QDialog):
         self._lbl_title.setText(I18N.t("panel.opt_dialog_title", self._lang))
         self._chk_no_bane.setText(I18N.t("panel.opt_no_bane_chk", self._lang))
         self._btn_reset_rec.setText(I18N.t("panel.opt_reset_btn", self._lang))
+        self._lbl_archetype.setText(I18N.t("panel.opt_archetype_label", self._lang))
         self._lbl_arcane.setText(I18N.t("panel.opt_arcane_label", self._lang))
         self._lbl_arcane_none.setText(I18N.t("panel.opt_no_arcane", self._lang))
+        self._lbl_exilus.setText(I18N.t("panel.opt_exilus_label", self._lang))
         self._lbl_rationale_hdr.setText(I18N.t("panel.opt_rationale_hdr", self._lang))
         self._lbl_disclaimer.setText(I18N.t("panel.opt_disclaimer", self._lang))
         self._btn_send_wfsim.setText(I18N.t("panel.opt_send_wfsim_btn", self._lang))
@@ -804,6 +851,7 @@ class BuildOptimizerDialog(QDialog):
     def show_for_card(self, evaluation: RivenEvaluation, riven: RivenData) -> None:
         self._current_eval = evaluation
         self._current_riven = riven
+        self._archetype = ARCHETYPE_AUTO
         self._recompute_recommended()
         self.showNormal()
         self.raise_()
@@ -859,6 +907,23 @@ class BuildOptimizerDialog(QDialog):
         self._selected_arcane_id = norm
         self._evaluate_current_selection()
 
+    def set_selected_exilus(self, exilus_id: Optional[str]) -> None:
+        """Equip or clear Slot #9 Exilus Mod and live-recalculate."""
+        if self._current_eval is None:
+            return
+        norm = str(exilus_id).strip() if exilus_id else None
+        if norm == self._selected_exilus_id:
+            return
+        self._conflict_notice = None
+        self._selected_exilus_id = norm
+        self._evaluate_current_selection()
+
+    def set_archetype(self, archetype_key: str) -> None:
+        if not archetype_key or archetype_key == self._archetype:
+            return
+        self._archetype = archetype_key
+        self._recompute_recommended()
+
     def reset_to_recommended(self) -> None:
         if self._recommended_result is None:
             return
@@ -867,6 +932,7 @@ class BuildOptimizerDialog(QDialog):
         while len(self._slot_mod_ids) < 7:
             self._slot_mod_ids.append(None)
         self._selected_arcane_id = rec.arcane.id if rec.arcane is not None else None
+        self._selected_exilus_id = None
         self._is_customized = False
         self._conflict_notice = None
         self._last_result = rec
@@ -885,6 +951,13 @@ class BuildOptimizerDialog(QDialog):
             btn.blockSignals(False)
         self._recompute_recommended()
 
+    def _on_archetype_combo_changed(self, _index: int) -> None:
+        if self._updating_widgets:
+            return
+        akey = self._cmb_archetype.currentData()
+        if isinstance(akey, str) and akey:
+            self.set_archetype(akey)
+
     def _on_no_bane_toggled(self, checked: bool) -> None:
         self._no_bane = bool(checked)
         self._recompute_recommended()
@@ -901,12 +974,14 @@ class BuildOptimizerDialog(QDialog):
             self._current_eval,
             scenario=self._scenario,
             allow_bane_mods=not self._no_bane,
+            archetype=self._archetype,
         )
         self._recommended_result = rec
         self._slot_mod_ids = [s.mod.id for s in rec.mods[:7]]
         while len(self._slot_mod_ids) < 7:
             self._slot_mod_ids.append(None)
         self._selected_arcane_id = rec.arcane.id if rec.arcane is not None else None
+        self._selected_exilus_id = None
         self._is_customized = False
         self._conflict_notice = None
         self._last_result = rec
@@ -923,7 +998,11 @@ class BuildOptimizerDialog(QDialog):
             rec_mods.append(None)
         rec_arc = rec.arcane.id if (rec is not None and rec.arcane is not None) else None
 
-        self._is_customized = (self._slot_mod_ids != rec_mods) or (self._selected_arcane_id != rec_arc)
+        self._is_customized = (
+            (self._slot_mod_ids != rec_mods)
+            or (self._selected_arcane_id != rec_arc)
+            or (self._selected_exilus_id is not None)
+        )
         self._btn_reset_rec.setEnabled(self._is_customized)
 
         if not self._is_customized and rec is not None:
@@ -938,6 +1017,8 @@ class BuildOptimizerDialog(QDialog):
             self._selected_arcane_id,
             scenario=self._scenario,
             reference_score=ref_score,
+            exilus_mod_id=self._selected_exilus_id,
+            archetype=self._archetype,
         )
         self._last_result = custom_res
         self._render_result(custom_res)
@@ -951,6 +1032,11 @@ class BuildOptimizerDialog(QDialog):
         if self._updating_widgets:
             return
         self.set_selected_arcane(arcane_id or None)
+
+    def _on_exilus_selected(self, exilus_id: str) -> None:
+        if self._updating_widgets:
+            return
+        self.set_selected_exilus(exilus_id or None)
 
     def _clear_mod_grid(self) -> None:
         for sel in self._slot_combos:
@@ -984,10 +1070,10 @@ class BuildOptimizerDialog(QDialog):
         pill_bd = _blend_hex(bg, border, 0.45)
 
         def _fmt_pct(v: float) -> str:
-            return f"{v:+.0f}%" if abs(v - round(v)) < 0.05 else f"{v:+.1f}%"
+            return f"{v:+,.0f}%" if abs(v - round(v)) < 0.05 else f"{v:+,.1f}%"
 
         def _fmt_num(v: float) -> str:
-            return f"{v:.0f}" if v >= 100 else (f"{v:.1f}" if v >= 10 else f"{v:.2f}")
+            return f"{v:,.0f}" if v >= 100 else (f"{v:,.1f}" if v >= 10 else f"{v:.2f}")
 
         pills_data: List[Tuple[str, str, str]] = []
         pills_data.append(
@@ -1086,7 +1172,9 @@ class BuildOptimizerDialog(QDialog):
             if ev is not None:
                 w_name = ev.weapon_name if is_zh else (ev.weapon_name_en or ev.weapon_name or "")
                 cls_txt = I18N.weapon_class(ev.weapon_class, lang)
-                arch_txt = (ev.matched_archetype_name if is_zh else ev.matched_archetype_name_en) or ""
+                arch_txt = (res.active_archetype_zh if is_zh else res.active_archetype_en) or (
+                    (ev.matched_archetype_name if is_zh else ev.matched_archetype_name_en) or ""
+                )
                 meta_parts = [f"{w_name} [{cls_txt}]"]
                 if arch_txt:
                     meta_parts.append(arch_txt)
@@ -1094,6 +1182,16 @@ class BuildOptimizerDialog(QDialog):
                 if self._is_customized and res.delta_vs_recommended_pct is not None:
                     meta_parts.append(I18N.t("panel.opt_modified_badge", lang, delta=res.delta_vs_recommended_pct))
                 self._lbl_weapon_meta.setText("  ·  ".join(meta_parts))
+
+                # Sync Archetype dropdown options for current weapon class
+                self._cmb_archetype.blockSignals(True)
+                self._cmb_archetype.clear()
+                arch_labels = ARCHETYPE_LABELS_ZH if is_zh else ARCHETYPE_LABELS_EN
+                for ak in get_available_archetypes_for_class(res.weapon_class):
+                    self._cmb_archetype.addItem(arch_labels.get(ak, ak), ak)
+                a_idx = self._cmb_archetype.findData(self._archetype)
+                self._cmb_archetype.setCurrentIndex(a_idx if a_idx >= 0 else 0)
+                self._cmb_archetype.blockSignals(False)
 
             colors = self._theme_colors or resolve_theme_colors(DEFAULT_THEME_PRESET)
             bg = colors.get("bg", "#120C20")
@@ -1239,7 +1337,7 @@ class BuildOptimizerDialog(QDialog):
             self._slot_frames.append(rcard)
             self._mod_grid.addWidget(rcard, 1, 3)
 
-            # Searchable Arcane bar
+            # Searchable Arcane & Slot #9 Exilus bar
             arcanes = get_arcane_pool(res.weapon_class, optimizer_only=False)
             if arcanes:
                 self._cmb_arcane.show()
@@ -1261,18 +1359,25 @@ class BuildOptimizerDialog(QDialog):
                 self._lbl_arcane_none.show()
                 self._lbl_arcane_desc.hide()
 
-            if res.stat_summary and res.stat_summary.element_breakdown:
-                def _fmt_e(e_zh: str, e_en: str, e_dmg: float, e_pct: float) -> str:
-                    lbl = e_zh if is_zh else e_en
-                    d_str = f"{e_dmg:.0f}" if e_dmg >= 100 else f"{e_dmg:.1f}"
-                    p_str = f"{e_pct:+.0f}%" if abs(e_pct - round(e_pct)) < 0.05 else f"{e_pct:+.1f}%"
-                    return f"{lbl}:{d_str}({p_str})"
-
-                elem_txt = " · ".join(_fmt_e(*row) for row in res.stat_summary.element_breakdown)
+            exilus_mods = get_exilus_pool(
+                res.weapon_class,
+                weapon_slug=ev.weapon_slug if ev is not None else "",
+                weapon_name_en=ev.weapon_name_en if ev is not None else "",
+            )
+            if exilus_mods:
+                self._lbl_exilus.show()
+                self._cmb_exilus.show()
+                self._cmb_exilus._weapon_class = res.weapon_class
+                self._cmb_exilus.populate_mods(
+                    exilus_mods,
+                    empty_label=I18N.t("panel.opt_exilus_none_opt", lang),
+                    placeholder=I18N.t("panel.opt_search_exilus_ph", lang),
+                    lang=lang,
+                    selected_id=self._selected_exilus_id,
+                )
             else:
-                elems = res.active_elements_zh if is_zh else res.active_elements_en
-                elem_txt = " + ".join(elems) if elems else "-"
-            self._lbl_elements.setText(I18N.t("panel.opt_elements_label", lang, elems=elem_txt))
+                self._lbl_exilus.hide()
+                self._cmb_exilus.hide()
 
             self._render_overall_stats(res.stat_summary, lang)
 
@@ -1291,4 +1396,5 @@ class BuildOptimizerDialog(QDialog):
         for sel in self._slot_combos:
             sel._popup.hide()
         self._cmb_arcane._popup.hide()
+        self._cmb_exilus._popup.hide()
         super().hideEvent(event)

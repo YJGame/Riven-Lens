@@ -12,15 +12,20 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from PyQt6.QtWidgets import QApplication
 
 from src.build_optimizer import (
+    ARCHETYPE_HEAVY_ATTACK,
+    ARCHETYPE_HEAVY_SLAM,
+    ARCHETYPE_MELEE_INFLUENCE,
     MOD_POOLS,
     ARCANE_POOLS,
     SCENARIO_BOSS_DIRECT,
     SCENARIO_GENERAL,
     SCENARIO_STEEL_PATH,
     categorize_mods_for_menu,
+    detect_meta_archetype,
     evaluate_custom_build_for_riven,
     format_mod_stats,
     get_arcane_pool,
+    get_exilus_pool,
     get_mod_pool,
     is_mod_compatible_with_weapon,
     match_mod_search,
@@ -338,10 +343,12 @@ class TestBuildOptimizer(unittest.TestCase):
             self.assertIn("virulent_scourge", filtered_ids)
             self.assertNotIn("vicious_frost", filtered_ids)
 
-            # Cascading hover-category QMenu builds submenus cleanly
+            # Cascading hover-category QMenu uses consolidated Elemental, Physical IPS, and Exilus categories
             cat_menu = sel0.build_category_menu()
             submenu_titles = [act.text() for act in cat_menu.actions() if act.menu() is not None]
-            self.assertTrue(any("毒素" in t for t in submenu_titles))
+            self.assertEqual(sum(1 for t in submenu_titles if "元素伤害" in t), 1)
+            self.assertTrue(any("物理伤害" in t for t in submenu_titles))
+            self.assertTrue(any("特殊功能" in t for t in submenu_titles))
             self.assertTrue(any("暴击" in t for t in submenu_titles))
 
             # Overall build stat summary populated & melee displays Range pill
@@ -419,6 +426,73 @@ class TestBuildOptimizer(unittest.TestCase):
         self.assertGreater(el_dmg, 100.0)
         self.assertGreater(gas_res.stat_summary.eff_multishot, 3.0)
         self.assertGreater(gas_res.stat_summary.eff_fire_rate, 0.5)
+
+    def test_primed_firestorm_exilus_slot9_physical_category_thousands_sep_and_heavy_meta(self) -> None:
+        # 1. Primed Firestorm (烈焰风暴 Prime) & Exilus & Physical (IPS) Mods present in catalog
+        rifle_pool = get_mod_pool("rifle", weapon_slug="kuva_bramma", weapon_name_en="Kuva Bramma")
+        rifle_ids = {m.id for m in rifle_pool}
+        self.assertIn("primed_firestorm", rifle_ids)
+        self.assertIn("primed_rifle_ammo_mutation", rifle_ids)
+
+        rifle_exilus = get_exilus_pool("rifle", weapon_slug="kuva_bramma", weapon_name_en="Kuva Bramma")
+        self.assertIn("primed_rifle_ammo_mutation", [m.id for m in rifle_exilus])
+        self.assertIn("stabilizer", [m.id for m in rifle_exilus])
+
+        cats = categorize_mods_for_menu(rifle_pool, "rifle", "zh_CN")
+        cat_names = [title for title, _ in cats]
+        self.assertEqual(sum(1 for n in cat_names if "元素伤害" in n), 1)
+        self.assertTrue(any("物理伤害" in n for n in cat_names))
+        self.assertTrue(any("特殊功能" in n for n in cat_names))
+
+        # 2. Heavy Attack meta archetype auto-detection for Glaive Prime + Heavy Riven
+        r_glaive = self.parser.parse(
+            [
+                "战刃 Crita-icron",
+                "+180.0% 暴击几率",
+                "+35.0 初始连击",
+                "+120.0% 暴击伤害",
+                "-40.0% 对 Infested 伤害",
+                "段位 15 O 9",
+            ]
+        )
+        ev_g = self.evaluator.evaluate(r_glaive)
+        arch_id, _az, _ae = detect_meta_archetype(ev_g)
+        self.assertEqual(arch_id, ARCHETYPE_HEAVY_ATTACK)
+        heavy_res = optimize_build_for_riven(ev_g, scenario=SCENARIO_STEEL_PATH, allow_bane_mods=False)
+        self.assertEqual(heavy_res.active_archetype_id, ARCHETYPE_HEAVY_ATTACK)
+        self.assertTrue(
+            any(m in heavy_res.mod_ids for m in ("killing_blow", "amalgam_organ_shatter", "sacrificial_steel", "galvanized_reflex")),
+            msg=f"Expected heavy attack core mods, got {heavy_res.mod_ids}",
+        )
+
+        # 3. Dialog Slot #9 Exilus selection exports to WFSim slots9[8] + thousands comma separator shown
+        r_bramma = self.parser.parse(["赤毒·布拉玛 Parciata", "+258.6% 伤害", "+73.1% 弹药效率", "段位 15 O 8"])
+        ev_b = self.evaluator.evaluate(r_bramma)
+        settings = UserSettings()
+        dlg = BuildOptimizerDialog(settings=settings, lang="zh_CN")
+        try:
+            dlg.show_for_card(ev_b, r_bramma)
+            self.assertFalse(hasattr(dlg, "_lbl_elements"))
+            # Verify comma-formatted big number on Bramma (base 1026 * >7x > 1,000)
+            pill_texts = " ".join(p.text() for p in dlg._stat_pills)
+            self.assertIn(",", pill_texts)
+
+            # Pick Exilus mod in Slot #9 and verify WFSim export puts it into slots9[8]!
+            dlg.set_selected_exilus("primed_rifle_ammo_mutation")
+            self.assertEqual(dlg._last_result.exilus_mod_id, "primed_rifle_ammo_mutation")
+            wf_link = build_wfsim_url(
+                ev_b,
+                r_bramma,
+                custom_mods=dlg._last_result.mod_ids,
+                custom_arcanes=dlg._last_result.arcane_ids,
+                custom_exilus=dlg._last_result.exilus_mod_id,
+            )
+            self.assertTrue(wf_link.ok)
+            code = urllib.parse.parse_qs(urllib.parse.urlparse(wf_link.url).query)["b"][0]
+            payload = decode_wfsim_share_code(code)
+            self.assertEqual(payload[3][8], ["primed_rifle_ammo_mutation"])
+        finally:
+            dlg.close()
 
 
 if __name__ == "__main__":

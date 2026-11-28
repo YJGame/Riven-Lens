@@ -1793,6 +1793,7 @@ def run_overlay_mode(args: argparse.Namespace) -> None:
             riven_obj,  # type: ignore[arg-type]
             custom_mods=getattr(opt_res, "mod_ids", None),
             custom_arcanes=getattr(opt_res, "arcane_ids", None),
+            custom_exilus=getattr(opt_res, "exilus_mod_id", None),
             custom_build_label="本地优化配装",
         )
         if not res.ok:

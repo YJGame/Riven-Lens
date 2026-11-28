@@ -36,6 +36,68 @@ SCENARIO_KEYS: Tuple[str, ...] = (
     SCENARIO_BOSS_DIRECT,
 )
 
+# Hot Meta Build Archetypes (auto-pulled from weapon Incarnon / recommended_tiers / Riven traits, or user-selectable)
+ARCHETYPE_AUTO = "auto"
+ARCHETYPE_STANDARD = "standard_crit"
+ARCHETYPE_INCARNON_META = "incarnon_meta"
+ARCHETYPE_NON_CRIT = "non_crit_devour"
+ARCHETYPE_MELEE_INFLUENCE = "melee_influence"
+ARCHETYPE_HEAVY_ATTACK = "heavy_attack"
+ARCHETYPE_HEAVY_SLAM = "heavy_slam"
+
+ARCHETYPE_LABELS_ZH: Dict[str, str] = {
+    ARCHETYPE_AUTO: "自动热门流派",
+    ARCHETYPE_STANDARD: "常规双暴直伤",
+    ARCHETYPE_INCARNON_META: "灵化热门流派",
+    ARCHETYPE_NON_CRIT: "灵化非暴吞噬流",
+    ARCHETYPE_MELEE_INFLUENCE: "近战侵染清图流",
+    ARCHETYPE_HEAVY_ATTACK: "近战重击爆发流",
+    ARCHETYPE_HEAVY_SLAM: "近战重击震地流",
+}
+ARCHETYPE_LABELS_EN: Dict[str, str] = {
+    ARCHETYPE_AUTO: "Auto Meta",
+    ARCHETYPE_STANDARD: "Standard Crit",
+    ARCHETYPE_INCARNON_META: "Incarnon Meta",
+    ARCHETYPE_NON_CRIT: "Non-Crit Devouring",
+    ARCHETYPE_MELEE_INFLUENCE: "Melee Influence AoE",
+    ARCHETYPE_HEAVY_ATTACK: "Heavy Attack",
+    ARCHETYPE_HEAVY_SLAM: "Heavy Slam",
+}
+
+_HEAVY_META_WEAPONS = frozenset(
+    {
+        "glaive", "glaive_prime", "xoris", "falcor", "cerata", "orvius", "pathocyst", "coda_pathocyst",
+        "ceramic_dagger", "stropha", "redeemer", "redeemer_prime", "corufell", "syam", "azothane",
+        "edun", "pennant", "quassus", "quassus_prime", "harmony", "hate", "reaper_prime",
+    }
+)
+_SLAM_META_WEAPONS = frozenset(
+    {
+        "sampotes", "arca_titron", "magistar", "sancti_magistar", "fragor_prime", "wolf_sledge", "exec", "tenet_exec",
+    }
+)
+_INCARNON_GUN_SLUGS = frozenset(
+    {
+        "torid", "burston", "burston_prime", "braton", "braton_prime", "latron", "latron_prime",
+        "strun", "strun_prime", "boar", "boar_prime", "soma", "soma_prime", "boltor", "boltor_prime",
+        "paris", "paris_prime", "dread", "miter", "gorgon", "dera", "sybaris", "sybaris_prime",
+        "lex", "lex_prime", "furis", "dual_toxocyst", "atomos", "angstrum", "sicarus", "sicarus_prime",
+        "vasto", "vasto_prime", "bronco", "bronco_prime", "kunai", "despair", "zylok", "gammacor", "cestra",
+        "phenmor", "felarx", "laetum", "onorix", "okina", "dual_ichor", "hate", "ceramic_dagger",
+        "magistar", "nami_solo", "sibear", "prisma_ohma", "innodem", "praedos", "thalys",
+    }
+)
+_HEAVY_CORE_MOD_IDS = frozenset(
+    {
+        "killing_blow", "amalgam_organ_shatter", "sacrificial_steel", "galvanized_reflex",
+        "corrupt_charge", "reflex_coil", "focus_radon", "focus_energy", "seismic_wave",
+        "primed_pressure_point", "sacrificial_pressure", "primed_fever_strike", "primed_smite_grineer",
+        "shocking_touch", "voltaic_strike", "virulent_scourge", "vicious_frost", "volcanic_edge",
+        "primed_reach", "condition_overload", "galvanized_steel", "gladiator_might", "organ_shatter",
+        "volatile_quick_return", "power_throw",
+    }
+)
+
 
 @dataclass(frozen=True)
 class ModDef:
@@ -62,11 +124,14 @@ class ModDef:
     slam_dmg: float = 0.0
     element: Optional[str] = None  # "toxin" | "cold" | "heat" | "electricity" | "radiation" | "magnetic" | ...
     element_value: float = 0.0
+    ips_type: str = ""             # "impact" | "puncture" | "slash" | ""
+    ips_value: float = 0.0
     co_per_status: float = 0.0     # Galvanized Aptitude/Savvy/Shot or Condition Overload
     blood_rush_cc: float = 0.0     # Blood Rush at 12x combo
     weeping_sc: float = 0.0        # Weeping Wounds at 12x combo
     hunter_munitions: bool = False
     is_bane: bool = False
+    is_exilus: bool = False
     compat_weapon: str = ""
     optimizer_core: bool = True
     stat_display_zh: str = ""
@@ -322,6 +387,10 @@ class BuildOptimizationResult:
     rationale_en: List[str] = field(default_factory=list)
     delta_vs_recommended_pct: Optional[float] = None
     stat_summary: Optional[BuildStatSummary] = None
+    exilus_mod: Optional[ModDef] = None
+    active_archetype_id: str = ARCHETYPE_STANDARD
+    active_archetype_zh: str = ""
+    active_archetype_en: str = ""
 
     @property
     def mod_ids(self) -> List[str]:
@@ -330,6 +399,10 @@ class BuildOptimizationResult:
     @property
     def arcane_ids(self) -> List[str]:
         return [self.arcane.id] if self.arcane is not None else []
+
+    @property
+    def exilus_mod_id(self) -> Optional[str]:
+        return self.exilus_mod.id if self.exilus_mod is not None else None
 
 
 # ---- Dynamic Catalog Loader (`data/optimizer_catalog.json`) ----
@@ -418,11 +491,14 @@ def _load_catalog() -> Tuple[
                         slam_dmg=float(d.get("slam_dmg") or 0.0),
                         element=str(d["element"]) if d.get("element") else None,
                         element_value=float(d.get("element_value") or 0.0),
+                        ips_type=str(d.get("ips_type") or ""),
+                        ips_value=float(d.get("ips_value") or 0.0),
                         co_per_status=float(d.get("co_per_status") or 0.0),
                         blood_rush_cc=float(d.get("blood_rush_cc") or 0.0),
                         weeping_sc=float(d.get("weeping_sc") or 0.0),
                         hunter_munitions=bool(d.get("hunter_munitions")),
                         is_bane=bool(d.get("is_bane")),
+                        is_exilus=bool(d.get("is_exilus")),
                         compat_weapon=str(d.get("compat_weapon") or ""),
                         optimizer_core=bool(d.get("optimizer_core", False)),
                         stat_display_zh=str(d.get("stat_display_zh") or ""),
@@ -571,12 +647,110 @@ def get_mod_pool(
     return out if out else list(MOD_POOLS.get(w_cls, RIFLE_MODS))
 
 
+def get_exilus_pool(
+    weapon_class: str,
+    *,
+    weapon_slug: str = "",
+    weapon_name_en: str = "",
+) -> List[ModDef]:
+    """Return all weapon-compatible Exilus (`is_exilus=True`) Mods for Slot #9."""
+    full = get_mod_pool(
+        weapon_class,
+        allow_bane_mods=True,
+        optimizer_only=False,
+        weapon_slug=weapon_slug,
+        weapon_name_en=weapon_name_en,
+    )
+    return [m for m in full if m.is_exilus]
+
+
+def get_available_archetypes_for_class(weapon_class: str) -> List[str]:
+    """Return ordered archetype keys selectable for `weapon_class`."""
+    cls = (weapon_class or "rifle").strip().lower()
+    if cls == "melee":
+        return [
+            ARCHETYPE_AUTO,
+            ARCHETYPE_MELEE_INFLUENCE,
+            ARCHETYPE_HEAVY_ATTACK,
+            ARCHETYPE_HEAVY_SLAM,
+            ARCHETYPE_STANDARD,
+        ]
+    if cls == "archgun":
+        return [ARCHETYPE_AUTO, ARCHETYPE_STANDARD]
+    return [
+        ARCHETYPE_AUTO,
+        ARCHETYPE_INCARNON_META,
+        ARCHETYPE_STANDARD,
+        ARCHETYPE_NON_CRIT,
+    ]
+
+
+def detect_meta_archetype(
+    ev: RivenEvaluation,
+    riven_prof: Optional[Dict[str, object]] = None,
+) -> Tuple[str, str, str]:
+    """Auto-detect the hottest meta build archetype from weapon Incarnon rules & scanned Riven stats."""
+    w_cls = (ev.weapon_class or "rifle").strip().lower()
+    wkey = _norm_weapon_key(ev.weapon_slug, ev.weapon_name_en)
+    matched_id = (ev.matched_archetype_id or "").strip().lower()
+    matched_zh = (ev.matched_archetype_name or "").strip()
+    matched_en = (ev.matched_archetype_name_en or "").strip()
+
+    if matched_id == "non_crit_devour" or wkey in ("laetum", "phenmor", "felarx"):
+        return (
+            ARCHETYPE_NON_CRIT,
+            matched_zh or ARCHETYPE_LABELS_ZH[ARCHETYPE_NON_CRIT],
+            matched_en or ARCHETYPE_LABELS_EN[ARCHETYPE_NON_CRIT],
+        )
+
+    if w_cls == "melee":
+        r_slam = float((riven_prof or {}).get("slam_dmg", 0.0))
+        r_heavy = float((riven_prof or {}).get("heavy_dmg", 0.0))
+        r_ic = float((riven_prof or {}).get("initial_combo", 0.0))
+        if matched_id == "heavy_slam" or wkey in _SLAM_META_WEAPONS or r_slam >= 0.4:
+            return (
+                ARCHETYPE_HEAVY_SLAM,
+                matched_zh or ARCHETYPE_LABELS_ZH[ARCHETYPE_HEAVY_SLAM],
+                matched_en or ARCHETYPE_LABELS_EN[ARCHETYPE_HEAVY_SLAM],
+            )
+        if matched_id in ("heavy_statstick", "heavy_attack") or wkey in _HEAVY_META_WEAPONS or r_heavy >= 0.35 or r_ic >= 15.0:
+            return (
+                ARCHETYPE_HEAVY_ATTACK,
+                matched_zh or ARCHETYPE_LABELS_ZH[ARCHETYPE_HEAVY_ATTACK],
+                matched_en or ARCHETYPE_LABELS_EN[ARCHETYPE_HEAVY_ATTACK],
+            )
+        if matched_id == "melee_influence" or wkey in _INCARNON_GUN_SLUGS:
+            return (
+                ARCHETYPE_MELEE_INFLUENCE,
+                matched_zh or ARCHETYPE_LABELS_ZH[ARCHETYPE_MELEE_INFLUENCE],
+                matched_en or ARCHETYPE_LABELS_EN[ARCHETYPE_MELEE_INFLUENCE],
+            )
+        return (
+            ARCHETYPE_MELEE_INFLUENCE,
+            ARCHETYPE_LABELS_ZH[ARCHETYPE_MELEE_INFLUENCE],
+            ARCHETYPE_LABELS_EN[ARCHETYPE_MELEE_INFLUENCE],
+        )
+
+    if wkey in _INCARNON_GUN_SLUGS or (matched_zh and "灵化" in matched_zh):
+        return (
+            ARCHETYPE_INCARNON_META,
+            matched_zh or ARCHETYPE_LABELS_ZH[ARCHETYPE_INCARNON_META],
+            matched_en or ARCHETYPE_LABELS_EN[ARCHETYPE_INCARNON_META],
+        )
+
+    return (
+        ARCHETYPE_STANDARD,
+        matched_zh or ARCHETYPE_LABELS_ZH[ARCHETYPE_STANDARD],
+        matched_en or ARCHETYPE_LABELS_EN[ARCHETYPE_STANDARD],
+    )
+
+
 def categorize_mods_for_menu(
     mods: Sequence[ModDef],
     weapon_class: str = "rifle",
     lang: str = "zh_CN",
 ) -> List[Tuple[str, List[ModDef]]]:
-    """Group compatible Mods into crisp top-level categories for cascading hover submenus."""
+    """Group compatible Mods into crisp top-level categories (single Elemental, Physical IPS, Exilus, Exclusive)."""
     is_zh = lang in ("zh_CN", "zh_TW")
     is_melee = (weapon_class or "").lower() == "melee"
 
@@ -585,31 +759,25 @@ def categorize_mods_for_menu(
         "dmg_ms": [],
         "crit": [],
         "speed_range": [],
-        "elem_toxin": [],
-        "elem_cold": [],
-        "elem_heat": [],
-        "elem_elec": [],
-        "elem_comp": [],
+        "elemental": [],
+        "physical": [],
         "status_slash": [],
         "bane": [],
-        "heavy_util": [],
+        "combat_util": [],
+        "exilus": [],
     }
 
     for m in mods:
         if m.compat_weapon:
             buckets["exclusive"].append(m)
+        elif m.is_exilus:
+            buckets["exilus"].append(m)
         elif m.is_bane:
             buckets["bane"].append(m)
-        elif m.element == "toxin":
-            buckets["elem_toxin"].append(m)
-        elif m.element == "cold":
-            buckets["elem_cold"].append(m)
-        elif m.element == "heat":
-            buckets["elem_heat"].append(m)
-        elif m.element == "electricity":
-            buckets["elem_elec"].append(m)
-        elif m.element in ("radiation", "magnetic", "viral", "corrosive", "blast", "gas"):
-            buckets["elem_comp"].append(m)
+        elif m.element:
+            buckets["elemental"].append(m)
+        elif m.ips_type:
+            buckets["physical"].append(m)
         elif m.crit_chance or m.crit_damage or m.blood_rush_cc or m.weakpoint:
             buckets["crit"].append(m)
         elif m.damage or m.multishot or m.co_per_status:
@@ -619,59 +787,64 @@ def categorize_mods_for_menu(
         elif m.status_chance or m.status_damage or m.weeping_sc or m.hunter_munitions:
             buckets["status_slash"].append(m)
         else:
-            buckets["heavy_util"].append(m)
+            buckets["combat_util"].append(m)
 
     labels_zh = {
         "exclusive": "★ 武器专属",
         "dmg_ms": "⚔ 伤害 / 多重" if not is_melee else "⚔ 基础伤害 / 异况",
         "crit": "🎯 暴击 / 爆伤",
         "speed_range": "⚡ 攻速 / 范围" if is_melee else "⚡ 射速",
-        "elem_toxin": "☠ 元素：毒素",
-        "elem_cold": "❄ 元素：冰冻",
-        "elem_heat": "🔥 元素：火焰",
-        "elem_elec": "⚡ 元素：电击",
-        "elem_comp": "☢ 元素：辐射 / 磁力",
+        "elemental": "🧪 元素伤害",
+        "physical": "🗡 物理伤害（冲/穿/切）",
         "status_slash": "🩸 触发 / 异常 / 切割",
         "bane": "🛡 种族歧视",
-        "heavy_util": "🔧 重击 / 震地 / 连击" if is_melee else "🔧 装填 / 穿透 / 功能",
+        "combat_util": "🔧 重击 / 震地 / 连击" if is_melee else "🔧 装填 / 穿透 / 弹药",
+        "exilus": "⚙ 特殊功能（第 9 格）",
     }
     labels_en = {
         "exclusive": "★ Weapon Exclusive",
         "dmg_ms": "⚔ Damage & Multishot" if not is_melee else "⚔ Base Damage / CO",
         "crit": "🎯 Crit Chance & Damage",
         "speed_range": "⚡ Attack Speed & Range" if is_melee else "⚡ Fire Rate",
-        "elem_toxin": "☠ Element: Toxin",
-        "elem_cold": "❄ Element: Cold",
-        "elem_heat": "🔥 Element: Heat",
-        "elem_elec": "⚡ Element: Electricity",
-        "elem_comp": "☢ Element: Rad / Mag",
+        "elemental": "🧪 Elemental Damage",
+        "physical": "🗡 Physical (Impact/Puncture/Slash)",
         "status_slash": "🩸 Status & Slash",
         "bane": "🛡 Faction Bane",
-        "heavy_util": "🔧 Heavy / Slam / Utility" if is_melee else "🔧 Reload / Punch / Utility",
+        "combat_util": "🔧 Heavy / Slam / Combo" if is_melee else "🔧 Reload / Punch / Utility",
+        "exilus": "⚙ Exilus (Slot #9)",
     }
     labels = labels_zh if is_zh else labels_en
+
+    elem_sort_order = {
+        "toxin": 0, "cold": 1, "heat": 2, "electricity": 3,
+        "radiation": 4, "magnetic": 5, "viral": 6, "corrosive": 7, "blast": 8, "gas": 9,
+    }
+    ips_sort_order = {"slash": 0, "puncture": 1, "impact": 2}
 
     ordered_keys = (
         "exclusive",
         "dmg_ms",
         "crit",
         "speed_range",
-        "elem_toxin",
-        "elem_cold",
-        "elem_heat",
-        "elem_elec",
-        "elem_comp",
+        "elemental",
+        "physical",
         "status_slash",
         "bane",
-        "heavy_util",
+        "combat_util",
+        "exilus",
     )
     result: List[Tuple[str, List[ModDef]]] = []
     for k in ordered_keys:
         items = buckets[k]
-        if items:
-            # Show core meta mods first inside each submenu, then alphabetical
+        if not items:
+            continue
+        if k == "elemental":
+            items.sort(key=lambda x: (elem_sort_order.get(x.element or "", 99), 0 if x.optimizer_core else 1, x.name_zh if is_zh else x.name_en))
+        elif k == "physical":
+            items.sort(key=lambda x: (ips_sort_order.get(x.ips_type, 9), -x.ips_value, x.name_zh if is_zh else x.name_en))
+        else:
             items.sort(key=lambda x: (0 if x.optimizer_core else 1, x.name_zh if is_zh else x.name_en))
-            result.append((labels[k], items))
+        result.append((labels[k], items))
     return result
 
 
@@ -985,11 +1158,13 @@ def _score_build(
     mods: Sequence[ModDef],
     arcane: Optional[ArcaneDef],
     scenario: str,
+    archetype_id: str = ARCHETYPE_STANDARD,
 ) -> Tuple[float, Set[str], Set[str]]:
-    """Compute realistic expected combat DPS score for `(weapon + riven + mods + arcane)`."""
+    """Compute realistic expected combat DPS score for `(weapon + riven + mods + arcane + archetype)`."""
     is_melee = ev.weapon_class == "melee"
-    is_non_crit = ev.matched_archetype_id == "non_crit_devour"
-    is_heavy = ev.matched_archetype_id in ("heavy_statstick", "heavy_slam")
+    is_non_crit = archetype_id == ARCHETYPE_NON_CRIT or ev.matched_archetype_id == "non_crit_devour"
+    is_heavy = is_melee and archetype_id in (ARCHETYPE_HEAVY_ATTACK, ARCHETYPE_HEAVY_SLAM)
+    is_slam = is_melee and archetype_id == ARCHETYPE_HEAVY_SLAM
 
     w_cc = float(ev.weapon_crit_chance) if (ev.weapon_crit_chance and ev.weapon_crit_chance > 0) else (0.24 if is_melee else 0.22)
     w_cd = float(ev.weapon_crit_mult) if (ev.weapon_crit_mult and ev.weapon_crit_mult > 1.0) else (2.2 if is_melee else 2.0)
@@ -1046,11 +1221,17 @@ def _score_build(
             # Requires continuous aimed headshot kills -> realistic uptime by scenario
             hs_uptime = 0.85 if scenario == SCENARIO_BOSS_DIRECT else 0.42
             cc_mod += m.crit_chance * hs_uptime
+        elif is_heavy and m.id in ("sacrificial_steel", "true_steel", "galvanized_steel", "amalgam_true_steel"):
+            # Steel mods double their Crit Chance on Heavy Attacks in Warframe!
+            cc_mod += m.crit_chance * 2.0
+        elif is_heavy and m.blood_rush_cc > 0:
+            # Heavy builds spend combo frequently -> Blood Rush operates at ~4x instead of permanent 12x
+            cc_mod += m.blood_rush_cc * 0.30
         else:
             cc_mod += m.crit_chance + m.blood_rush_cc
         cd_mod += m.crit_damage
-        fr += m.fire_rate
-        sc_mod += m.status_chance + m.weeping_sc
+        fr += m.fire_rate * (0.45 if is_heavy else 1.0)
+        sc_mod += (m.status_chance + m.weeping_sc * (0.30 if is_heavy else 1.0))
         st_dmg += m.status_damage
         if m.faction:
             f_scale = 1.0 if scenario == SCENARIO_STEEL_PATH else (0.45 if scenario == SCENARIO_GENERAL else 0.70)
@@ -1071,6 +1252,8 @@ def _score_build(
             else:
                 base_elems.add(m.element)
             elem += m.element_value
+        if m.ips_value > 0:
+            elem += m.ips_value * 0.25
 
     prefer_influence = bool(arcane is not None and arcane.influence_aoe and is_melee)
     if arcane is not None:
@@ -1152,22 +1335,30 @@ def _score_build(
     # Melee Influence (requires uncombined Electricity -> massive 20m AoE status spread in Steel Path / General!)
     if prefer_influence:
         if "electricity" in rem_elems:
-            inf_scale = 2.40 if scenario != SCENARIO_BOSS_DIRECT else 0.35
-            arch_boost = 1.25 if ev.matched_archetype_id == "melee_influence" else 1.0
+            if is_heavy:
+                inf_scale = 0.45  # Heavy/Slam builds focus on single huge hits rather than light-attack spread
+            else:
+                inf_scale = 2.40 if scenario != SCENARIO_BOSS_DIRECT else 0.35
+            arch_boost = 1.35 if archetype_id == ARCHETYPE_MELEE_INFLUENCE else 1.0
             elem_synergy *= 1.0 + inf_scale * arch_boost * max(0.45, proc_uptime) * (0.75 + 0.30 * st_dmg)
         else:
-            # Influence does nothing without uncombined Electricity!
             elem_synergy *= 0.85
     elif arcane is not None and arcane.afflictions_bonus and is_melee:
-        elem_synergy *= 1.0 + 0.22 * st_dmg * max(0.35, proc_uptime)
+        elem_synergy *= 1.0 + (0.55 if is_heavy else 0.22) * st_dmg * max(0.35, proc_uptime)
 
     # Utility / AoE / Heavy / Sustained uptime scaling
     utility = 1.0
     if is_melee:
-        range_w = 0.085 if scenario != SCENARIO_BOSS_DIRECT else 0.03
+        range_w = 0.085 if (scenario != SCENARIO_BOSS_DIRECT and not is_heavy) else 0.03
         utility *= max(0.70, 1.0 + range_m * range_w)
         if is_heavy:
-            utility *= 1.0 + (init_combo / 40.0) * 0.22 + heavy_dmg * 0.35 + slam_dmg * 0.28
+            # Heavy Attack / Slam builds multiply damage by Combo Multiplier (Initial Combo) + Heavy Wind-Up + Heavy/Slam DMG!
+            combo_mult = 1.0 + min(11.0, max(0.0, init_combo) / 20.0)
+            heavy_mult = 1.0 + max(0.0, heavy_dmg) * 1.15
+            slam_mult = 1.0 + max(0.0, slam_dmg) * (1.35 if is_slam else 0.20)
+            # Amalgam Organ Shatter / Killing Blow wind-up bonus
+            windup_bonus = 1.0 + (0.35 if any(m.id in ("amalgam_organ_shatter", "killing_blow") for m in mods) else 0.0)
+            utility *= combo_mult * heavy_mult * slam_mult * windup_bonus
         else:
             utility *= 1.0 + (init_combo / 80.0) * 0.06 + heavy_dmg * 0.08 + slam_dmg * 0.06
     else:
@@ -1355,6 +1546,7 @@ def _optimize_for_arcane(
     arcane: Optional[ArcaneDef],
     scenario: str,
     slots: int = 7,
+    archetype_id: str = ARCHETYPE_STANDARD,
 ) -> Tuple[List[ModDef], float, Set[str], Set[str]]:
     chosen: List[ModDef] = []
 
@@ -1368,14 +1560,14 @@ def _optimize_for_arcane(
         for cand in pool:
             if _conflict_with(cand, chosen):
                 continue
-            sc, _, _ = _score_build(ev, riven_prof, chosen + [cand], arcane, scenario)
+            sc, _, _ = _score_build(ev, riven_prof, chosen + [cand], arcane, scenario, archetype_id=archetype_id)
             if sc > best_score:
                 best_score = sc
                 best_next = cand
 
         # 2-step lookahead for elemental pairs when >= 2 slots remain
         if len(chosen) <= slots - 2:
-            base_now, _, _ = _score_build(ev, riven_prof, chosen, arcane, scenario)
+            base_now, _, _ = _score_build(ev, riven_prof, chosen, arcane, scenario, archetype_id=archetype_id)
             best_pair_avg = (best_score - base_now) if best_score > base_now else 0.0
             for i, m1 in enumerate(elem_mods):
                 if _conflict_with(m1, chosen):
@@ -1383,7 +1575,7 @@ def _optimize_for_arcane(
                 for m2 in elem_mods[i + 1 :]:
                     if m1.element == m2.element or _conflict_with(m2, chosen) or _conflict_with(m2, [m1]):
                         continue
-                    sc2, _, _ = _score_build(ev, riven_prof, chosen + [m1, m2], arcane, scenario)
+                    sc2, _, _ = _score_build(ev, riven_prof, chosen + [m1, m2], arcane, scenario, archetype_id=archetype_id)
                     avg_gain = (sc2 - base_now) * 0.52
                     if avg_gain > best_pair_avg:
                         best_pair_avg = avg_gain
@@ -1394,7 +1586,7 @@ def _optimize_for_arcane(
         chosen.append(best_next)
 
     # Step 2: Coordinate-descent 1-swap local refinement until convergence
-    cur_score, cur_comps, cur_rem = _score_build(ev, riven_prof, chosen, arcane, scenario)
+    cur_score, cur_comps, cur_rem = _score_build(ev, riven_prof, chosen, arcane, scenario, archetype_id=archetype_id)
     for _ in range(4):
         improved = False
         for idx in range(len(chosen)):
@@ -1404,7 +1596,7 @@ def _optimize_for_arcane(
             for cand in pool:
                 if cand.id == chosen[idx].id or _conflict_with(cand, others):
                     continue
-                sc, _, _ = _score_build(ev, riven_prof, others + [cand], arcane, scenario)
+                sc, _, _ = _score_build(ev, riven_prof, others + [cand], arcane, scenario, archetype_id=archetype_id)
                 if sc > best_sc * 1.0005:
                     best_sc = sc
                     best_m = cand
@@ -1415,7 +1607,7 @@ def _optimize_for_arcane(
         if not improved:
             break
 
-    cur_score, cur_comps, cur_rem = _score_build(ev, riven_prof, chosen, arcane, scenario)
+    cur_score, cur_comps, cur_rem = _score_build(ev, riven_prof, chosen, arcane, scenario, archetype_id=archetype_id)
     return chosen, cur_score, cur_comps, cur_rem
 
 
@@ -1450,9 +1642,19 @@ def optimize_build_for_riven(
     *,
     scenario: str = SCENARIO_STEEL_PATH,
     allow_bane_mods: bool = True,
+    archetype: str = ARCHETYPE_AUTO,
 ) -> BuildOptimizationResult:
-    """Find the optimal 7 Mods + Arcane complementing the scanned Riven Mod (<30ms offline)."""
+    """Find the optimal 7 Mods + Arcane complementing the scanned Riven & hot meta archetype (<30ms offline)."""
     w_cls = (ev.weapon_class or "rifle").strip().lower()
+    riven_prof = _extract_riven_profile(ev)
+
+    if not archetype or archetype == ARCHETYPE_AUTO:
+        arch_id, arch_zh, arch_en = detect_meta_archetype(ev, riven_prof)
+    else:
+        arch_id = archetype
+        arch_zh = ARCHETYPE_LABELS_ZH.get(arch_id, arch_id)
+        arch_en = ARCHETYPE_LABELS_EN.get(arch_id, arch_id)
+
     pool = get_mod_pool(
         w_cls,
         allow_bane_mods=allow_bane_mods,
@@ -1460,9 +1662,27 @@ def optimize_build_for_riven(
         weapon_slug=ev.weapon_slug,
         weapon_name_en=ev.weapon_name_en,
     )
-    arcanes = get_arcane_pool(w_cls, optimizer_only=True) or [None]
+    # Include Heavy/Slam core mods (e.g. Corrupt Charge, Focus Radon, Volatile Quick Return) when Heavy archetype active
+    if w_cls == "melee" and arch_id in (ARCHETYPE_HEAVY_ATTACK, ARCHETYPE_HEAVY_SLAM):
+        full_melee = get_mod_pool(
+            w_cls,
+            allow_bane_mods=allow_bane_mods,
+            optimizer_only=False,
+            weapon_slug=ev.weapon_slug,
+            weapon_name_en=ev.weapon_name_en,
+        )
+        seen_ids = {m.id for m in pool}
+        for m in full_melee:
+            if m.id in _HEAVY_CORE_MOD_IDS and m.id not in seen_ids:
+                pool.append(m)
+                seen_ids.add(m.id)
 
-    riven_prof = _extract_riven_profile(ev)
+    arcanes = get_arcane_pool(w_cls, optimizer_only=True) or [None]
+    if w_cls == "melee" and arch_id in (ARCHETYPE_HEAVY_ATTACK, ARCHETYPE_HEAVY_SLAM):
+        all_m_arcs = get_arcane_pool(w_cls, optimizer_only=False)
+        for a in all_m_arcs:
+            if a.id == "melee_animosity" and all(x is None or x.id != a.id for x in arcanes):
+                arcanes.append(a)
 
     best_mods: List[ModDef] = []
     best_arcane: Optional[ArcaneDef] = None
@@ -1471,7 +1691,9 @@ def optimize_build_for_riven(
     best_rem: Set[str] = set()
 
     for arc in arcanes:
-        mods, sc, comps, rem = _optimize_for_arcane(ev, riven_prof, pool, arc, scenario, slots=7)
+        mods, sc, comps, rem = _optimize_for_arcane(
+            ev, riven_prof, pool, arc, scenario, slots=7, archetype_id=arch_id
+        )
         if sc > best_score:
             best_score = sc
             best_mods = mods
@@ -1483,12 +1705,12 @@ def optimize_build_for_riven(
     slot_results: List[OptimizedModSlot] = []
     for i, m in enumerate(best_mods):
         without_m = best_mods[:i] + best_mods[i + 1 :]
-        sc_without, _, _ = _score_build(ev, riven_prof, without_m, best_arcane, scenario)
+        sc_without, _, _ = _score_build(ev, riven_prof, without_m, best_arcane, scenario, archetype_id=arch_id)
         gain_pct = round(((best_score / sc_without) - 1.0) * 100.0, 1) if sc_without > 0 else 0.0
         slot_results.append(OptimizedModSlot(mod=m, marginal_gain_pct=gain_pct))
     slot_results.sort(key=lambda s: s.marginal_gain_pct, reverse=True)
 
-    sc_no_riven, _, _ = _score_build(ev, None, best_mods, best_arcane, scenario)
+    sc_no_riven, _, _ = _score_build(ev, None, best_mods, best_arcane, scenario, archetype_id=arch_id)
     riven_gain_pct = round(((best_score / sc_no_riven) - 1.0) * 100.0, 1) if sc_no_riven > 0 else 0.0
 
     # Format active elements & smart human-readable explanations
@@ -1499,9 +1721,18 @@ def optimize_build_for_riven(
     rationale_zh: List[str] = []
     rationale_en: List[str] = []
 
-    if ev.matched_archetype_id == "non_crit_devour":
-        rationale_zh.append("命中扎里曼非暴吞噬流 → 自动剔除暴击率/爆伤卡，全力堆叠多重、射速、元素与基伤乘区")
-        rationale_en.append("Zariman Non-Crit Devouring detected → stripped crit mods to maximize MS, Fire Rate & elemental scaling")
+    if arch_id == ARCHETYPE_NON_CRIT:
+        rationale_zh.append(f"已拉取热门流派【{arch_zh}】→ 自动剔除暴击率/爆伤卡，全力堆叠多重、射速、元素与基伤乘区")
+        rationale_en.append(f"Meta Archetype [{arch_en}] → stripped crit mods to maximize MS, Fire Rate & elemental scaling")
+    elif arch_id == ARCHETYPE_HEAVY_SLAM:
+        rationale_zh.append(f"已拉取热门流派【{arch_zh}】→ 自动强化初始连击、重击蓄力与震地攻击乘区（牺牲斩铁双倍暴击）")
+        rationale_en.append(f"Meta Archetype [{arch_en}] → prioritized Initial Combo, Heavy Wind-Up & Slam multipliers")
+    elif arch_id == ARCHETYPE_HEAVY_ATTACK:
+        rationale_zh.append(f"已拉取热门流派【{arch_zh}】→ 自动搭配重击/初始连击体系（牺牲斩铁重击双倍暴击 + 一击必杀/并合肢解）")
+        rationale_en.append(f"Meta Archetype [{arch_en}] → built around Initial Combo, Heavy Attack Damage & Sacrificial Steel 2x crit")
+    elif arch_id == ARCHETYPE_INCARNON_META:
+        rationale_zh.append(f"已拉取热门灵化流派【{arch_zh}】→ 按当前武器灵化定位与紫卡词条自动避开稀释")
+        rationale_en.append(f"Incarnon Meta Archetype [{arch_en}] → balanced high-synergy multipliers around your Riven")
 
     r_base_elems = set(riven_prof["base_elements"])  # type: ignore[arg-type]
     r_comp_elems = set(riven_prof["compound_elements"])  # type: ignore[arg-type]
@@ -1544,6 +1775,10 @@ def optimize_build_for_riven(
         rationale_en=rationale_en,
         delta_vs_recommended_pct=0.0,
         stat_summary=stat_summary,
+        exilus_mod=None,
+        active_archetype_id=arch_id,
+        active_archetype_zh=arch_zh,
+        active_archetype_en=arch_en,
     )
 
 
@@ -1554,8 +1789,10 @@ def evaluate_custom_build_for_riven(
     *,
     scenario: str = SCENARIO_STEEL_PATH,
     reference_score: Optional[float] = None,
+    exilus_mod_id: Optional[str] = None,
+    archetype: str = ARCHETYPE_AUTO,
 ) -> BuildOptimizationResult:
-    """Evaluate a user-customized 0..7 Mod + Arcane combination around the scanned Riven (<2ms)."""
+    """Evaluate a user-customized 0..7 Mod + Exilus (#9) + Arcane combination around the scanned Riven (<2ms)."""
     w_cls = (ev.weapon_class or "rifle").strip().lower()
     pool = get_mod_pool(
         w_cls,
@@ -1577,19 +1814,33 @@ def evaluate_custom_build_for_riven(
             chosen_mods.append(m)
             seen_ids.add(m.id)
 
+    exilus_mod: Optional[ModDef] = None
+    if exilus_mod_id:
+        cand_ex = mod_by_id.get(str(exilus_mod_id).strip())
+        if cand_ex is not None and cand_ex.id not in seen_ids:
+            exilus_mod = cand_ex
+
     chosen_arcane: Optional[ArcaneDef] = arc_by_id.get(str(arcane_id).strip()) if arcane_id else None
     riven_prof = _extract_riven_profile(ev)
 
-    score, comps, rem = _score_build(ev, riven_prof, chosen_mods, chosen_arcane, scenario)
+    if not archetype or archetype == ARCHETYPE_AUTO:
+        arch_id, arch_zh, arch_en = detect_meta_archetype(ev, riven_prof)
+    else:
+        arch_id = archetype
+        arch_zh = ARCHETYPE_LABELS_ZH.get(arch_id, arch_id)
+        arch_en = ARCHETYPE_LABELS_EN.get(arch_id, arch_id)
+
+    all_active_mods = chosen_mods + ([exilus_mod] if exilus_mod is not None else [])
+    score, comps, rem = _score_build(ev, riven_prof, all_active_mods, chosen_arcane, scenario, archetype_id=arch_id)
 
     slot_results: List[OptimizedModSlot] = []
     for i, m in enumerate(chosen_mods):
-        without_m = chosen_mods[:i] + chosen_mods[i + 1 :]
-        sc_without, _, _ = _score_build(ev, riven_prof, without_m, chosen_arcane, scenario)
+        without_m = chosen_mods[:i] + chosen_mods[i + 1 :] + ([exilus_mod] if exilus_mod is not None else [])
+        sc_without, _, _ = _score_build(ev, riven_prof, without_m, chosen_arcane, scenario, archetype_id=arch_id)
         gain_pct = round(((score / sc_without) - 1.0) * 100.0, 1) if sc_without > 0 else 0.0
         slot_results.append(OptimizedModSlot(mod=m, marginal_gain_pct=gain_pct))
 
-    sc_no_riven, _, _ = _score_build(ev, None, chosen_mods, chosen_arcane, scenario)
+    sc_no_riven, _, _ = _score_build(ev, None, all_active_mods, chosen_arcane, scenario, archetype_id=arch_id)
     riven_gain_pct = round(((score / sc_no_riven) - 1.0) * 100.0, 1) if sc_no_riven > 0 else 0.0
 
     delta_vs_rec: Optional[float] = None
@@ -1633,7 +1884,7 @@ def evaluate_custom_build_for_riven(
             rationale_zh.append("当前自定义配卡与自动推荐强度基本持平，可一键跳转 WFSim 精确逐帧验证")
             rationale_en.append("Custom build matches the auto-recommended DPS closely; verify in WFSim anytime")
 
-    stat_summary = compute_build_stat_summary(ev, riven_prof, chosen_mods, chosen_arcane, scenario)
+    stat_summary = compute_build_stat_summary(ev, riven_prof, all_active_mods, chosen_arcane, scenario)
     return BuildOptimizationResult(
         weapon_name=ev.weapon_name or ev.weapon_name_en or "",
         weapon_class=w_cls,
@@ -1648,4 +1899,8 @@ def evaluate_custom_build_for_riven(
         rationale_en=rationale_en,
         delta_vs_recommended_pct=delta_vs_rec,
         stat_summary=stat_summary,
+        exilus_mod=exilus_mod,
+        active_archetype_id=arch_id,
+        active_archetype_zh=arch_zh,
+        active_archetype_en=arch_en,
     )
