@@ -986,14 +986,47 @@ class BuildOptimizerDialog(QDialog):
         def _fmt_pct(v: float) -> str:
             return f"{v:+.0f}%" if abs(v - round(v)) < 0.05 else f"{v:+.1f}%"
 
+        def _fmt_num(v: float) -> str:
+            return f"{v:.0f}" if v >= 100 else (f"{v:.1f}" if v >= 10 else f"{v:.2f}")
+
         pills_data: List[Tuple[str, str, str]] = []
-        pills_data.append(("伤害" if is_zh else "Damage", _fmt_pct(summary.damage_bonus_pct), "#FDE68A"))
+        pills_data.append(
+            (
+                "伤害" if is_zh else "Damage",
+                f"{_fmt_num(summary.eff_damage)} ({_fmt_pct(summary.damage_bonus_pct)})",
+                "#FDE68A",
+            )
+        )
         if not is_melee:
-            pills_data.append(("多重" if is_zh else "Multishot", _fmt_pct(summary.multishot_pct), "#93C5FD"))
-            pills_data.append(("射速" if is_zh else "Fire Rate", _fmt_pct(summary.fire_rate_pct), "#A7F3D0"))
+            pills_data.append(
+                (
+                    "多重" if is_zh else "Multishot",
+                    f"{summary.eff_multishot:.2f} ({_fmt_pct(summary.multishot_pct)})",
+                    "#93C5FD",
+                )
+            )
+            pills_data.append(
+                (
+                    "射速" if is_zh else "Fire Rate",
+                    f"{summary.eff_fire_rate:.2f}/s ({_fmt_pct(summary.fire_rate_pct)})",
+                    "#A7F3D0",
+                )
+            )
         else:
-            pills_data.append(("攻速" if is_zh else "Attack Speed", _fmt_pct(summary.fire_rate_pct), "#A7F3D0"))
-            pills_data.append(("范围" if is_zh else "Range", f"{summary.range_m:+.1f}m", "#C4B5FD"))
+            pills_data.append(
+                (
+                    "攻速" if is_zh else "Attack Speed",
+                    f"{summary.eff_fire_rate:.2f} ({_fmt_pct(summary.fire_rate_pct)})",
+                    "#A7F3D0",
+                )
+            )
+            pills_data.append(
+                (
+                    "范围" if is_zh else "Range",
+                    f"{summary.eff_range_m:.2f}m ({summary.range_m:+.1f}m)",
+                    "#C4B5FD",
+                )
+            )
 
         pills_data.append(
             (
@@ -1016,7 +1049,14 @@ class BuildOptimizerDialog(QDialog):
                 "#67E8F9",
             )
         )
-        pills_data.append(("元素" if is_zh else "Elemental", _fmt_pct(summary.elemental_pct), "#86EFAC"))
+        # Per-element concrete value + percentage pills (e.g. "腐蚀: 198 (+180%)")
+        if summary.element_breakdown:
+            for e_zh, e_en, e_dmg, e_pct in summary.element_breakdown:
+                e_lbl = e_zh if is_zh else e_en
+                pills_data.append((e_lbl, f"{_fmt_num(e_dmg)} ({_fmt_pct(e_pct)})", "#86EFAC"))
+        else:
+            pills_data.append(("元素" if is_zh else "Elemental", _fmt_pct(summary.elemental_pct), "#86EFAC"))
+
         if abs(summary.status_damage_pct) >= 0.5:
             pills_data.append(("异伤" if is_zh else "Status DMG", _fmt_pct(summary.status_damage_pct), "#F9A8D4"))
         if abs(summary.faction_pct) >= 0.5:
@@ -1221,8 +1261,17 @@ class BuildOptimizerDialog(QDialog):
                 self._lbl_arcane_none.show()
                 self._lbl_arcane_desc.hide()
 
-            elems = res.active_elements_zh if is_zh else res.active_elements_en
-            elem_txt = " + ".join(elems) if elems else "-"
+            if res.stat_summary and res.stat_summary.element_breakdown:
+                def _fmt_e(e_zh: str, e_en: str, e_dmg: float, e_pct: float) -> str:
+                    lbl = e_zh if is_zh else e_en
+                    d_str = f"{e_dmg:.0f}" if e_dmg >= 100 else f"{e_dmg:.1f}"
+                    p_str = f"{e_pct:+.0f}%" if abs(e_pct - round(e_pct)) < 0.05 else f"{e_pct:+.1f}%"
+                    return f"{lbl}:{d_str}({p_str})"
+
+                elem_txt = " · ".join(_fmt_e(*row) for row in res.stat_summary.element_breakdown)
+            else:
+                elems = res.active_elements_zh if is_zh else res.active_elements_en
+                elem_txt = " + ".join(elems) if elems else "-"
             self._lbl_elements.setText(I18N.t("panel.opt_elements_label", lang, elems=elem_txt))
 
             self._render_overall_stats(res.stat_summary, lang)

@@ -297,9 +297,14 @@ class TestBuildOptimizer(unittest.TestCase):
         self.assertIn("stormbringer", rad_hits)
         self.assertIn("radiated_reload", rad_hits)
 
-        # 3. Mod stat formatting produces explicit values
+        # 3. Mod stat formatting produces official DE zh-hans descriptions & conditional min~max ranges
         chamber = next(m for m in rifle_mods if m.id == "galvanized_chamber")
-        self.assertIn("+230%", format_mod_stats(chamber, "rifle", "zh_CN"))
+        self.assertIn("80%~230%", format_mod_stats(chamber, "rifle", "zh_CN"))
+        self.assertIn("多重射击", format_mod_stats(chamber, "rifle", "zh_CN"))
+        sinister = next(m for m in rifle_mods if m.id == "sinister_reach")
+        self.assertIn("光束范围", format_mod_stats(sinister, "rifle", "zh_CN"))
+        fanged = next(m for m in rifle_mods if m.id == "fanged_fusillade")
+        self.assertIn("切割伤害", format_mod_stats(fanged, "rifle", "zh_CN"))
 
         # 4. Dialog shows purple Riven card, searchable combo filtering, & overall stats (melee includes Range)
         r_ichor = self.parser.parse(
@@ -377,6 +382,43 @@ class TestBuildOptimizer(unittest.TestCase):
         xoris_pool = get_mod_pool("melee", weapon_slug="xoris", weapon_name_en="Xoris")
         self.assertIn("volatile_quick_return", [m.id for m in xoris_pool])
         self.assertNotIn("amanata_pressure", [m.id for m in xoris_pool])
+
+    def test_toxin_heat_merges_into_gas_bramma_never_picks_blight_and_concrete_element_stats(self) -> None:
+        # Regression test for user's Kuva Bramma screenshot: Toxin + Heat MUST merge into Gas (毒气),
+        # never leaving uncombined Toxin -> Primary Blight MUST NOT be chosen!
+        r_bramma = self.parser.parse(
+            [
+                "赤毒·布拉玛 Parciata",
+                "+258.6% 伤害",
+                "+73.1% 弹药效率",
+                "-48.5% 武器后坐力",
+                "段位 15 O 8",
+            ]
+        )
+        ev_b = self.evaluator.evaluate(r_bramma)
+        res = optimize_build_for_riven(ev_b, scenario=SCENARIO_GENERAL, allow_bane_mods=False)
+        self.assertIsNotNone(res.arcane)
+        if "毒素" not in res.active_elements_zh:
+            self.assertNotEqual(res.arcane.id, "primary_blight")
+        self.assertEqual(res.arcane.id, "primary_merciless")
+
+        # Direct check: Toxin + Heat alone MUST produce Gas (毒气) with 0 standalone Toxin
+        gas_res = evaluate_custom_build_for_riven(
+            ev_b,
+            ["galvanized_chamber", "critical_delay", "vital_sense", "infected_clip", "hellfire", "vile_acceleration", None],
+            "primary_merciless",
+            scenario=SCENARIO_GENERAL,
+        )
+        self.assertEqual(gas_res.active_elements_zh, ["毒气"])
+        self.assertIsNotNone(gas_res.stat_summary)
+        # Concrete element value + percentage & concrete Multishot / Fire Rate values populated
+        self.assertEqual(len(gas_res.stat_summary.element_breakdown), 1)
+        el_zh, _el_en, el_dmg, el_pct = gas_res.stat_summary.element_breakdown[0]
+        self.assertEqual(el_zh, "毒气")
+        self.assertAlmostEqual(el_pct, 180.0, places=1)
+        self.assertGreater(el_dmg, 100.0)
+        self.assertGreater(gas_res.stat_summary.eff_multishot, 3.0)
+        self.assertGreater(gas_res.stat_summary.eff_fire_rate, 0.5)
 
 
 if __name__ == "__main__":
